@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <com.cosmicdew.lessonpot.customviews.UserCircularImageView
+        android:id="@+id/USER_CIV_CELL"
+        style="@style/circular_imageview"
+        android:layout_marginTop="@dimen/margin_med_large"
+        android:src="@drawable/profile_placeholder" />
+
+    <LinearLayout
+        android:id="@+id/NAMING_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/letter_margin"
+        android:layout_marginTop="@dimen/margin_med_large"
+        android:layout_toRightOf="@+id/USER_CIV_CELL"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/USER_FULL_NAME_TXT"
+            style="@style/note_normal_black_bold_txt"
+            android:layout_marginTop="2dp"
+            android:text="Full Name"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/USER_ROLL_TXT"
+            style="@style/note_nor_txt"
+            android:text="Role"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/lighter_grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/USER_CIV_CELL"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/NAV_LESSON_HOME"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/libraryicon"
+            android:text="Lessons" />
+
+        <TextView
+            android:id="@+id/NAV_NETWORK"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/networkicon"
+            android:text="My Network" />
+
+        <TextView
+            android:id="@+id/NAV_EDIT_PROFILE"
+            style="@style/nav_sub_txt"
+            android:text="My Account"
+            android:drawableLeft="@drawable/editusericon" />
+
+        <TextView
+            android:id="@+id/NAV_SUPPORT"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/messageicon"
+            android:text="Support" />
+
+        <TextView
+            android:id="@+id/NAV_SIGN_OUT"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/logouticon"
+            android:text="Switch Account" />
+    </LinearLayout>
+
+</RelativeLayout>

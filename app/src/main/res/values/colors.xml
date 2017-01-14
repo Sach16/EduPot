@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#4fc3f7</color>-->
+    <!--<color name="colorPrimaryDark">#0288d1</color>-->
+
+    <color name="colorPrimary">#039BE5</color>
+    <color name="colorPrimaryDark">#324DE1</color>
+    <color name="colorAccent">#2196F3</color>
+
+    <color name="greenFab">#1AB750</color>
+
+    <color name="lightPaleGreen">#abd9d3</color>
+    <color name="darkPaleGreen">#3BB876</color>
+
+    <color name="lighter_grey">#dddddd</color>
+    <color name="darker_grey">#aaaaaa</color>
+    <color name="darkest_grey">#696969</color>
+    <color name="dark_grey_tab">#959595</color>
+
+    <color name="text_heading">#252525</color>
+    <color name="text_body">#464646</color>
+
+    <color name="pale_grey">#ecf0f2</color>
+    <color name="white">#ffffff</color>
+    <color name="greyish_brown">#464646</color>
+    <color name="white_two">#efefef</color>
+    <color name="pinkish_grey">#d1d1d1</color>
+    <color name="pinkish_grey_two">#c8c8c8</color>
+    <color name="warm_grey">#707070</color>
+    <color name="white_three">#d5d5d5</color>
+    <color name="white_press">#F5F6FD</color>
+    <color name="greyish_brown_40">#66464646</color>
+</resources>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.LessonsScreen"
+    tools:showIn="@layout/lesson_screen_main">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/SAVE_CANCEL_LL">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/lesson_top_margin"
+            android:layout_marginLeft="@dimen/lesson_sides_margin"
+            android:layout_marginRight="@dimen/lesson_sides_margin"
+            android:layout_marginTop="@dimen/lesson_top_margin"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/TITLE_LL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/TITLE_TXT"
+                    style="@style/title_medium"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="@dimen/lesson_sides_margin"
+                    android:text="@string/title_txt" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/TITLE_TXT"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/LESSON_TITLE_TXT"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:drawablePadding="10dp"
+                        android:gravity="center|left"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/text_heading"
+                        android:textSize="@dimen/sub_text_size" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@android:color/darker_gray" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lesson_top_margin">
+
+                <ImageView
+                    android:id="@+id/DELETE_MEDIA_IMG"
+                    style="@style/clickable_txt_accent_ultra_small"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/delete_black" />
+
+                <LinearLayout
+                    android:id="@+id/MEDIA_PLAYER_LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/img_btn_size"
+                    android:layout_below="@+id/DELETE_MEDIA_IMG"
+                    android:layout_marginTop="@dimen/margin_one_side_size"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/REC_PAUSE_RES_IMG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/media_btn_bg"
+                        android:padding="@dimen/tab_text_size"
+                        android:src="@drawable/ellipse_3" />
+
+                    <RelativeLayout
+                        android:id="@+id/relative_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/media_btn_bg">
+
+                        <ImageView
+                            android:id="@+id/PLAY_PAUSE_RESUM_IMG"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/media_btn_bg"
+                            android:padding="@dimen/tab_text_size"
+                            android:src="@drawable/playicon" />
+
+                        <ProgressBar
+                            android:id="@+id/PLAY_PROGRESS_BAR"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/media_btn_bg"
+                            android:indeterminateDrawable="@drawable/progress_style"
+                            android:padding="@dimen/tab_text_size"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/media_btn_bg">
+
+                        <!--android:paddingBottom="10sp"
+                        android:paddingTop="10sp"-->
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/PROGRESS_TIMER_RL"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_sides_size"
+                                android:layout_marginRight="@dimen/margin_sides_size">
+
+                                <TextView
+                                    android:id="@+id/PROGRESS_TIMER_TXT"
+                                    style="@style/timer_medium"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="@string/timer_nutral" />
+
+                                <TextView
+                                    android:id="@+id/FIXED_TIMER_TXT"
+                                    style="@style/timer_medium"
+                                    android:layout_alignParentRight="true"
+                                    android:text="@string/timer_nutral" />
+
+                            </RelativeLayout>
+
+                            <SeekBar
+                                android:id="@+id/SEEKBAR"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/PROGRESS_TIMER_RL"
+                                android:layout_marginLeft="@dimen/margin_sides_size"
+                                android:layout_marginRight="@dimen/margin_sides_size"
+                                android:maxHeight="2.5dp"
+                                android:progressDrawable="@color/pinkish_grey_two"
+                                android:thumbOffset="0px" />
+
+                            <!--android:thumb="@drawable/rectangle_1_2"-->
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/LESSON_LOCATION_RL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/top_margin_top">
+
+                <TextView
+                    android:id="@+id/LESSON_LOCATION_HEADER"
+                    style="@style/clickable_txt_accent_ultra_small"
+                    android:text="@string/lesson_location" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/letter_margin"
+                    android:layout_toRightOf="@+id/LESSON_LOCATION_HEADER"
+                    android:src="@drawable/editicon" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/OWNER_TXT"
+                style="@style/title_regular"
+                android:layout_marginTop="@dimen/lesson_sides_margin"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Creator : " />
+
+            <TextView
+                android:id="@+id/LAST_LISTENED_TXT"
+                style="@style/title_regular"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Last Listened : iuwniucen" />
+
+
+            <TextView
+                android:id="@+id/SHARED_BY_TXT"
+                style="@style/title_regular"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Shared By : " />
+
+            <TextView
+                android:id="@+id/LESSON_LOCATION_TXT"
+                style="@style/title_regular"
+                android:layout_marginTop="@dimen/lesson_sides_margin"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/dummy_txt" />
+
+            <TextView
+                android:id="@+id/NUM_OF_LISTENS_TXT"
+                style="@style/title_regular"
+                android:layout_marginTop="@dimen/lesson_sides_margin"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Number of Listens : 5" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lesson_top_margin_high"
+                android:layout_marginBottom="@dimen/lesson_top_margin_high">
+
+                <TextView
+                    android:id="@+id/IMAGES_TITLE_TXT"
+                    android:layout_width="@dimen/img_wh"
+                    android:layout_height="@dimen/img_wh"
+                    android:layout_marginRight="@dimen/lesson_sides_margin"
+                    android:background="@drawable/camera_btn_bg"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/margin_img_padding"
+                    android:paddingTop="@dimen/margin_img_padding"
+                    android:text="@string/comments_txt"
+                    android:textColor="@color/greyish_brown"
+                    android:textSize="@dimen/small_txt" />
+
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/IMAGES_TITLE_TXT">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/LESSON_IMG_1"
+                            android:layout_width="@dimen/img_wh"
+                            android:layout_height="@dimen/img_wh"
+                            android:layout_marginRight="@dimen/lesson_sides_margin"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/camera_btn_bg"
+                            android:padding="2dp"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/cameraicon_pad2" />
+
+                        <ImageView
+                            android:id="@+id/LESSON_IMG_2"
+                            android:layout_width="@dimen/img_wh"
+                            android:layout_height="@dimen/img_wh"
+                            android:layout_marginRight="@dimen/lesson_sides_margin"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/camera_btn_bg"
+                            android:padding="2dp"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/cameraicon_pad2" />
+
+                        <ImageView
+                            android:id="@+id/LESSON_IMG_3"
+                            android:layout_width="@dimen/img_wh"
+                            android:layout_height="@dimen/img_wh"
+                            android:layout_marginRight="@dimen/lesson_sides_margin"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/camera_btn_bg"
+                            android:padding="2dp"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/cameraicon_pad2" />
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/SAVE_CANCEL_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/CANCEL_LESSON_TXT"
+            style="@style/clikable_warm_txt"
+            android:layout_weight="1"
+            android:background="@color/white_two"
+            android:gravity="center"
+            android:paddingBottom="@dimen/tab_text_size"
+            android:paddingTop="@dimen/tab_text_size"
+            android:text="@string/cancel_txt"
+            android:textColor="@color/warm_grey" />
+
+        <View
+            android:layout_width="1.3dp"
+            android:layout_height="match_parent"
+            android:background="@color/white_three" />
+
+        <TextView
+            android:id="@+id/SAVE_LESSON_TXT"
+            style="@style/clikable_warm_txt"
+            android:layout_weight="1"
+            android:background="@color/white_two"
+            android:gravity="center"
+            android:paddingBottom="@dimen/tab_text_size"
+            android:paddingTop="@dimen/tab_text_size"
+            android:text="@string/save_txt"
+            android:textColor="@color/colorAccent" />
+
+    </LinearLayout>
+
+</RelativeLayout>

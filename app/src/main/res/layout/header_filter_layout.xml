@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/HEADER_DET_TXT"
+        style="@style/clikable_warm_header_txt"
+        android:padding="15dp"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/warm_grey" />
+
+    <TextView
+        android:id="@+id/FILTER_LIST_TXT"
+        style="@style/clikable_warm_header_txt"
+        android:padding="15dp"
+        android:layout_alignParentRight="true"
+        android:text="@string/show_groups_txt"
+        android:textColor="@color/colorAccent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_marginRight="@dimen/small_text_size"
+        android:layout_marginLeft="@dimen/small_text_size"
+        android:layout_below="@+id/HEADER_DET_TXT"
+        android:background="@color/lighter_grey"/>
+
+</RelativeLayout>

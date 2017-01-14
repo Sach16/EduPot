@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "215622804677",
+    "firebase_url": "https://lessonpot-eb429.firebaseio.com",
+    "project_id": "lessonpot-eb429",
+    "storage_bucket": "lessonpot-eb429.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215622804677:android:426f9db9def49d23",
+        "android_client_info": {
+          "package_name": "com.cosmicdew.lessonpot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215622804677-e74a5rdavmq4qb67a8uumcll752ht6ib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cosmicdew.lessonpot",
+            "certificate_hash": "01EE8C60ABE2E1C13E02675CE949AAC4A5D24A1C"
+          }
+        },
+        {
+          "client_id": "215622804677-riaihmqcl1p7d1s8jhql2541j0225nva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9jqqPZ0VGJE38_J9DstK-U53se99wQX8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215622804677-riaihmqcl1p7d1s8jhql2541j0225nva.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

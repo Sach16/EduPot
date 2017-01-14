@@ -1,0 +1,205 @@
+<resources>
+    <string name="app_name">LessonPot</string>
+    <string name="lesson_pot_caps">LessonPot</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="alert_gps_not_enabled">GPS is not enabled. Do you want to go to settings menu?</string>
+
+    <string name="enter_phone_no">Enter 10 digit Mobile Number</string>
+    <string name="enter_otp">Enter Auth Code sent via SMS to the above Number</string>
+
+    <string name="get_otp">Get OTP</string>
+    <string name="register_txt">Register New LessonPot Account</string>
+    <string name="add_existing_user_txt">Add Existing LessonPot Account \nto this device</string>
+    <string name="lessonpot_overview">LessonPot Overview</string>
+    <string name="submit_txt">Submit</string>
+    <string name="resend_auth_code">Resend Auth Code</string>
+    <string name="sign_in">Sign In</string>
+
+    <string name="numeric">0123456789</string>
+    <string name="phone_no_otp_not_reg">Phone No. &amp; OTP does not match</string>
+
+    <string name="no_users_available">"Add Users with the options below"</string>
+    <string name="no_boards_available">"Add Boards and Classes"</string>
+    <string name="no_board_and_class_information_yet_hed">"No Board and Class information yet"</string>
+    <string name="no_users_yet_det">"No Accounts Yet"</string>
+
+    <string name="to_add_a_board_class_det">To add a Board/Class click on "+" above.
+        Board(s)/Class(es) you associate yourself with will appear here.
+        Depending on your role, please add one or more Board(s)/Class(es) you or your wards are connected with to effectively use LessonPot.
+        Each user needs to be associated with at least 1 Board/Class.</string>
+    <string name="users_registered_with_this_device_will_appear_here_det">"Accounts registered with this device will appear here. Multiple Accounts can use the same device.
+        To add an Account, choose from the options below:"</string>
+
+    Share
+    Edit
+    Remove
+    Delete
+    Add Syllabus
+    <string name="action_share">Share</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_add_syllabus">Add Syllabus</string>
+    <string name="action_post_to_students">Post to Students with this Syllabus</string>
+    <string name="options_txt">Options</string>
+
+    <string name="action_add">Add</string>
+    <string name="action_notify">Notify</string>
+    <string name="aggree_continue_det">By Clicking on Agree and Continue I accept to the</string>
+    <string name="terms_conditions"><u>Terms &amp; Conditions</u></string>
+    <string name="privacy_policy"><u>Privacy Policy</u></string>
+    <string name="aggree_continue">Agree and Continue</string>
+    <string name="and">" and "</string>
+    <string name="phone_number_verification">Phone Number Verification</string>
+    <string name="prefix_numb">+91</string>
+
+    <string name="discard_txt">Discard</string>
+    <string name="cancel_txt">Cancel</string>
+    <string name="done_txt">Done</string>
+    <string name="reorder_txt">Reorder</string>
+    <string name="save_txt">Save</string>
+
+    <string name="add_boards_txt">Add Board(s)/Class(es) you are associated with</string>
+    <string name="sms_limit_exceeded_prompt">You have exceeded the sms resend limit for the session. Please visit www.lessonpot.com</string>
+
+    <string name="select_role_txt">Select Role</string>
+    <string name="parent_guardian_txt">Parent/Guardian</string>
+    <string name="student_txt">Student</string>
+    <string name="school_teacher_txt">School Teacher</string>
+    <string name="private_teacher_txt">Private Teacher</string>
+
+    <string name="select_board_txt">Select Board</string>
+    <string name="comment_txt">Comment</string>
+    <string name="cbse_txt">CBSE</string>
+    <string name="state_board_txt">State Board</string>
+    <string name="icse_txt">ICSE</string>
+    <string name="igcse_txt">IGCSE</string>
+    <string name="ib_txt">IB</string>
+    <string name="cambridge_txt">Cambridge</string>
+    <string name="Add_txt">Add</string>
+    <string name="enter_user_details">Enter Account Details</string>
+    <string name="fields_marked_with_are_mandatory">Fields marked with * are mandatory. \nThe rest are optional</string>
+    <string name="user_already_exists">Account with same name and role already exists on device</string>
+
+    <string name="select_classes_txt">Select Classes</string>
+    <string name="select_class_txt">Select Class</string>
+    <string name="register_text">Register</string>
+    <string name="next_text">Next</string>
+
+    <string name="add_boards_and_classes">Board(s)/Class(es)</string>
+    <string name="add_boards_or_classes">Add Board/Class</string>
+    <string name="edit_boards_or_classes">Edit Board/Class</string>
+    <string name="library_txt">Library</string>
+    <string name="lesson_home_txt">All Lessons</string>
+    <string name="register_new_user">Register New Account</string>
+    <string name="title_txt">Title</string>
+    <string name="images_txt">Images:</string>
+
+    <string name="add_lesson_txt">Add Lesson</string>
+    <string name="edit_lesson_txt">Edit Lesson</string>
+    <string name="edit_profile_txt">My Account</string>
+    <string name="add_photo_txt">Add Photo</string>
+    <string name="timer_nutral">00:00</string>
+    <string name="lesson_location"><u>Lesson Location</u></string>
+    <string name="comments_txt">Notes:</string>
+    <string name="supp_comments_txt">Comments</string>
+    <string name="attachments_txt">Attachments:</string>
+    <string name="dummy_txt">Karntaka State, VII, Social Studies, \nHistory of Ancient India</string>
+    <string name="go_to_camera">Go to camera</string>
+    <string name="go_to_gallery">Go to gallery</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="view_photo">View photo</string>
+    <string name="delete_record_txt">Delete Recording</string>
+    <string name="rewrite_record_txt">Re-write Recording</string>
+    <string name="delete_record_detail_txt">Do you want to delete the recording?</string>
+    <string name="rewrite_record_detail_txt">Your previous recording will be lost, Do you want to continue?</string>
+    <string name="yes_txt">Yes</string>
+    <string name="no_txt">No</string>
+    <string name="ok_txt">OK</string>
+
+    <string name="select_board_class">Select Board Class</string>
+    <string name="select_syllabus">Select Syllabus</string>
+    <string name="select_chapter">Select Chapter</string>
+    <string name="exixts_in_syllabus">Exists in syllabus</string>
+
+    <string name="my_network_txt">My Network</string>
+    <string name="requests_txt">Requests</string>
+    <string name="my_connections_txt">My Connections</string>
+    <string name="accept_txt">Accept</string>
+    <string name="delete_txt">Delete</string>
+    <string name="add_connection_txt">Add Connection</string>
+    <string name="alert_txt">Alert</string>
+    <string name="invalid_user_txt">Invalid Account</string>
+    <string name="insufficient_info_txt">Insufficient information to determine unique Account. Please provide one or more inputs other than the phone number, or enter Account Id</string>
+    <string name="sms_info_txt">This person does not have LessonPot app on his/her phone. You can invite the person to join LessonPot yourself. Or, you can click Yes below to send an SMS</string>
+    <string name="mark_as_spam_txt">Mark as Spam</string>
+
+    <string name="connection_marked_as_spam_txt">Connection marked as spam</string>
+    <string name="connection_accepted_successfully_txt">Connection accepted successfully</string>
+    <string name="lesson_posted_successfully_txt">Lesson posted successfully</string>
+    <string name="lesson_shared_successfully_txt">Lesson shared successfully</string>
+    <string name="connection_deleted_txt">Connection deleted</string>
+    <string name="show_groups_txt">Show Groups</string>
+    <string name="select_users_txt">Select Accounts</string>
+    <string name="connections_not_found_txt">No Connections found!</string>
+    <string name="show_flat_txt">Show By Role</string>
+    <string name="notifications_txt">Notifications</string>
+    <string name="add_to_syllabus_txt">Add to Syllabus</string>
+    <string name="syllabus_added_successfully_txt">Syllabus added successfully</string>
+    <string name="user_credentials_txt">Account Id</string>
+    <string name="registered_phone_numbers_txt">Registered Phone numbers</string>
+
+    <string name="newly_received_lessons_txt">Newly Received Lessons</string>
+    <string name="newly_connection_requests_txt">New Connection Requests</string>
+
+    <string name="share_lesson_txt">Share Lesson</string>
+    <string name="tap_and_hold_txt_det">Tap and hold at any level to select \neverybody within</string>
+
+    <string name="register_your_user_id_and_password_txt">You can register your Account Id and Password here.</string>
+    <string name="register_your_user_id_and_password_txt_det">This helps you to add yourself to an alternate device as an existing LessonPot user. It results in flexibility of operating from multiple devices and helps you to continue using LessonPot even if your primary device becomes inaccessible.</string>
+    <string name="add_phone_numbers_txt">You can register additional phone numbers from which you can access your LessonPot account by inputting them here. Use the + button at the top to add a new number.</string>
+    <string name="add_phone_numbers_txt_det">Note that once a phone number is registered, you will need to access LessonPot on that phone to remove yourself if needed.</string>
+    <string name="phone_numbers_txt">Phone Numbers:</string>
+    <string name="reg_board_class_profile_txt">Registered Board(s)/Class(es) can only have their school information modified.</string>
+    <string name="reg_board_class_profile_txt_det">To delete  a Board/Class, go to the Library Main Screen.</string>
+    <string name="user_cred_updated_txt">Account Id updated successfully</string>
+
+    <string name="remove_user_txt">Remove Account</string>
+    <string name="will_be_removed_from_this_phone_txt">will be removed from this phone. In case you want to add the Account back later, you will need an Account Id which is to be configured through the "My Account" screen.</string>
+    <string name="do_you_want_to_proceed_txt">Do you want to proceed?</string>
+
+    <string name="delete_board_class_txt">Delete Board/Class</string>
+    <string name="once_you_delete_this_board_class_txt">Once you delete this Board/Class, all Subjects and all lessons that have been created or received within it will be removed.</string>
+
+    <string name="delete_subject_txt">Delete Subject</string>
+    <string name="once_you_delete_this_subject_txt">Once you delete this Subject, all lessons that have been created or received within it will be removed.</string>
+
+    <string name="hold_and_drag_to_change_order_txt">Hold and drag to change order</string>
+    <string name="filter_lessons_txt">Filter Lessons</string>
+    <string name="apply_txt">Apply</string>
+    <string name="remove_filter_txt">Remove Filter</string>
+    <string name="edit_filter_txt">Edit Filter</string>
+    <string name="support_txt">Support</string>
+
+    <string name="how_to_get_my_syllabus_right_txt">How to get my Syllabus Right!</string>
+    <string name="syllabus_consists_of_the_your_boards_classes_txt">Syllabus consists of the your Boards-Classes and the Subjects in each Board-Class\n\n
+        You can add Boards and Classes from your Profile page, and you can delete them on the Library screen\n\n
+        To get the right subjects and the right version of those subjects, you can do one of the following:\n\n
+        1. Take syllabus from a Lesson received\n\n
+        2. Take syllabus from a Connection\n\n
+        3. Take syllabys from a Wizard\n\n
+        4. Click the syllabus Help button</string>
+    <string name="i_need_syllabus_help_txt">I need Syllabus Help!</string>
+    <string name="ways_to_get_syllabus_accurate_txt">Ways to get Syllabus Accurate</string>
+
+    <string-array name="add_photo_arr">
+        <item>Go to camera</item>
+        <item>Go to gallery</item>
+    </string-array>
+
+    <item type="id" name="IMG_PATH"/>
+
+</resources>

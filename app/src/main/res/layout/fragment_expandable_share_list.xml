@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ExpandableListView
+        android:id="@+id/EXPAN_LIST_VIEW"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/SAVE_CANCEL_LL"
+        android:childDivider="@android:color/transparent"
+        android:groupIndicator="@null" />
+
+    <LinearLayout
+        android:id="@+id/SAVE_CANCEL_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/CANCEL_LESSON_TXT"
+            style="@style/clikable_warm_txt"
+            android:layout_weight="1"
+            android:background="@color/white_two"
+            android:gravity="center"
+            android:paddingBottom="@dimen/tab_text_size"
+            android:paddingTop="@dimen/tab_text_size"
+            android:text="@string/cancel_txt"
+            android:textColor="@color/warm_grey" />
+
+        <View
+            android:layout_width="1.3dp"
+            android:layout_height="match_parent"
+            android:background="@color/white_three" />
+
+        <TextView
+            android:id="@+id/SAVE_LESSON_TXT"
+            style="@style/clikable_warm_txt"
+            android:layout_weight="1"
+            android:background="@color/white_two"
+            android:gravity="center"
+            android:paddingBottom="@dimen/tab_text_size"
+            android:paddingTop="@dimen/tab_text_size"
+            android:text="@string/action_share"
+            android:textColor="@color/colorAccent" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

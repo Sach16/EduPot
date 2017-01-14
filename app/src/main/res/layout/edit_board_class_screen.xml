@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ADD_BOARDS_MAIN_LAYOUT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/BOARD_CLASS_HEADER_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pot_cell_margin"
+        android:layout_marginRight="@dimen/pot_cell_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_med_large"
+            android:gravity="top|left"
+            android:text="@string/reg_board_class_profile_txt"
+            android:textColor="@color/text_heading"
+            android:textSize="@dimen/sub_text_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lesson_top_margin_high"
+            android:gravity="top|left"
+            android:text="@string/reg_board_class_profile_txt_det"
+            android:textColor="@color/text_heading"
+            android:textSize="@dimen/sub_text_size" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RECYC_CLASS_BOARDS"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/BOARD_CLASS_HEADER_LL"
+        android:layout_above="@+id/REGISTER_TXT_LAY"
+        android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

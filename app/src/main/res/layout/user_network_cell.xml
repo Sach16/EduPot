@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/CV_USER_CELL"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/pot_cell_margin">
+
+    <com.cosmicdew.lessonpot.customviews.UserCircularImageView
+        android:id="@+id/USER_CIV_CELL"
+        style="@style/circular_imageview"
+        android:src="@drawable/profile_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/USER_CIV_CELL"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/NAMING_LL"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/USER_FULL_NAME_TXT"
+                style="@style/note_normal_black_bold_txt"
+                android:layout_marginTop="2dp"
+                android:text="Full Name"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/USER_ROLL_TXT"
+                style="@style/note_nor_txt"
+                android:text="Role"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/USER_CIV_CELL"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/ACCEPT_NET_TXT"
+                style="@style/user_nav_txt"
+                android:textSize="@dimen/mid_lar_text_size"
+                android:text="@string/accept_txt"
+                android:textColor="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/DELETE_NET_TXT"
+                style="@style/user_nav_txt"
+                android:layout_marginLeft="@dimen/txt_margin"
+                android:layout_toRightOf="@+id/ACCEPT_NET_TXT"
+                android:text="@string/delete_txt"
+                android:textColor="@color/warm_grey" />
+
+            <ImageView
+                android:id="@+id/SPAM_SETTINGS_IMG"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/mid_lar_text_size"
+                android:src="@drawable/settings_net"
+                android:layout_marginLeft="@dimen/txt_margin"
+                android:layout_toRightOf="@+id/DELETE_NET_TXT" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/lighter_grey" />
+
+</RelativeLayout>

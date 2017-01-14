@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/TERMS_COND_LL"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_splash" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/TERMS_COND_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/note_txt"
+            android:text="@string/aggree_continue_det" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TERMS_AND_CONDITION_TXT"
+                style="@style/note_txt"
+                android:text="@string/terms_conditions" />
+
+            <TextView
+                style="@style/note_txt"
+                android:text="@string/and" />
+
+            <TextView
+                android:id="@+id/PRIVACY_POLICY_TXT"
+                style="@style/note_txt"
+                android:text="@string/privacy_policy" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/AGREE_TERMS_TXT"
+            style="@style/clickable_txt_Accent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/aggree_continue" />
+
+    </LinearLayout>
+
+</RelativeLayout>

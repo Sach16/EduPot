@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ADD_BOARDS_MAIN_LAYOUT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RECYC_CLASS_BOARDS"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/REGISTER_TXT_LAY"
+        android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/NO_DATA_RL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_above="@+id/REGISTER_LAY"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/NO_DATA_IMG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ellipse_1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icon_books"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/TV_NO_DATA"
+            style="@style/tv_bold_simple"
+            android:text="@string/no_board_and_class_information_yet_hed"
+            android:layout_below="@+id/NO_DATA_IMG"/>
+
+        <TextView
+            android:id="@+id/TV_NO_DATA_DESC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:text="@string/to_add_a_board_class_det"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/TV_NO_DATA"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/REGISTER_TXT_LAY"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/REGISTER_TXT"
+            style="@style/clickable_txt_Accent"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp"
+            android:textSize="@dimen/accent_txt_size"
+            android:text="@string/register_text" />
+
+        <TextView
+            android:id="@+id/CANCEL_TXT"
+            style="@style/clickable_txt_grey"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="20dp"
+            android:text="@string/cancel_txt"
+            android:textSize="@dimen/accent_txt_size" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

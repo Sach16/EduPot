@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/HOME_CLASS_MAIN_LAYOUT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RECYC_HOME_CLASS_BOARDS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/RIGHT_SYLLABUS_LL"
+        android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/RIGHT_SYLLABUS_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/RIGHT_SYLLABUS_TXT"
+            style="@style/clikable_warm_txt"
+            android:layout_weight="1"
+            android:background="@color/white_two"
+            android:gravity="center"
+            android:paddingBottom="@dimen/mid_lar_text_size"
+            android:paddingTop="@dimen/mid_lar_text_size"
+            android:text="@string/how_to_get_my_syllabus_right_txt"
+            android:textColor="@color/colorAccent" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MAIN_RL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_home"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@android:color/white"
+            app:subtitleTextColor="@android:color/white"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <include
+                android:id="@+id/toolbar_header_view"
+                layout="@layout/title_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/header_view_end_margin_right" />
+
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/lesson_screen"/>
+
+    <FrameLayout
+        android:id="@+id/BOTTOM_VIEW"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        android:visibility="gone"
+        style="?attr/bottomSheetStyle"
+        android:background="@color/white">
+
+        <include layout="@layout/image_view_pager" />
+
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

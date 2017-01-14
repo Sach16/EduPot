@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_share"
+        android:icon="@drawable/editusericon"
+        android:title="Edit Profile" />
+    <item
+        android:id="@+id/nav_library"
+        android:icon="@drawable/libraryicon"
+        android:title="Library" />
+    <item
+        android:id="@+id/nav_network"
+        android:icon="@drawable/networkicon"
+        android:title="My Network" />
+    <item
+        android:id="@+id/nav_message"
+        android:icon="@drawable/messageicon"
+        android:title="Tell Me" />
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/logouticon"
+        android:title="Sign Out" />
+
+</menu>

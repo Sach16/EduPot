@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1.3/d97e400d31bbeb36c1c60d2c3a9bbf2cdccf85a8/httpmime-4.1.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d97e400d31bbeb36c1c60d2c3a9bbf2cdccf85a8">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpmime-4.1.3_4ab13784badce26a94ee1dfb4dd12c8144dc30e5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="028f8255cb977b29cdffbfcf05caa0459686120c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-drive-10.0.1_2d7e3fa7a1140e6934c1afff9ced1dd81c8a0680/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-database-connection/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="8010ae6ed32828a145b25ec97bc07b7a83c6318f">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-database-connection-10.0.1_830f9ea7544a1f9f5026a0b6b0bd3853bed14efd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="1e11c68fec92a17c84dd8d1dd80e74c4e67b12e2">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-10.0.1_b1ce949c88bca2bca66163881597c10df158da3e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d0460bf07cc3657e0be518ca01c174493951c6b8">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-10.0.1_0ca49759e9596cd77a56a2270a1531eb5914629e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_cedc5e6a1ad43a23e6321a037ae28b2ffc467a07/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-24.2.1_d9df879543b4ab99b232f7e88ae1ae6482947cd6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="7a64bf6dc775198eed9db9468a133adf7dfe6562">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-10.0.1_8365f686ae028bdd530217beaa925cc3fccde1f0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="a48dc0b148059764d32500be558702d5ff932058">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-10.0.1_fa574322852b55c5b997aca82b342b685a59d1a8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b955cb3a1ad6f1b6ff728ce1e0cd592c1717b440">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-lite-10.0.1_c3f35e10f1ca1fea43eb2d21bccab5cdb0a42734/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="eb0d830e3eabb9deb9ec44869cf7ac7ea1ad794c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-common-10.0.1_9e608dfd5ae05669b06e5d92628723eacc0abfa5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-fragment-24.2.1_b8fc8d6e277b8da47c88bafba7394fe354c423f8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e2185aff89caeb337b1ffc36d5e525d8318e7cfe">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-10.0.1_663a633eab35feffa1c2394acd93e71af1a69f22/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e96c6974cf924e7ee3b230e6847d5731423388c9">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-base-10.0.1_e4c835ab6d7e950c9e8ed1e891db7ed639bc932d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.2.2/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b42cf2134829f715edfa2adaf0ee246631322dba">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-beta-1.2.2_372cdb42d7dc415c387e27e4c4d84845562eca04/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="c6e1f361e9d61aece9dac39b77fcc98a337a144d">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-nearby-10.0.1_acba49d728fcd48eec03462fe03f073199f82e1c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="756f6297eef79784f5e356dcd4f39865028b2bd0">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.1_76aaef5400b6f3edc0928098c628553e8bc863e6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager-api/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b1df8fa3d372a27e4e969ce00b00689ee1eed031">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tagmanager-api-10.0.1_5bc64f2eca827b8e05e413281437ca8d61d7688c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-database/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="8f128aeeb7e31271b28a7adb9dac1f3a6ed9f5e7">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-database-10.0.1_b0c45bc8726e5905b36bf7c22c28407e1ac72dfe/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="89d9a66d385a3839eb896cfe59534a397193f571">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_bd986dd64cf14bed1f881dbf3148845ead4a2fa0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/me.leolin/ShortcutBadger/1.1.11/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="06cb68d47f62420d14cd664db9333c3c251a6086">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/me.leolin-ShortcutBadger-1.1.11_56891f11e3dcaff7d5c7c4382956c87db23fb8d1/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/design/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-24.2.1_8e3a3db81df913387d4b4370cdd3484c08971f9b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-24.2.1_2b614b603193f02c60146e54c33077bbb6385fe2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_74ac43ecf5ef4e1f5e7c74d61b5f3c3424f317d3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gass/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="57c2eceb8548de84509d1ebc293fedec53231f6c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gass-10.0.1_010707be52f1a225bab172c1d4d110c5df0aaa2c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_4558956ed322fcfd211573f20ec0aa0cc5127f6f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-auth/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="9cca2818594cc5348806d6662133491e7ea0fa8d">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-auth-10.0.1_a90d138ea47ed964b4ce865511466d3838c86e04/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="455c3a50baed48ca64d9c56e2e81fee6df503a87">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_b95cfdd1af0ba1fcf51cd2ae1eeaab300491ca0e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_d9a3f3cd2a54a238e45846c987a402f65af370ac/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="c5e6490573cd2cc8018417f60ddd251138b6ed61">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-24.2.1_e3f1d5d3d0cc78ab5f447b6b75c625c803ac336e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-24.2.1_62a4c3b36f13788f21fab92f363e0b9deecdb4f9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="4c829ff0ccfecb28a999ee46d9e75948dfc777a4">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-10.0.1_aa6f85ea1bcbc6ac5d8ad1365c68b84c126ae05e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-instantapps/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="45305e6af414dab5aba6c3225081c2f15c3bdd1e">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-instantapps-10.0.1_140f672196c5bacb1931ff91c59ca42b126bfe1c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-iid/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6bb5d347ebc0c6ef3c83a905222a688da5d2f7b4">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-iid-10.0.1_31c4f3d329d19debffa8cd50ecfa50dad4e449ac/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.14/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="a319fd4d548ba4cc9511561d37109ba922bfbf6a">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/io.fabric.sdk.android-fabric-1.3.14_474a7cab440cd42604277d9429f0dcb90a4d0d9b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-crash/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="de29a39f9260f88151b1ef453140e71c76b6c415">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-crash-10.0.1_0f676448edf651155c6d3410005888fc6e6c4f7b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.jakewharton/butterknife/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="a07818a1ecabdb149998823429cce555af4b9cba">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.jakewharton-butterknife-8.4.0_7136ddbe7944dbdb2240cdea2896f7d64ed1dc7c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.3.10/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="ed6b455e3dd7bbf1ff31f8df0b41e2f0d87f3ace">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-answers-1.3.10_22f9852e2df7c44ff896b1838c3bc855bad7dfa5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-storage-common/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="09cf6aa1390f95157e8295d02be7868f568825fc">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-storage-common-10.0.1_ad100b058e1bf6745f80cdfa796a08a4134a68c9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="971509bbe30bb7b971fc1c49d7b23d0d818830ac">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tagmanager-10.0.1_bf0b01d70806e76b7a2cfa362cc84f34549bd5c5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="f6cf557be4dbd0282ea2388633e5378634423226">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-safetynet-10.0.1_c755741e61a939b3d5762176c50318f2085b047e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.6.5/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="02cc9f2e5899415add52bc716602b6b38e7eeb99">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-crashlytics-2.6.5_9d850ceb520767ef4612761e96c8c55556dc56e9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_5e587ed543926602671bf4f62bcd2671924887e8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="27777b3cad3c20b1acab19f6e37fe3e03371bf6e">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-10.0.1_102f98658aee9e6157eb88ae592f9e55820390b4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/24.0.0/jars/libs/internal_impl-24.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b6763651ec29b4c95e7bbe63fc393ffcc8c4c2c5">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.0.0_e4cd3a10533e6e4349e48cd351d8fdc2ef2ec15b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-clearcut/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="1d193729baf37df3d902a423291423a0df7e3779">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-clearcut-10.0.1_6765df34575740c728cb3dc5d330691f5c454501/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="c14f0c89f28cf782e42581ab0aba5f63af39b3d2">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-plus-10.0.1_af653bf6e47aba4246c076e6b587c6964525bc47/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-awareness/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="4385ccc0a88b33d182a836eadb47be55c8eb1107">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-awareness-10.0.1_04944173554b778b9736dffc3b1887039f00f252/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="486371f97baad8e607f332f20fee1d3dd00a731a">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-10.0.1_0a0f8196a40035b910ff48d79edb076acaa3c19e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e871881b36b32e6bfd271a830c6eeb54ff0fc185">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-impl-10.0.1_ebe0b4507492dc7c760b4b853b89b880f20b0ca1/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/palette-v7/24.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="734e80dffea7bd76c18ae256822a124c30d85850">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-palette-v7-24.0.0_8287b02da991b22e7b9ce6d0de2f5495d03d9269/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e4840fe9120d1651ce2c92974dd00c4aa79c0b2b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/24.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b327fbe2fad414bc38cf0ce8f7efe1a38f572837">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-mediarouter-v7-24.0.0_7147f073cf6d1d74a27e52650977c6ebf9cd1e45/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_52b0c114de876449c2933652a1ddada12e07df8a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/OpenPeak/tools/adt-bundle-linux-x86_64/sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.1/support-annotations-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-24.2.1_2463225df853a052e40932ee555e6cbcffd3d39b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.2.1_1daee00993606a2102e0e3dab17908497d4729d4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="8308ed003522a2ee8958311afcc4cfd0470377cd">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-10.0.1_f0222f2a04ac942542fc5c63767eb81f1b0c1a34/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-multidex-1.0.1_7789337a9fec6be6c59b2dde0994d96fe240eec6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="2d5d113b0352ab60946fc44c518cf68fd26cbb79">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-10.0.1_350310fba8daadc9b9c1b8672a02c32ab924f65d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/uk.co.chrisjenx/calligraphy/2.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="ebcb0bcf52fab7c586f39717f7cb8de91748b1b1">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/uk.co.chrisjenx-calligraphy-2.2.0_f6ec92bf44d2dc41a09d84db34e2d951c95f6d6f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="39907d5c8f5902fffef30160ca7447c93b82405c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appinvite-10.0.1_c559df281acf81508ad16e1ec89fa7a13eaf2e13/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="433f4d6aa5f21f19552afe0e6c5eff0fedba73ad">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-10.0.1_852e9731fb362ac56507146a89a943ee820c35d9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-24.2.1_660478dd178fffcf566b2aa902deeda616ddc50b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast-framework/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="df1cb17511aabbb63264a0024949d1e42502a512">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-framework-10.0.1_a9faa1b94d0e17d3d3358e9363c66b23137c9e42/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-storage/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="dd39827d2067497e60e21da48a7926000b6d4b0c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-storage-10.0.1_62091128aec7cc4e0f585b11820b8f29d981e4c5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-config/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="ffc15e965a9e8c28f24455eedd4cac215c45d1fc">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-config-10.0.1_6052421f8076c01cea1961bf9d6aad7d41cc78d3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6116e0e7069de7fc259aac8e08b84f32c2038231">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-10.0.1_ec8d71bbef3f915bc5f76796e00b6f7902ab53bd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-appindexing/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="ae80d328a8548b4610ead6c624bab8c6a6984f5b">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-appindexing-10.0.1_f76690aa3e3c4f590a450de17832984b5ff84f09/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/.gradle/caches/modules-2/files-2.1/com.mcxiaoke.volley/library/1.0.19/a8f23f65fc1e522ee4a1a697ee569901a46741fa/library-1.0.19.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="a8f23f65fc1e522ee4a1a697ee569901a46741fa">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-1.0.19_96896dabb96470f8de6d5552dc6e99e58c7c5e55/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="92c871a22463a247e8a77a9f3fd231c278788c4a">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-panorama-10.0.1_4181d08ba226a6703aa0b280e064677f4fd68d54/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="771267c5b0c7a5b348d3205dcfa1f871af7e0177">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-10.0.1_68a09ade56150cdc4a4dccf604bafbf2e1bfcdd9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-24.2.1_fa8e06ecbaed41c795153b03033dc4c375dd4086/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="f3e51e9c5233b8897f61e08a6a27bc36283c2724">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-places-10.0.1_4402f0953a5162bb6945385f9f81da03c8115e4b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-24.2.1_cc2a10ad641666362804c7e013b04259d32f7370/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="44a694d4095be84c2888764b1f7256b385c030ad">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-location-10.0.1_34efc09714aa5cd73c3eedd2b02b365b68a5e8d6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1.4/31cc0a151d458c4b99476805ede9c8accafb734c/httpcore-4.1.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="31cc0a151d458c4b99476805ede9c8accafb734c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpcore-4.1.4_43ee4e89d796b0dee1df92b4c3091956c8694f21/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_e5f1cd66e7e9d04c8cf36281ed0fe8ff4e2494c4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="408a599ac77cd17fe8e8919326bec617b3d005bd">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wearable-10.0.1_fa3fb165fa3c3e64a7e4c92e99cc56f551a70a4c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife-annotations/8.4.0/ea392375cf9ff59234a82e7928a204215ccc98cd/butterknife-annotations-8.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="ea392375cf9ff59234a82e7928a204215ccc98cd">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.4.0_8e6a7669f7377c192298b61a7eb6a21566ec2036/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.14/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="7ff77725723167163d69439e3fd077bd0899babf">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-crashlytics-core-2.3.14_d108306900ce4ad8b2ea3d665d2deafd1a8f82e5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="25438f55fc6d906a0e72f30b21487541430ede43">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-10.0.1_dfb3bb5de60b16c82fb6fd27708953bb72fc20aa/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager-v4-impl/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="f23ad0f8e58713ff4b55f61c0bbde3830378347c">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tagmanager-v4-impl-10.0.1_282969535b1b24a83f9da8db39fcff6e9c8cbb89/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.2.1_d518ae9813cdc70b1e3e9ce896cca36ba80daa13/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="ba6aa5e69ef31dee57208125323cee958fc67565">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-vision-10.0.1_ecd84edfb66f13602c21959d2897261ed475f637/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.7_e76e4cf0ef88225532b42255085c4c95238a96c9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/exploded-aar/com.google.firebase/firebase-messaging/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="4b17463c814bdc562fb0392fa3494063623a0904">
+        <dex dex="/home/chandrasekhar/lessonpot/src/LessonPot/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-messaging-10.0.1_2eadaae6c0322aba4012c329eb027b6105b758b4/classes.dex" />
+    </item>
+
+</items>

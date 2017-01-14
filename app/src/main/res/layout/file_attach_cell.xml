@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_high">
+
+        <TextView
+            style="@style/title_regular_small"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/lesson_sides_margin"
+            android:text="@string/attachments_txt" />
+
+        <TextView
+            style="@style/clickable_txt_accent_ultra_small"
+            android:layout_alignParentRight="true"
+            android:text="@string/Add_txt" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/header_view_end_margin_right"
+        android:layout_marginTop="@dimen/header_view_end_margin_right">
+
+        <TextView
+            android:id="@+id/ATTACH_NAME_TXT"
+            style="@style/clickable_txt_accent_ultra_small"
+            android:drawableLeft="@drawable/attachicon"
+            android:drawablePadding="@dimen/letter_margin"
+            android:text="Slideshow1.ppt" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/letter_margin"
+            android:layout_toRightOf="@+id/ATTACH_NAME_TXT"
+            android:src="@drawable/deleteicon" />
+
+    </RelativeLayout>
+</LinearLayout>

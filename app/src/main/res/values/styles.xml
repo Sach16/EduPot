@@ -1,0 +1,304 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="drawerArrowStyle">@style/DrawerIcon</item>-->
+    </style>
+
+    <style name="AppTheme.NoActionBar">`
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/black</item>
+    </style>
+
+    <style name="search_card_cell">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/pot_cell_margin</item>
+        <item name="android:layout_marginRight">@dimen/pot_cell_margin</item>
+    </style>
+
+    <style name="circular_imageview">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginTop">@dimen/card_margin_for_image</item>
+        <item name="android:layout_marginBottom">@dimen/card_margin_for_image</item>
+    </style>
+
+    <style name="round_imageview">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_marginTop">@dimen/card_margin_for_image</item>
+        <item name="android:layout_marginBottom">@dimen/card_margin_for_image</item>
+    </style>
+
+    <style name="roman_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:text">@string/lesson_pot_caps</item>
+        <item name="android:textColor">@color/darkPaleGreen</item>
+        <item name="android:textSize">32sp</item>
+        <item name="fontPath">fonts/Timesnew-Roman.ttf</item>
+    </style>
+
+    <style name="title_roman_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/lesson_pot_caps</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">22sp</item>
+        <item name="fontPath">fonts/Timesnew-Roman.ttf</item>
+    </style>
+
+    <style name="title_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/phone_number_verification</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="title_bar_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+
+    <style name="titleboards_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/add_boards_or_classes</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="titleclass_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/add_boards_and_classes</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="small_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+
+    <style name="note_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="note_normal_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="note_nor_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="note_normal_black_bold_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="note_normal_dark_black_bold_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="clickable_txt_blue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="grey_bold_40_txt">
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textColor">@color/greyish_brown_40</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="grey_bold_txt">
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="clickable_txt_Accent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="clickable_txt_grey">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/darkest_grey</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="clickable_txt_accent_small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="clickable_txt_accent_ultra_small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="tv_bold_simple">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">@dimen/accent_txt_size</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+    </style>
+
+    <style name="title_header">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+    </style>
+
+    <style name="title_bold_header">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/text_heading</item>
+        <item name="android:textSize">@dimen/body_size</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+    </style>
+
+    <style name="title_subheader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/sub_text_size</item>
+    </style>
+
+    <style name="title_medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="title_regular_small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sub_text_size</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+    </style>
+
+    <style name="title_regular">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sub_text_size</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+    </style>
+
+    <style name="timer_medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="expand_child_medium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="clikable_warm_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15.6sp</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="clikable_warm_header_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/mid_text_size</item>
+    </style>
+
+    <style name="nav_sub_txt">
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/pot_cell_margin</item>
+        <item name="android:paddingBottom">@dimen/pot_cell_margin</item>
+        <item name="android:drawablePadding">@dimen/text_lay_size</item>
+        <item name="android:textColor">@color/greyish_brown</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="user_nav_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">@dimen/mid_lar_text_size</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

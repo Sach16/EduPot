@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/MAIN_RL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pot_cell_margin"
+        android:layout_marginRight="@dimen/pot_cell_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_med_large"
+            android:gravity="top|left"
+            android:text="@string/add_phone_numbers_txt"
+            android:textColor="@color/text_heading"
+            android:textSize="@dimen/sub_text_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lesson_top_margin_high"
+            android:gravity="top|left"
+            android:text="@string/add_phone_numbers_txt_det"
+            android:textColor="@color/text_heading"
+            android:textSize="@dimen/sub_text_size" />
+
+        <TextView
+            android:id="@+id/BOARD_TXT"
+            style="@style/title_bold_header"
+            android:gravity="center|left"
+            android:layout_marginTop="@dimen/lesson_top_margin_high"
+            android:text="@string/phone_numbers_txt"/>
+        
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/RECYC_PHONE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lesson_top_margin_high"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

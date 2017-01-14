@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/header_view_title"
+        style="@style/title_header"
+        />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/header_view_sub_title"
+        style="@style/title_subheader"
+        />
+
+
+</LinearLayout>

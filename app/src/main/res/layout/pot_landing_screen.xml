@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/REL_LAY"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.PotLandingScreen">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RV_LIST_STU"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/REGISTER_LAY"></android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/NO_DATA_RL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_above="@+id/REGISTER_LAY"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/NO_DATA_IMG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ellipse_1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/layer_1"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/TV_NO_DATA"
+            style="@style/tv_bold_simple"
+            android:text="@string/no_users_yet_det"
+            android:layout_below="@+id/NO_DATA_IMG"/>
+
+        <TextView
+            android:id="@+id/TV_NO_DATA_DESC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:text="@string/users_registered_with_this_device_will_appear_here_det"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/TV_NO_DATA"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/REGISTER_LAY"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true">
+        //TODO : re-apply below code as soon as required
+        <!--android:layout_marginBottom="100dp"        -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pot_cell_margin"
+            android:layout_marginLeft="@dimen/pot_cell_margin"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/REGISTER_NEW_TXT"
+                style="@style/clickable_txt_accent_small"
+                android:layout_gravity="left"
+                android:text="@string/register_txt" />
+
+            <TextView
+                android:id="@+id/ADD_EXISTING_TXT"
+                style="@style/clickable_txt_accent_small"
+                android:layout_gravity="left"
+                android:layout_marginTop="8dp"
+                android:text="@string/add_existing_user_txt" />
+
+            <TextView
+                android:id="@+id/OVERVIEW_TXT"
+                style="@style/clickable_txt_accent_small"
+                android:layout_gravity="left"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/lessonpot_overview" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
