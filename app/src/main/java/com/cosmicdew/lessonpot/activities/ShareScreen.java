@@ -279,6 +279,7 @@ public class ShareScreen extends PotBaseActivity implements RecyclerShareListene
         m_cSelectionItems = new HashMap<>();
         m_cLayoutManager = new LinearLayoutManager(this);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        checkWhereToMap();
 
         //Call api here
         displayProgressBar(-1, "");
@@ -339,6 +340,18 @@ public class ShareScreen extends PotBaseActivity implements RecyclerShareListene
                 break;
         }
 
+    }
+
+    private void checkWhereToMap() {
+        if (m_cLessons.getChapter().getSyllabus().getBoardclass().getIsGeneric()) {
+            mLessFromWhere = PotMacros.OBJ_BOARDCHOICES;
+        } else if (m_cLessons.getChapter().getSyllabus().getIsGeneric()) {
+            mLessFromWhere = PotMacros.OBJ_SYLLABI;
+        } else if (m_cLessons.getChapter().getIsGeneric()) {
+            mLessFromWhere = PotMacros.OBJ_CHAPTERS;
+        } else {
+            mLessFromWhere = PotMacros.OBJ_LESSON;
+        }
     }
 
     @Override

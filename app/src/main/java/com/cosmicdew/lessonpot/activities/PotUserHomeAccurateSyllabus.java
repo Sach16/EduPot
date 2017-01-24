@@ -111,7 +111,7 @@ public class PotUserHomeAccurateSyllabus extends PotBaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.RIGHT_SYLLABUS_HELP_LL:
-                displaySupportDialog(PotMacros.SUPPORT_OPTION, getResources().getString(R.string.support_txt), null, null, false);
+                displaySupportDialog(PotMacros.SUPPORT_OPTION, getResources().getString(R.string.syllabus_help_txt), null, null, false);
                 break;
         }
     }

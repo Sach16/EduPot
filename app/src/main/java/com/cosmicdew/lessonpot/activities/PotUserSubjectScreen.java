@@ -83,8 +83,8 @@ public class PotUserSubjectScreen extends PotBaseActivity {
                     m_cUser.getFirstName(),
                     m_cUser.getLastName(),
                     m_cUser.getRole(),
-                    m_cBoardChoice.getName(),
-                    m_cBoardChoice.getBoardName());
+                    m_cBoardChoice.getBoardclass().getName(),
+                    m_cBoardChoice.getBoardclass().getBoard().getName());
             m_cHeaderTitle.setText(String.format("%s %s", m_cBoardChoice.getBoardclass().getName(),
                     m_cBoardChoice.getBoardclass().getBoard().getName()));
             m_cHeaderSubTitle.setText(lsub);

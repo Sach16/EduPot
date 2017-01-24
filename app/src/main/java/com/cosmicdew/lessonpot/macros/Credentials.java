@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Credentials {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("username")
     @Expose
     private String username;
@@ -24,6 +27,24 @@ public class Credentials {
     @SerializedName("user")
     @Expose
     private Integer users;
+
+    /**
+     *
+     * @return
+     * The id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     *
+     * @param id
+     * The id
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

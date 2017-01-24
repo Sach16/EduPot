@@ -75,6 +75,7 @@ public class PotFirebaseMessagingService extends FirebaseMessagingService{
 //                PotMacros.setNotifyCount(this, Constants.CONNECTION_APPROVED, m_cConnections.getConnectionTo());
                 break;
             case Constants.LESSON_SHARE:
+            case Constants.LESSON_EDIT:
                 lObjIntent = new Intent(this, PotUserHomeScreen.class);
                 m_cLessonShares = (new Gson()).fromJson(lStrObj, LessonShares.class);
                 lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cLessonShares.getToUser()));

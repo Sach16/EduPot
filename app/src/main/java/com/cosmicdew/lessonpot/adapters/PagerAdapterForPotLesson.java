@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeLessonFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeMineFragment;
+import com.cosmicdew.lessonpot.fragments.PotUserHomePublicFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeReceivedFragment;
 import com.cosmicdew.lessonpot.models.BoardChoices;
 import com.cosmicdew.lessonpot.models.Chapters;
@@ -49,12 +50,15 @@ public class PagerAdapterForPotLesson extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
+                m_cObjFragmentBase = PotUserHomePublicFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
                 return m_cObjFragmentBase;
             case 1:
-                m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
+                m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
                 return m_cObjFragmentBase;
             case 2:
+                m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
+                return m_cObjFragmentBase;
+            case 3:
                 m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
                 return m_cObjFragmentBase;
             default:

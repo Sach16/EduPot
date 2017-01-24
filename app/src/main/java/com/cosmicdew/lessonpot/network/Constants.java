@@ -62,7 +62,9 @@ public class Constants {
     public static final String SHARE = "share/";
     public static final String USERFILTER = "userfilter/";
     public static final String CREDENTIALS = "credentials/";
+    public static final String USERDEVICES = "userdevices/";
     public static final String LESSONSHARES = "lessonshares/";
+    public static final String APPCONFIG = "appconfig/";
 
     public static final String PHONE = "phone";
     public static final String OTP = "otp";
@@ -119,6 +121,7 @@ public class Constants {
     public static final String LESSON_SHARE = "lesson:share";
     public static final String LESSON_SHARES_FROM_CONNECTION = "lesson:shares_from_connection";
     public static final String LESSON_SHARES_FROM_SYLLABUS = "lesson:shares_from_syllabus";
+    public static final String LESSON_EDIT = "lesson:edit";
 
     public static String apiMethodEx(String apiMethod, String uuid) {
         StringBuffer lBuf = new StringBuffer();

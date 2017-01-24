@@ -40,15 +40,20 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/SEPERATOR_V"
         android:layout_width="match_parent"
         android:layout_height="0.1dp"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/margin_med_large"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_below="@+id/NAMING_LL"
         android:background="@color/lighter_grey" />
 
     <LinearLayout
+        android:id="@+id/MENU_LL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/USER_CIV_CELL"
+        android:layout_below="@+id/SEPERATOR_V"
         android:orientation="vertical">
 
         <TextView
@@ -66,20 +71,59 @@
         <TextView
             android:id="@+id/NAV_EDIT_PROFILE"
             style="@style/nav_sub_txt"
-            android:text="My Account"
-            android:drawableLeft="@drawable/editusericon" />
-
-        <TextView
-            android:id="@+id/NAV_SUPPORT"
-            style="@style/nav_sub_txt"
-            android:drawableLeft="@drawable/messageicon"
-            android:text="Support" />
+            android:drawableLeft="@drawable/editusericon"
+            android:text="My Account" />
 
         <TextView
             android:id="@+id/NAV_SIGN_OUT"
             style="@style/nav_sub_txt"
             android:drawableLeft="@drawable/logouticon"
             android:text="Switch Account" />
+
     </LinearLayout>
+
+    <View
+        android:id="@+id/SEPERATOR_V2"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_below="@+id/MENU_LL"
+        android:layout_margin="@dimen/small_margin"
+        android:background="@color/lighter_grey" />
+
+    <LinearLayout
+        android:id="@+id/MENU_LL2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SEPERATOR_V2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/NAV_HELP"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/helpicon"
+            android:text="Help" />
+
+        <TextView
+            android:id="@+id/NAV_SUPPORT"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/messageicon"
+            android:text="Request Support" />
+
+        <TextView
+            android:id="@+id/NAV_SEND_FEEDBACK"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/feedbackicon"
+            android:text="Send Feedback" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/SEPERATOR_V3"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_below="@+id/MENU_LL2"
+        android:layout_margin="@dimen/small_margin"
+        android:background="@color/lighter_grey" />
+
 
 </RelativeLayout>

@@ -181,23 +181,26 @@ public class CustomRecyclerAdapterForSubjects extends RecyclerView.Adapter{
                 e.printStackTrace();
             }
 
-            try {
+            /*try {
                 ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).distinguisherTxt
                         .setText(getString(m_cObjSyllabi.get(position).getDistinguisher()));
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
+
+            StringBuffer lBuffer = new StringBuffer();
+            if (m_cObjSyllabi.get(position).getDistinguisher().length() > 0)
+                lBuffer.append(m_cObjSyllabi.get(position).getDistinguisher() + ": ");
+            if (m_cObjSyllabi.get(position).getIsGeneric())
+                lBuffer.append(String.format("%d Lessons",
+                        m_cObjSyllabi.get(position).getMessageCount()));
+            else
+                lBuffer.append(String.format("%d Chapters * %d Lessons", m_cObjSyllabi.get(position).getChapterCount(),
+                        m_cObjSyllabi.get(position).getLessonCount()));
 
             try {
-                if (m_cObjSyllabi.get(position).getIsGeneric()){
-                    ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).chapterRecordingTxt
-                            .setText(String.format("%d Lessons",
-                                    m_cObjSyllabi.get(position).getMessageCount()));
-                }else {
-                    ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).chapterRecordingTxt
-                            .setText(String.format("%d Chapters * %d Lessons", m_cObjSyllabi.get(position).getChapterCount(),
-                                    m_cObjSyllabi.get(position).getLessonCount()));
-                }
+                ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).chapterRecordingTxt
+                        .setText(lBuffer.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }

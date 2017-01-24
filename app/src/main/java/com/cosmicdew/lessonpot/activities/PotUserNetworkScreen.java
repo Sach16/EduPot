@@ -1,6 +1,7 @@
 package com.cosmicdew.lessonpot.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -184,6 +185,28 @@ public class PotUserNetworkScreen extends PotBaseActivity implements NavigationV
                     m_cDrawerLayout.closeDrawer(GravityCompat.START);
                     displaySupportDialog(PotMacros.SUPPORT_OPTION, getResources().getString(R.string.support_txt), null, null, false);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            }
+        });
+        TextView lFeedback = (TextView) m_cView.findViewById(R.id.NAV_SEND_FEEDBACK);
+        lFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != m_cDrawerLayout) {
+                    m_cDrawerLayout.closeDrawer(GravityCompat.START);
+                    displaySupportDialog(PotMacros.SUPPORT_OPTION, getResources().getString(R.string.send_feedback_txt), null, null, false);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            }
+        });
+        TextView lHelp = (TextView) m_cView.findViewById(R.id.NAV_HELP);
+        lHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != m_cDrawerLayout) {
+                    m_cDrawerLayout.closeDrawer(GravityCompat.START);
+                    Intent lObjIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.OVERVIEW));
+                    startActivity(lObjIntent);
                 }
             }
         });

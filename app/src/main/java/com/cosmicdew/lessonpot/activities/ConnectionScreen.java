@@ -1,7 +1,6 @@
 package com.cosmicdew.lessonpot.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -169,9 +168,15 @@ public class ConnectionScreen extends PotBaseActivity {
                 break;
             case MESSAGE_INFO:
                 if ((boolean)pObjMessage.obj) {
-                    Uri uri = Uri.parse("sms:"/* + "8892348234"*/);
-                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                    it.putExtra("sms_body", "The sms text");
+//                    Uri uri = Uri.parse("sms:" + etPhoneNum.getText().toString().trim());
+                    Intent it = new Intent(Intent.ACTION_VIEW);
+                    it.setType("vnd.android-dir/mms-sms");
+                    it.putExtra("address", etPhoneNum.getText().toString().trim());
+                    it.putExtra("sms_body", String.format("%s \n\n%s %s \n\n%s",
+                            getResources().getString(R.string.sms1_txt),
+                            getResources().getString(R.string.sms2_txt),
+                            PotMacros.GOOGLE_PLAY_URL,
+                            getResources().getString(R.string.sms3_txt)));
                     startActivity(it);
                 }
                 break;
@@ -239,7 +244,7 @@ public class ConnectionScreen extends PotBaseActivity {
                             lParams.put(Constants.PHONE, m_cCountryCodetxt.getText().toString().trim() + etPhoneNum.getText().toString().trim());
                         if (!etUserId.getText().toString().trim().isEmpty())
                             lParams.put(Constants.USERNAME, etUserId.getText().toString().trim());
-                        RequestManager.getInstance(this).placeRequest(Constants.USERS, UsersAll.class, this, null, lParams, null, false);
+                        RequestManager.getInstance(this).placeRequest(Constants.USERS, UsersAll.class, this, etUserId.getText().toString().trim(), lParams, null, false);
                     }
                 }
                 break;
@@ -312,8 +317,12 @@ public class ConnectionScreen extends PotBaseActivity {
                     }
                 }else {
                     if (null != lUsersAll && lUsersAll.getUsers().size() == 0) {
-                        displayYesOrNoAlert(MESSAGE_INFO, getResources().getString(R.string.alert_txt),
-                                getResources().getString(R.string.sms_info_txt));
+                        if (((String) refObj).length() > 0)
+                            displayAlert(-1, getResources().getString(R.string.alert_txt),
+                                    getResources().getString(R.string.account_id_doesnt_exist_txt));
+                        else
+                            displayYesOrNoAlert(MESSAGE_INFO, getResources().getString(R.string.alert_txt),
+                                    getResources().getString(R.string.sms_info_txt));
                     } else if (null != lUsersAll && lUsersAll.getUsers().size() > 1) {
                         displayAlert(-1, getResources().getString(R.string.alert_txt),
                                 getResources().getString(R.string.insufficient_info_txt));

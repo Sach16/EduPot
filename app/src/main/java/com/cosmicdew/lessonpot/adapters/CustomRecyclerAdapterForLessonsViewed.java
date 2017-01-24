@@ -189,11 +189,11 @@ public class CustomRecyclerAdapterForLessonsViewed extends RecyclerView.Adapter{
             try {
                 String[] lTimer = PotMacros.getFormatedTimer(m_cObjLessons.get(position).getLength().getLengthSum()).split(":");
                 ((CustomRecyclerAdapterForLessonsViewed.DataObjectHolder) holder).timeStamp
-                        .setText(String.format("%s min %s secs", lTimer[0], lTimer[1]));
+                        .setText(String.format("%s m %s s", lTimer[0], lTimer[1]));
             } catch (Exception e) {
                 e.printStackTrace();
                 ((CustomRecyclerAdapterForLessonsViewed.DataObjectHolder) holder).timeStamp
-                        .setText("0 min 0 secs");
+                        .setText("0 m 0 s");
             }
 
             try {
@@ -219,9 +219,9 @@ public class CustomRecyclerAdapterForLessonsViewed extends RecyclerView.Adapter{
 
             try {
                 ((CustomRecyclerAdapterForLessonsViewed.DataObjectHolder) holder).authorNameTxt
-                        .setText(m_cObjLessons.get(position).getOwner().getFirstName()+
+                        .setText(m_cObjLessonViews.get(position).getSource().getFirstName()+
                                 " "+
-                                m_cObjLessons.get(position).getOwner().getLastName());
+                                m_cObjLessonViews.get(position).getSource().getLastName());
             } catch (Exception e) {
                 e.printStackTrace();
             }

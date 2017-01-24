@@ -2,12 +2,15 @@ package com.cosmicdew.lessonpot.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -72,6 +75,8 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
     private Syllabi m_cSyllabi;
     private Chapters m_cChapters;
 
+    private RemoveLessonReceiver mRemvReceiver;
+
     private Dialog m_cObjDialog;
     private String mLessFromWhere;
 
@@ -120,6 +125,10 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
 
         m_cObjMainActivity.m_cObjFragmentBase = PotUserHomeLessonFragment.this;
 
+        mRemvReceiver = new RemoveLessonReceiver();
+        LocalBroadcastManager.getInstance(m_cObjMainActivity).registerReceiver(mRemvReceiver,
+                new IntentFilter(PotMacros.REMOVELESSON_REFRESH_CONSTANT_VIEWED));
+
         return m_cObjMainView;
     }
 
@@ -128,6 +137,18 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
         super.onResume();
         init();
     }
+
+    private class RemoveLessonReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (null != m_cRecycClassesAdapt) {
+                m_cLessonsList.clear();
+                m_cRecycClassesAdapt.notifyDataSetChanged();
+                init();
+            }
+        }
+    }
+
 
     private void init() {
         m_cPos = getArguments().getInt("Position", 0);
@@ -216,6 +237,16 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
                     case R.id.action_delete:
                         callDeleteLessonApi((LessonViews)pObjMessage.obj);
                         break;
+                    case R.id.action_remove:
+                        m_cObjMainActivity.displayProgressBar(-1, "");
+                        placeDeleteRequest(Constants.LESSONS +
+                                        ((LessonViews) pObjMessage.obj).getLesson().getId() +
+                                        "/" +
+                                        Constants.SOURCES +
+                                        ((LessonViews) pObjMessage.obj).getSource().getId() +
+                                        "/",
+                                Attachments.class, null, null, null, true);
+                        break;
                     case R.id.action_add_syllabus:
                         Lessons lessons = ((LessonViews) pObjMessage.obj).getLesson();
                         m_cObjMainActivity.displayProgressBar(-1, "");
@@ -257,7 +288,17 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (response instanceof Syllabi){
+                if (apiMethod.contains(Constants.SOURCES)){
+                    if (response == null) {
+                        m_cObjMainActivity.hideDialog();
+                        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(m_cObjMainActivity);
+                        Intent i = new Intent(PotMacros.REMOVELESSON_REFRESH_CONSTANT_RECEIVED);
+                        lbm.sendBroadcast(i);
+                        m_cLessonsList.clear();
+                        m_cRecycClassesAdapt.notifyDataSetChanged();
+                        init();
+                    }
+                } else if (response instanceof Syllabi){
                     Syllabi lSyllabi = (Syllabi) response;
                     if (lSyllabi != null) {
                         m_cObjMainActivity.hideDialog();
@@ -302,9 +343,13 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
                                 m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
                             }
                         } else {
-                            if (m_cLessonsList.size() > 0) {
-                                m_cLessonsList.clear();
-                                m_cRecycClassesAdapt.notifyDataSetChanged();
+                            if (m_cLessonsList.size() >= 0) {
+                                if (null != m_cRecycClassesAdapt) {
+                                    m_cLessonsList.clear();
+                                    m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsViewed(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                                            m_cSyllabi, m_cChapters, m_cLessonsList, null, lLessonViewsAll.getLessonViews(), this));
+                                    m_cRecycClasses.invalidate();
+                                }
                             }
                         }
                         m_cObjMainActivity.hideDialog();
@@ -321,7 +366,8 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (apiMethod.contains(Constants.BOARDCLASSES) ||
+                if (apiMethod.contains(Constants.SOURCES) ||
+                        apiMethod.contains(Constants.BOARDCLASSES) ||
                         apiMethod.contains(Constants.POST) ||
                         apiMethod.contains(Constants.VIEWS) ||
                         apiMethod.contains(Constants.CHAPTERS) ||

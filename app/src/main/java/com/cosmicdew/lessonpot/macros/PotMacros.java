@@ -74,6 +74,12 @@ public class PotMacros {
     public static final int NOTIFICATION_NO_NETWORK_CONNECTION_RETRY = 1002;
 
     public static final String SUPPORTWIZARD_USERNAME = "supportwizard";
+    public static final String SYLLABUSWIZARD_USERNAME = "syllabuswizard";
+
+    public static final String REMOVELESSON_REFRESH_CONSTANT_VIEWED = "REMOVELESSON_REFRESH_CONSTANT_VIEWED";
+    public static final String REMOVELESSON_REFRESH_CONSTANT_RECEIVED = "REMOVELESSON_REFRESH_CONSTANT_RECEIVED";
+
+    public static final int APPCONFIG = 1612;
 
     public static final int LESSONPOSITION = 1342;
     public static final int LESSON_FILTER = 1343;
@@ -81,6 +87,7 @@ public class PotMacros {
     public static final String TERMS_AND_CONDITION_URL = "http://www.lessonpot.com/terms";
     public static final String OVERVIEW = "http://www.lessonpot.com/help";
     public static final String PRIVACY_POLICY_URL = "http://www.lessonpot.com/policies";
+    public static final String GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=com.cosmicdew.lessonpot";
     public static final String HTTP_PREFIX = "http";
 
     public static final String REFRESH_NOTIFY_CONSTANT = "REFRESH_NOTIFY_CONSTANT";
@@ -94,6 +101,7 @@ public class PotMacros {
     public static final int LESSON_ACTION_DOWNLOADED = 9856;
     public static final int SUPPORT_OPTION = 3700;
 
+    public static final String OBJ_REGISTERATION = "OBJ_REGISTERATION";
     public static final String OBJ_USER = "OBJ_USER";
     public static final String OBJ_BOARDCHOICES = "OBJ_BOARDCHOICES";
     public static final String OBJ_SYLLABI = "OBJ_SYLLABI";
@@ -106,6 +114,8 @@ public class PotMacros {
     public static final String OBJ_LESSONVIEWS = "OBJ_LESSONVIEWS";
     public static final String LESSON_HEADER = "LESSON_HEADER";
     public static final String LESSON_INDEX_PAGE = "LESSON_INDEX_PAGE";
+
+    public static final String OBJ_USER_MAIN = "OBJ_USER_MAIN";
 
     public static final String NOTIFICATION = "NOTIFICATION";
 
@@ -190,7 +200,7 @@ public class PotMacros {
 
     public static final String PASSWORD_MIN_8_ALPHA_1_NUM_1 = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
 
-    public static final String USEERNAME_MIN_8_ALPHA_1_NUM_1 = "^[a-zA-Z0-9]{6,}$";
+    public static final String USEERNAME_MIN_6 = "^[a-zA-Z0-9]{6,}$";
 
     public static final String INCLUDE = "include";
     public static final String PAGINATION_PAGE = "page";
@@ -292,7 +302,7 @@ public class PotMacros {
 
     public static int getRandomColor(){
         Random rnd = new Random();
-        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        int color = Color.argb(255, rnd.nextInt(150), rnd.nextInt(150), rnd.nextInt(150));
         return color;
     }
 
@@ -606,6 +616,7 @@ public class PotMacros {
                     lNotifyDS.setLessonShare(0);
                     break;
                 case Constants.LESSON_SHARE:
+                case Constants.LESSON_EDIT:
                     lNotifyDS.setConnectionRequests(0);
                     lNotifyDS.setConnectionApproved(0);
                     lNotifyDS.setLessonShare(1);
@@ -628,6 +639,7 @@ public class PotMacros {
                     lNotifyDS.setConnectionApproved(lNotifyDS.getConnectionApproved() + 1);
                     break;
                 case Constants.LESSON_SHARE:
+                case Constants.LESSON_EDIT:
                     lNotifyDS.setLessonShare(lNotifyDS.getLessonShare() + 1);
                     lNotifyDS.getLessonShareIds().add(pNotificationId);
                     lNotifyDS.setLessonShareIds(lNotifyDS.getLessonShareIds());
@@ -657,6 +669,7 @@ public class PotMacros {
                     lNotifyDS.getConnectionRequestsIds().clear();
                     break;
                 case Constants.LESSON_SHARE:
+                case Constants.LESSON_EDIT:
                     lNotifyDS.setLessonShare(0);
                     for (Integer lInteger : lNotifyDS.getLessonShareIds()){
                         NotificationManager notificationManager = (NotificationManager) pContext.getSystemService(Context.NOTIFICATION_SERVICE);

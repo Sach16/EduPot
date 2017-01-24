@@ -222,7 +222,7 @@
                 style="@style/title_regular"
                 android:layout_marginTop="@dimen/lesson_sides_margin"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:text="@string/dummy_txt" />
 
             <TextView

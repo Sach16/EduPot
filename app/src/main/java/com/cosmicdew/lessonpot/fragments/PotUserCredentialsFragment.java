@@ -4,7 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -29,13 +33,14 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import butterknife.Optional;
 
 /**
  * Created by S.K. Pissay on 29/12/16.
  */
 
-public class PotUserCredentialsFragment extends PotFragmentBaseClass {
+public class PotUserCredentialsFragment extends PotFragmentBaseClass implements View.OnTouchListener{
 
     @Nullable
     @BindView(R.id.MAIN_RL)
@@ -51,6 +56,12 @@ public class PotUserCredentialsFragment extends PotFragmentBaseClass {
 
     private int m_cPos = -1;
     private Users m_cUser;
+
+    private boolean m_cIsEditMode;
+    private boolean m_cIsPassChanged;
+    private boolean m_cIsAccIdChanged;
+    private boolean m_cIsAccIdTouched;
+    private boolean m_cIsPassTouched;
 
     private static final String RECEIVE_CREDENTIALS = "RECEIVE_CREDENTIALS";
 
@@ -104,6 +115,47 @@ public class PotUserCredentialsFragment extends PotFragmentBaseClass {
     private void init() {
         m_cPos = getArguments().getInt("Position");
         m_cUser = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_USER), Users.class);
+        m_cIsAccIdChanged = false;
+        m_cIsPassChanged = false;
+        m_cIsAccIdTouched = false;
+        m_cIsPassTouched = false;
+        etUserId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.v("Text", "b4");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.v("Text", "on");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Log.v("Text", "af");
+                if (m_cIsAccIdTouched)
+                    if (m_cIsEditMode)
+                        m_cIsAccIdChanged = true;
+            }
+        });
+        etPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (m_cIsPassTouched)
+                    if (m_cIsEditMode)
+                        m_cIsPassChanged = true;
+            }
+        });
 
 
         //Call credentials api
@@ -122,17 +174,42 @@ public class PotUserCredentialsFragment extends PotFragmentBaseClass {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.DONE_TXT:
-                if (validate()) {
-                    m_cObjMainActivity.hideSoftKeyboard();
-                    JSONObject lJO = new JSONObject();
-                    try {
-                        lJO.put(Constants.USERNAME, etUserId.getText().toString().trim());
-                        lJO.put(Constants.PASSWORD, etPass.getText().toString().trim());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                if (m_cIsEditMode) {
+                    if (m_cIsAccIdChanged && m_cIsPassChanged) {
+                        if (validateBoth()) {
+                            callBoth();
+                        }
+                    } else if (m_cIsAccIdChanged) {
+                        if (validateAccId()) {
+                            m_cObjMainActivity.hideSoftKeyboard();
+                            JSONObject lJO = new JSONObject();
+                            try {
+                                lJO.put(Constants.USERNAME, etUserId.getText().toString().trim());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            m_cObjMainActivity.displayProgressBar(-1, "");
+                            placeUserRequest(Constants.CREDENTIALS, Credentials.class, null, null, lJO.toString(), true);
+                        }
+                    } else if (m_cIsPassChanged) {
+                        if (validatePass()) {
+                            m_cObjMainActivity.hideSoftKeyboard();
+                            JSONObject lJO = new JSONObject();
+                            try {
+                                lJO.put(Constants.PASSWORD, etPass.getText().toString().trim());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            m_cObjMainActivity.displayProgressBar(-1, "");
+                            placeUserRequest(Constants.CREDENTIALS, Credentials.class, null, null, lJO.toString(), true);
+                        }
+                    } else {
+                        onBackPressed();
                     }
-                    m_cObjMainActivity.displayProgressBar(-1, "");
-                    placeUserRequest(Constants.CREDENTIALS, Credentials.class, null, null, lJO.toString(), true);
+                } else {
+                    if (validateBoth()) {
+                        callBoth();
+                    }
                 }
                 break;
             case R.id.CANCEL_TXT:
@@ -141,20 +218,65 @@ public class PotUserCredentialsFragment extends PotFragmentBaseClass {
         }
     }
 
-    private boolean validate() {
+    private void callBoth() {
+        m_cObjMainActivity.hideSoftKeyboard();
+        JSONObject lJO = new JSONObject();
+        try {
+            lJO.put(Constants.USERNAME, etUserId.getText().toString().trim());
+            lJO.put(Constants.PASSWORD, etPass.getText().toString().trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        m_cObjMainActivity.displayProgressBar(-1, "");
+        placeUserRequest(Constants.CREDENTIALS, Credentials.class, null, null, lJO.toString(), true);
+    }
+
+    private boolean validateBoth() {
         boolean lRetVal = false;
         String lUserId = etUserId.getText().toString().trim();
         String lPass = etPass.getText().toString().trim();
         if (lUserId.isEmpty()) {
-            m_cObjMainActivity.displaySnack(m_cRelL, "Enter UserId");
+            m_cObjMainActivity.displaySnack(m_cRelL, "Enter Account Id");
             return false;
-        }  else if (!m_cObjMainActivity.isUsername(lUserId)) {
-            m_cObjMainActivity.displaySnack(m_cRelL, "UserId : minimum 6 characters at least 1 Alphabet and 1 Number");
+        } else if (!m_cObjMainActivity.isUsername(lUserId)) {
+            m_cObjMainActivity.displaySnack(m_cRelL, "Account Id : minimum 6 characters");
             return false;
         } else if (lPass.isEmpty()) {
             m_cObjMainActivity.displaySnack(m_cRelL, "Enter Password");
             return false;
-        }else if (!m_cObjMainActivity.isPassword(lPass)) {
+        } else if (!m_cObjMainActivity.isPassword(lPass)) {
+            m_cObjMainActivity.displaySnack(m_cRelL, "Password : minimum 8 characters at least 1 Alphabet and 1 Number");
+            return false;
+        } else {
+            lRetVal = true;
+        }
+        return lRetVal;
+    }
+
+    private boolean validateAccId() {
+        boolean lRetVal = false;
+        String lUserId = etUserId.getText().toString().trim();
+        String lPass = etPass.getText().toString().trim();
+        if (lUserId.isEmpty()) {
+            m_cObjMainActivity.displaySnack(m_cRelL, "Enter Account Id");
+            return false;
+        } else if (!m_cObjMainActivity.isUsername(lUserId)) {
+            m_cObjMainActivity.displaySnack(m_cRelL, "Account Id : minimum 6 characters");
+            return false;
+        } else {
+            lRetVal = true;
+        }
+        return lRetVal;
+    }
+
+    private boolean validatePass() {
+        boolean lRetVal = false;
+        String lUserId = etUserId.getText().toString().trim();
+        String lPass = etPass.getText().toString().trim();
+        if (lPass.isEmpty()) {
+            m_cObjMainActivity.displaySnack(m_cRelL, "Enter Password");
+            return false;
+        } else if (!m_cObjMainActivity.isPassword(lPass)) {
             m_cObjMainActivity.displaySnack(m_cRelL, "Password : minimum 8 characters at least 1 Alphabet and 1 Number");
             return false;
         } else {
@@ -179,7 +301,10 @@ public class PotUserCredentialsFragment extends PotFragmentBaseClass {
                     UsersAll lUsersAll = (UsersAll) response;
                     if (null != lUsersAll && lUsersAll.getUsers().size() > 0) {
                         etUserId.setText(lUsersAll.getUsers().get(0).getUsername());
-                        etPass.setText(lUsersAll.getUsers().get(0).getPassword());
+                        if (lUsersAll.getUsers().get(0).getUsername().length() > 0) {
+                            etPass.setHint("********");
+                            m_cIsEditMode = true;
+                        }
                     }
                 }
                 break;
@@ -213,5 +338,19 @@ public class PotUserCredentialsFragment extends PotFragmentBaseClass {
 
     public int getPos() {
         return m_cPos;
+    }
+
+    @Optional
+    @OnTouch({R.id.PASS_EDIT, R.id.USER_ID_EDIT})
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId()){
+            case R.id.USER_ID_EDIT:
+                m_cIsAccIdTouched = true;
+                break;
+            case R.id.PASS_EDIT:
+                m_cIsPassTouched = true;
+                break;
+        }
+        return false;
     }
 }

@@ -471,6 +471,23 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 callDeleteLessonApi();
                 return true;
             case R.id.action_remove:
+                displayProgressBar(-1, "");
+                int lSourceId = -1;
+                switch (mLessFromWhereWchTab) {
+                    case PotMacros.OBJ_LESSON_RECEIVED_TAB:
+                        lSourceId = m_cLessonShares.getFromUser().getId();
+                        break;
+                    case PotMacros.OBJ_LESSON_VIEWED_TAB:
+                        lSourceId = m_cLessonViews.getSource().getId();
+                        break;
+                }
+                RequestManager.getInstance(this).placeDeleteRequest(Constants.LESSONS +
+                                m_cLessons.getId() +
+                                "/" +
+                                Constants.SOURCES +
+                                lSourceId +
+                                "/",
+                        Attachments.class, this, null, null, null, true);
                 return true;
             case R.id.action_add_syllabus:
                 displayProgressBar(-1, "");
@@ -687,9 +704,9 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 break;
             case R.id.IMAGES_TITLE_TXT:
                 if (m_cLessType == PotMacros.OBJ_LESSON_VIEW)
-                    displayCommentDialog(v.getId(), getResources().getString(R.string.comment_txt), mComment, true);
+                    displayCommentDialog(v.getId(), getResources().getString(R.string.notes_txt), mComment, true);
                 else
-                    displayCommentDialog(v.getId(), getResources().getString(R.string.comment_txt), mComment, false);
+                    displayCommentDialog(v.getId(), getResources().getString(R.string.notes_txt), mComment, false);
                 break;
             case R.id.CANCEL_LESSON_TXT:
                 onBackPressed();
@@ -712,7 +729,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         case PotMacros.OBJ_BOARDCHOICES:
                             RequestManager.getInstance(this).placePutRequest(Constants.LESSONS
                                             +
-                                            m_cLessons.getId() +
+                                            mLessonID +
                                             "/",
                                     Lessons.class, this, null, null, lJO.toString(), true);
 
@@ -722,7 +739,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                                             m_cBoardChoice.getBoardclass().getId() +
                                             "/" +
                                             Constants.LESSONS +
-                                            m_cLessons.getId() +
+                                            mLessonID +
                                             "/",
                                     Lessons.class, this, null, null, lJO.toString(), true);
 
@@ -732,7 +749,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                                             m_cSyllabi.getId() +
                                             "/" +
                                             Constants.LESSONS +
-                                            m_cLessons.getId() +
+                                            mLessonID +
                                             "/",
                                     Lessons.class, this, null, null, lJO.toString(), true);
                             break;
@@ -741,7 +758,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                                             m_cChapters.getId() +
                                             "/" +
                                             Constants.LESSONS +
-                                            m_cLessons.getId() +
+                                            mLessonID +
                                             "/",
                                     Lessons.class, this, null, null, lJO.toString(), true);
                             break;
@@ -1234,7 +1251,12 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (response instanceof Syllabi){
+                if (apiMethod.contains(Constants.SOURCES)){
+                    if (response == null) {
+                        hideDialog();
+                        onBackPressed();
+                    }
+                } else if (response instanceof Syllabi){
                     Syllabi lSyllabi = (Syllabi) response;
                     if (lSyllabi != null) {
                         hideDialog();
@@ -1263,9 +1285,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     if (response == null || response instanceof Attachments) {
 //                        Attachments lAttachments = (Attachments) response;
                         //check only size, coz lAttachments is null when deleted
-                        if (m_cAttachList.size() > 0)
+                        m_cAttachList.remove((String) refObj);
+                        if (m_cAttachList.size() > 0) {
                             callAttachmentsApi();
-                        else {
+                        }else {
                             hideDialog();
                             navigate();
                         }
@@ -1389,6 +1412,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoice));
             lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
             lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(m_cChapters));
+            lObjIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(lObjIntent);
             finish();
         }else {
@@ -1414,7 +1438,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
         if (m_cAttachList.size() > 0) {
             if (m_cAttachList.containsKey(PotMacros.LESSON_AUDIO)) {
                 if (((Attachments) m_cAttachList.get(PotMacros.LESSON_AUDIO)).getIsDeleted()) {
-                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_AUDIO)).getId());
+                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_AUDIO)).getId(), PotMacros.LESSON_AUDIO);
                 } else {
                     if (m_cAudioUrl == null) {
                         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -1428,7 +1452,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         RequestManager.getInstance(this).placeMultiPartRequest(Constants.LESSONS +
                                         mLessonID +
                                         "/" +
-                                        Constants.ATTACHMENTS, Attachments.class, this, null, lParams,
+                                        Constants.ATTACHMENTS, Attachments.class, this, PotMacros.LESSON_AUDIO, lParams,
                                 new File(PotMacros.getAudioFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_AUDIO)).getAttachment()),
                                 Constants.ATTACHMENT);
                     } else {
@@ -1436,10 +1460,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         callAttachmentsApi();
                     }
                 }
-                m_cAttachList.remove(PotMacros.LESSON_AUDIO);
+//                m_cAttachList.remove(PotMacros.LESSON_AUDIO);
             } else if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_1)) {
                 if (((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getIsDeleted()) {
-                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getId());
+                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getId(), PotMacros.LESSON_IMG_1);
                 } else {
                     if ((new File(PotMacros.getImageFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getAttachment()).exists())) {
                         HashMap<String, String> lParams = new HashMap<>();
@@ -1448,7 +1472,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         RequestManager.getInstance(this).placeMultiPartRequest(Constants.LESSONS +
                                         mLessonID +
                                         "/" +
-                                        Constants.ATTACHMENTS, Attachments.class, this, null, lParams,
+                                        Constants.ATTACHMENTS, Attachments.class, this, PotMacros.LESSON_IMG_1, lParams,
                                 new File(PotMacros.getImageFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getAttachment()),
                                 Constants.ATTACHMENT);
                     } else {
@@ -1456,10 +1480,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         callAttachmentsApi();
                     }
                 }
-                m_cAttachList.remove(PotMacros.LESSON_IMG_1);
+//                m_cAttachList.remove(PotMacros.LESSON_IMG_1);
             } else if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_2)) {
                 if (((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getIsDeleted()) {
-                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getId());
+                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getId(), PotMacros.LESSON_IMG_2);
                 } else {
                     if ((new File(PotMacros.getImageFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getAttachment()).exists())) {
                         HashMap<String, String> lParams = new HashMap<>();
@@ -1468,7 +1492,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         RequestManager.getInstance(this).placeMultiPartRequest(Constants.LESSONS +
                                         mLessonID +
                                         "/" +
-                                        Constants.ATTACHMENTS, Attachments.class, this, null, lParams,
+                                        Constants.ATTACHMENTS, Attachments.class, this, PotMacros.LESSON_IMG_2, lParams,
                                 new File(PotMacros.getImageFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getAttachment()),
                                 Constants.ATTACHMENT);
                     } else {
@@ -1476,10 +1500,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         callAttachmentsApi();
                     }
                 }
-                m_cAttachList.remove(PotMacros.LESSON_IMG_2);
+//                m_cAttachList.remove(PotMacros.LESSON_IMG_2);
             } else if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_3)) {
                 if (((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getIsDeleted()) {
-                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getId());
+                    callDeleteAttachmentApi(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getId(), PotMacros.LESSON_IMG_3);
                 } else {
                     if ((new File(PotMacros.getImageFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getAttachment()).exists())) {
                         HashMap<String, String> lParams = new HashMap<>();
@@ -1488,7 +1512,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         RequestManager.getInstance(this).placeMultiPartRequest(Constants.LESSONS +
                                         mLessonID +
                                         "/" +
-                                        Constants.ATTACHMENTS, Attachments.class, this, null, lParams,
+                                        Constants.ATTACHMENTS, Attachments.class, this, PotMacros.LESSON_IMG_3, lParams,
                                 new File(PotMacros.getImageFilePath(this), ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getAttachment()),
                                 Constants.ATTACHMENT);
                     } else {
@@ -1496,14 +1520,14 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         callAttachmentsApi();
                     }
                 }
-                m_cAttachList.remove(PotMacros.LESSON_IMG_3);
+//                m_cAttachList.remove(PotMacros.LESSON_IMG_3);
             }
         }else {
             navigate();
         }
     }
 
-    private void callDeleteAttachmentApi(Integer pAttachmentId) {
+    private void callDeleteAttachmentApi(Integer pAttachmentId, String pAttachmentType) {
         displayProgressBar(-1, "");
         RequestManager.getInstance(this).placeDeleteRequest(Constants.LESSONS +
                         mLessonID +
@@ -1511,7 +1535,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         Constants.ATTACHMENTS +
                         pAttachmentId +
                         "/",
-                Attachments.class, this, null, null, null, true);
+                Attachments.class, this, pAttachmentType, null, null, true);
     }
 
     private void callDeleteLessonApi() {
@@ -1527,7 +1551,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
 
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
-        if (apiMethod.contains(Constants.BOARDCLASSES) ||
+        if (apiMethod.contains(Constants.SOURCES) ||
+                apiMethod.contains(Constants.BOARDCLASSES) ||
                 apiMethod.contains(Constants.POST) ||
                 apiMethod.contains(Constants.CHAPTERS) ||
                 apiMethod.contains(Constants.ATTACHMENTS) ||

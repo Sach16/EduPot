@@ -72,6 +72,8 @@ public class PotAdEdBoardFragment extends PotFragmentBaseClass {
 
     private int m_cPos = -1;
 
+    private boolean isOnBackPressCalles = false;
+
     ArrayList<String> m_cClassList;
     HashMap<String, Integer> m_cClassDic;
     ArrayList<String> m_cBoardsList;
@@ -354,8 +356,11 @@ public class PotAdEdBoardFragment extends PotFragmentBaseClass {
     }
 
     public void onBackPressed() {
-        m_cRefreshListener.resetFragment(false);
-        m_cObjMainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
+        if (!isOnBackPressCalles) {
+            m_cRefreshListener.resetFragment(false);
+            m_cObjMainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
+            isOnBackPressCalles = !isOnBackPressCalles;
+        }
     }
 
     public int getPos() {

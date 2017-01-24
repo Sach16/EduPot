@@ -144,7 +144,6 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
     @Override
     protected void onResume() {
         super.onResume();
-        init();
     }
 
     private void init() {
@@ -292,6 +291,7 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             R.id.CLASS_BOARD_TXT_RL,
             R.id.USER_CRED_TXT_RL,
             R.id.REG_PH_TXT_RL,
+            R.id.SETTINGS_RL,
             R.id.ROLE_TXT,
             R.id.PAGER_DELETE_IMG})
     public void onClick(View v) {
@@ -325,23 +325,21 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             case R.id.PAGER_DELETE_IMG:
                 viewStub.setVisibility(View.GONE);
                 break;
+            case R.id.SETTINGS_RL:
+                break;
         }
     }
 
     private void switchModeFragment(boolean pIsFragment, String pFragTag) {
-        MenuItem register = mMenu.findItem(R.id.action_delete);
         switch (pFragTag){
             case FRAG_CREDENTIALS_FRAGMENT:
                 getSupportActionBar().setTitle(getResources().getString(R.string.user_credentials_txt));
-                register.setVisible(false);
                 break;
             case FRAG_REG_PHONENUMBERS:
                 getSupportActionBar().setTitle(getResources().getString(R.string.registered_phone_numbers_txt));
-                register.setVisible(false);
                 break;
             default:
                 getSupportActionBar().setTitle(getResources().getString(R.string.edit_profile_txt));
-                register.setVisible(true);
                 break;
         }
     }

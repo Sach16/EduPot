@@ -107,6 +107,7 @@ public class PotUserLessonScreen extends PotBaseActivity {
     }
 
     private void init() {
+        m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Public"));
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Viewed"));
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Received"));
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Mine"));
@@ -122,7 +123,7 @@ public class PotUserLessonScreen extends PotBaseActivity {
                 m_cSyllabi,
                 m_cChapters,
                 mLessFromWhere);
-        m_cPager.setOffscreenPageLimit(2);
+//        m_cPager.setOffscreenPageLimit(2);
         m_cPager.setAdapter(m_cPagerAdapter);
         m_cPager.setCurrentItem(mIndexPage);
 
@@ -162,6 +163,11 @@ public class PotUserLessonScreen extends PotBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override
@@ -218,7 +224,7 @@ public class PotUserLessonScreen extends PotBaseActivity {
                     lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoice));
                     lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
                     lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(m_cChapters));
-                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 2);
+                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 3);
                 } else {
                     lObjIntent.putExtra(PotMacros.OBJ_LESSON_TYPE, PotMacros.OBJ_LESSON_NEW);
                     lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
@@ -227,7 +233,7 @@ public class PotUserLessonScreen extends PotBaseActivity {
                     lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
                     lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(m_cChapters));
                     lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(getLessonsGen()));
-                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 2);
+                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 3);
                 }
                 startActivityForResult(lObjIntent, LESSON_INDEX_RESULT);
                 return true;

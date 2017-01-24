@@ -275,11 +275,11 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
             try {
                 String[] lTimer = PotMacros.getFormatedTimer(m_cObjLessons.get(position).getLength().getLengthSum()).split(":");
                 ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).timeStamp
-                        .setText(String.format("%s min %s secs", lTimer[0], lTimer[1]));
+                        .setText(String.format("%s m %s s", lTimer[0], lTimer[1]));
             } catch (Exception e) {
                 e.printStackTrace();
                 ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).timeStamp
-                        .setText("0 min 0 secs");
+                        .setText("0 m 0 s");
             }
 
             try {

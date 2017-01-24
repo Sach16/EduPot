@@ -386,9 +386,13 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
                                 m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
                             }
                         } else {
-                            if (m_cLessonsList.size() > 0) {
-                                m_cLessonsList.clear();
-                                m_cRecycClassesAdapt.notifyDataSetChanged();
+                            if (m_cLessonsList.size() >= 0) {
+                                if (null != m_cRecycClassesAdapt) {
+                                    m_cLessonsList.clear();
+                                    m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsMine(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                                            m_cSyllabi, m_cChapters, m_cLessonsList, null, null, this, this, mLessFromWhere, m_cIsInReorder));
+                                    m_cRecycClasses.invalidate();
+                                }
                             }
                             m_cHeaderView.setVisibility(View.GONE);
                         }

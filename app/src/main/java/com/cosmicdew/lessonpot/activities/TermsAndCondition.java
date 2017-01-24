@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -36,18 +38,30 @@ public class TermsAndCondition extends PotBaseActivity {
     @BindView(R.id.AGREE_TERMS_TXT)
     TextView m_cAgreeTerms;
 
+    private boolean m_cIsReg;
+
     @Override
     protected void onCreate(Bundle pSavedInstance) {
+        m_cIsReg = getIntent().getBooleanExtra(PotMacros.OBJ_REGISTERATION, false);
+        if (!m_cIsReg) {
+            setTheme(R.style.AppTheme_NoActionBar);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         super.onCreate(pSavedInstance);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.terms_and_conditions);
         ButterKnife.bind(this);
+
+        if (m_cIsReg) {
+            getSupportActionBar().setTitle(getResources().getString(R.string.terms_conditions));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        verifyAllPermissions(this);
+        if (!m_cIsReg)
+            verifyAllPermissions(this);
     }
 
     @Override
@@ -61,25 +75,47 @@ public class TermsAndCondition extends PotBaseActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Optional
     @OnClick({R.id.TERMS_AND_CONDITION_TXT, R.id.PRIVACY_POLICY_TXT,
             R.id.AGREE_TERMS_TXT})
     public void onClick(View v) {
-        Intent lObjInt;
+        Intent lObjIntent;
         switch (v.getId()) {
             case R.id.TERMS_AND_CONDITION_TXT:
-                lObjInt = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.TERMS_AND_CONDITION_URL));
-                startActivity(lObjInt);
+                lObjIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.TERMS_AND_CONDITION_URL));
+                startActivity(lObjIntent);
                 break;
             case R.id.PRIVACY_POLICY_TXT:
-                lObjInt = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.PRIVACY_POLICY_URL));
-                startActivity(lObjInt);
+                lObjIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.PRIVACY_POLICY_URL));
+                startActivity(lObjIntent);
                 break;
             case R.id.AGREE_TERMS_TXT:
-                lObjInt = new Intent(this, OtpScreen.class);
-                PotMacros.setAgreeTerms(this, true);
-                startActivity(lObjInt);
-                finish();
+                if (!m_cIsReg) {
+                    lObjIntent = new Intent(this, OtpScreen.class);
+                    PotMacros.setAgreeTerms(this, true);
+                    startActivity(lObjIntent);
+                    finish();
+                }else {
+                    lObjIntent = new Intent(this, RegisterationScreen.class);
+                    startActivity(lObjIntent);
+                    finish();
+                }
                 break;
             default:
                 super.onClick(v);

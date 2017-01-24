@@ -1179,7 +1179,7 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
         boolean lRetVal = true;
         if (pAlpha.trim().length() > 0) {
             CharSequence inputStr = pAlpha;
-            Pattern pattern = Pattern.compile(PotMacros.USEERNAME_MIN_8_ALPHA_1_NUM_1, Pattern.CASE_INSENSITIVE);
+            Pattern pattern = Pattern.compile(PotMacros.USEERNAME_MIN_6, Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(inputStr);
             if (matcher.matches())
                 lRetVal = true;

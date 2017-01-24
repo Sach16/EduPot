@@ -272,11 +272,14 @@ public class PotUserHomeClassesMineFragment extends PotFragmentBaseClass impleme
                             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
                         }
                     } else {
-                        if (m_cLessonsList.size() > 0) {
-                            m_cLessonsList.clear();
-                            m_cRecycClassesAdapt.notifyDataSetChanged();
-                        }
-                    }
+                        if (m_cLessonsList.size() >= 0) {
+                            if (null != m_cRecycClassesAdapt) {
+                                m_cLessonsList.clear();
+                                m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsMine(m_cObjMainActivity, m_cUser, null,
+                                        null, null, m_cLessonsList, null, null, this, this, null, false));
+                                m_cRecycClasses.invalidate();
+                            }
+                        }                    }
                     m_cObjMainActivity.hideDialog();
                 } else {
                     super.onAPIResponse(response, apiMethod, refObj);

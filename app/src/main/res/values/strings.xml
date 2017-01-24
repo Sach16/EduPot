@@ -26,10 +26,10 @@
     <string name="no_board_and_class_information_yet_hed">"No Board and Class information yet"</string>
     <string name="no_users_yet_det">"No Accounts Yet"</string>
 
-    <string name="to_add_a_board_class_det">To add a Board/Class click on "+" above.
-        Board(s)/Class(es) you associate yourself with will appear here.
-        Depending on your role, please add one or more Board(s)/Class(es) you or your wards are connected with to effectively use LessonPot.
-        Each user needs to be associated with at least 1 Board/Class.</string>
+    <string name="to_add_a_board_class_det">Each account needs to be associated with at least 1 Board-Class.
+        \nTo add a Board/Class click on "+" above. You can add as many Boards and Classes as you are associated with.
+        \nIt is important to have the right set of Boards and Classes so that you can create, share and study lessons in the corresponding syllabus.
+        \nYou can later add and delete Boards and Classes whenever you need to.</string>
     <string name="users_registered_with_this_device_will_appear_here_det">"Accounts registered with this device will appear here. Multiple Accounts can use the same device.
         To add an Account, choose from the options below:"</string>
 
@@ -105,6 +105,7 @@
     <string name="timer_nutral">00:00</string>
     <string name="lesson_location"><u>Lesson Location</u></string>
     <string name="comments_txt">Notes:</string>
+    <string name="notes_txt">Notes</string>
     <string name="supp_comments_txt">Comments</string>
     <string name="attachments_txt">Attachments:</string>
     <string name="dummy_txt">Karntaka State, VII, Social Studies, \nHistory of Ancient India</string>
@@ -133,8 +134,9 @@
     <string name="add_connection_txt">Add Connection</string>
     <string name="alert_txt">Alert</string>
     <string name="invalid_user_txt">Invalid Account</string>
-    <string name="insufficient_info_txt">Insufficient information to determine unique Account. Please provide one or more inputs other than the phone number, or enter Account Id</string>
-    <string name="sms_info_txt">This person does not have LessonPot app on his/her phone. You can invite the person to join LessonPot yourself. Or, you can click Yes below to send an SMS</string>
+    <string name="insufficient_info_txt">There is more than one Account matching the information you have provided. Provide a sufficient number of initial letters of first/last name and Role to identify a unique Account</string>
+    <string name="account_id_doesnt_exist_txt">Account Id doesn\'t exist</string>
+    <string name="sms_info_txt">This person does not have LessonPot app on his/her phone. You can invite the person to join LessonPot yourself. Or, you can click Yes below to send an SMS. \n\nNote: Your carrier may charge you for sending the SMS.</string>
     <string name="mark_as_spam_txt">Mark as Spam</string>
 
     <string name="connection_marked_as_spam_txt">Connection marked as spam</string>
@@ -158,13 +160,14 @@
     <string name="share_lesson_txt">Share Lesson</string>
     <string name="tap_and_hold_txt_det">Tap and hold at any level to select \neverybody within</string>
 
-    <string name="register_your_user_id_and_password_txt">You can register your Account Id and Password here.</string>
-    <string name="register_your_user_id_and_password_txt_det">This helps you to add yourself to an alternate device as an existing LessonPot user. It results in flexibility of operating from multiple devices and helps you to continue using LessonPot even if your primary device becomes inaccessible.</string>
+    <string name="register_your_user_id_and_password_txt">Having an Account Id helps because:</string>
+    <string name="register_your_user_id_and_password_txt_det">You can then let others send connection requests to your Account Id without disclosing your phone number.
+        \nUsing your Account Id and Password, you can add your existing account to another device, giving you flexibility to use LessonPot from multiple devices.</string>
     <string name="add_phone_numbers_txt">You can register additional phone numbers from which you can access your LessonPot account by inputting them here. Use the + button at the top to add a new number.</string>
     <string name="add_phone_numbers_txt_det">Note that once a phone number is registered, you will need to access LessonPot on that phone to remove yourself if needed.</string>
     <string name="phone_numbers_txt">Phone Numbers:</string>
     <string name="reg_board_class_profile_txt">Registered Board(s)/Class(es) can only have their school information modified.</string>
-    <string name="reg_board_class_profile_txt_det">To delete  a Board/Class, go to the Library Main Screen.</string>
+    <string name="reg_board_class_profile_txt_det">To delete a Board/Class, go to the All Lessons Screen.</string>
     <string name="user_cred_updated_txt">Account Id updated successfully</string>
 
     <string name="remove_user_txt">Remove Account</string>
@@ -182,18 +185,32 @@
     <string name="apply_txt">Apply</string>
     <string name="remove_filter_txt">Remove Filter</string>
     <string name="edit_filter_txt">Edit Filter</string>
-    <string name="support_txt">Support</string>
+    <string name="support_txt">Request Support</string>
+    <string name="send_feedback_txt">Send Feedback</string>
+    <string name="syllabus_help_txt">Syllabus Help</string>
 
     <string name="how_to_get_my_syllabus_right_txt">How to get my Syllabus Right!</string>
-    <string name="syllabus_consists_of_the_your_boards_classes_txt">Syllabus consists of the your Boards-Classes and the Subjects in each Board-Class\n\n
-        You can add Boards and Classes from your Profile page, and you can delete them on the Library screen\n\n
+    <string name="syllabus_consists_of_the_your_boards_classes_txt">Syllabus consists of your Boards-Classes and the Subjects in each Board-Class.\n\n
+        You can add Boards and Classes from the ""My Account"" screen, and can delete them from the ""All Lessons"" screen.\n\n
         To get the right subjects and the right version of those subjects, you can do one of the following:\n\n
-        1. Take syllabus from a Lesson received\n\n
-        2. Take syllabus from a Connection\n\n
-        3. Take syllabys from a Wizard\n\n
-        4. Click the syllabus Help button</string>
+        1. Add Syllabus from a Lesson received\n\n
+        2. Add Syllabus from a Connection\n\n
+        3. Add Syllabus from the Syllabus Wizard\n\n
+        4. Click the Syllabus Help button below to reach us for assistance"</string>
     <string name="i_need_syllabus_help_txt">I need Syllabus Help!</string>
-    <string name="ways_to_get_syllabus_accurate_txt">Ways to get Syllabus Accurate</string>
+    <string name="ways_to_get_syllabus_accurate_txt">Ways To Get Syllabus Right</string>
+
+    <string name="update_is_available_txt">is available for LessonPot. Please update the app to continue using it.</string>
+    <string name="update_highlights_txt">Update Highlights:</string>
+    <string name="delete_connection_txt">Delete Connection</string>
+    <string name="all_lessons_shared_txt">All lessons shared between you and this connection will be permanently removed!</string>
+
+    <string name="register_existing_account_txt">Register Existing Account</string>
+    <string name="account_added_successfully_txt">Account added successfully</string>
+
+    <string name="sms1_txt">I am on the LessonPot app for education and would like to connect with you through it.</string>
+    <string name="sms2_txt">The app is located on Google Playstore at</string>
+    <string name="sms3_txt">Try it out.</string>
 
     <string-array name="add_photo_arr">
         <item>Go to camera</item>

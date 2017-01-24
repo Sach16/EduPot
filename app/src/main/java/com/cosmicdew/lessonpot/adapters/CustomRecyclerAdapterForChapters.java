@@ -139,10 +139,10 @@ public class CustomRecyclerAdapterForChapters extends RecyclerView.Adapter{
                 String[] lTimer = PotMacros.getFormatedTimerHMS(m_cObjChapters.get(position).getLessonLength()).split(":");
                 if (Integer.parseInt(lTimer[0]) > 0)
                     ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).timeStamp
-                            .setText(String.format("%s hr %s min %s secs", lTimer[0], lTimer[1], lTimer[2]));
+                            .setText(String.format("%s h %s m %s s", lTimer[0], lTimer[1], lTimer[2]));
                 else
                     ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).timeStamp
-                            .setText(String.format("%s min %s secs", lTimer[1], lTimer[2]));
+                            .setText(String.format("%s m %s s", lTimer[1], lTimer[2]));
 
             } catch (Exception e) {
                 e.printStackTrace();

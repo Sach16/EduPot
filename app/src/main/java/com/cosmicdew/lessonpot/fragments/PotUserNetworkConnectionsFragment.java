@@ -33,6 +33,7 @@ import com.cosmicdew.lessonpot.models.Groups;
 import com.cosmicdew.lessonpot.models.Role;
 import com.cosmicdew.lessonpot.models.Roles;
 import com.cosmicdew.lessonpot.models.Users;
+import com.cosmicdew.lessonpot.models.UsersAll;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.google.gson.Gson;
 
@@ -192,38 +193,67 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
 
     @Override
     protected void handleUIMessage(Message pObjMessage) {
-        Intent lObjIntent;
         switch (pObjMessage.what) {
             case R.id.CHILD_LL:
                 if (m_cIsFlatView) {
                     switch (pObjMessage.arg2) {
                         case R.id.action_add_syllabus:
-                            lObjIntent = new Intent(m_cObjMainActivity, AddSyllabusScreen.class);
-                            lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(((Connections) pObjMessage.obj).getConnectionTo()));
-                            startActivityForResult(lObjIntent, ADD_SYLLABUS);
+                            HashMap<String, String> lParams = new HashMap<>();
+                            lParams.put(Constants.USERNAME, PotMacros.SYLLABUSWIZARD_USERNAME);
+                            m_cObjMainActivity.displayProgressBar(-1, "");
+                            placeRequest(Constants.USERS,
+                                    UsersAll.class, ((Connections) pObjMessage.obj).getConnectionTo(), lParams, null, false);
                             break;
                         case R.id.action_delete:
                             Connections pConnections = (Connections) pObjMessage.obj;
-                            m_cObjMainActivity.displayProgressBar(-1, "");
-                            placeDeleteRequest(Constants.CONNECTIONS +
-                                    pConnections.getId() +
-                                    "/", Connections.class, null, null, null, true);
+                            m_cObjMainActivity.displayYesOrNoCustAlert(R.id.action_delete,
+                                    getResources().getString(R.string.delete_connection_txt),
+                                    String.format("%s \n\n%s",
+                                            getResources().getString(R.string.all_lessons_shared_txt),
+                                            getResources().getString(R.string.do_you_want_to_proceed_txt)),
+                                    pConnections);
+
                             break;
                     }
                 } else {
                     switch (pObjMessage.arg2) {
                         case R.id.action_add_syllabus:
-                            lObjIntent = new Intent(m_cObjMainActivity, AddSyllabusScreen.class);
-                            lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(((Role) pObjMessage.obj).getConnections().get(pObjMessage.arg1).getConnectionTo()));
-                            startActivityForResult(lObjIntent, ADD_SYLLABUS);
+                            HashMap<String, String> lParams = new HashMap<>();
+                            lParams.put(Constants.USERNAME, PotMacros.SYLLABUSWIZARD_USERNAME);
+                            m_cObjMainActivity.displayProgressBar(-1, "");
+                            placeRequest(Constants.USERS,
+                                    UsersAll.class, ((Role) pObjMessage.obj).getConnections().get(pObjMessage.arg1).getConnectionTo(), lParams, null, false);
                             break;
                         case R.id.action_delete:
                             Role pRole = (Role) pObjMessage.obj;
-                            m_cObjMainActivity.displayProgressBar(-1, "");
-                            placeDeleteRequest(Constants.CONNECTIONS +
-                                    pRole.getConnections().get(pObjMessage.arg1).getId() +
-                                    "/", Connections.class, null, null, null, true);
+                            m_cObjMainActivity.displayYesOrNoCustAlert(R.id.action_delete,
+                                    getResources().getString(R.string.delete_connection_txt),
+                                    String.format("%s \n\n%s",
+                                            getResources().getString(R.string.all_lessons_shared_txt),
+                                            getResources().getString(R.string.do_you_want_to_proceed_txt)),
+                                    pRole);
                             break;
+                    }
+                }
+                break;
+            case R.id.action_delete:
+                if (m_cIsFlatView) {
+                    Object[] lObjects = (Object[]) pObjMessage.obj;
+                    if ((boolean) lObjects[0]) {
+                        Connections pConnections = (Connections) lObjects[1];
+                        m_cObjMainActivity.displayProgressBar(-1, "");
+                        placeDeleteRequest(Constants.CONNECTIONS +
+                                pConnections.getId() +
+                                "/", Connections.class, null, null, null, true);
+                    }
+                }else {
+                    Object[] lObjects = (Object[]) pObjMessage.obj;
+                    if ((boolean) lObjects[0]) {
+                        Role pRole = (Role) lObjects[1];
+                        m_cObjMainActivity.displayProgressBar(-1, "");
+                        placeDeleteRequest(Constants.CONNECTIONS +
+                                pRole.getConnections().get(pObjMessage.arg1).getId() +
+                                "/", Connections.class, null, null, null, true);
                     }
                 }
                 break;
@@ -232,7 +262,17 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
 
     @Override
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
+        Intent lObjIntent;
         switch (apiMethod) {
+            case Constants.USERS:
+                UsersAll lUsers = (UsersAll) response;
+                Users lUserConnected = (Users) refObj;
+                lObjIntent = new Intent(m_cObjMainActivity, AddSyllabusScreen.class);
+                if (lUserConnected.getId() == lUsers.getUsers().get(0).getId())
+                    lObjIntent.putExtra(PotMacros.OBJ_USER_MAIN, (new Gson()).toJson(m_cUser));
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(lUserConnected));
+                startActivityForResult(lObjIntent, ADD_SYLLABUS);
+                break;
             case Constants.CONNECTIONS:
                 if (m_cIsFlatView) {
                     Roles lRoles = (Roles) response;
@@ -262,8 +302,8 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
                         m_clistDataHeader = new ArrayList<String>();
                         m_clistDataChild = new HashMap<>();
                         for (Group lGroup : lGroups.getGroups()) {
-                            m_clistDataHeader.add(lGroup.getName() +"#"+ lGroup.getComment());
-                            m_clistDataChild.put(lGroup.getName() +"#"+ lGroup.getComment(),
+                            m_clistDataHeader.add(lGroup.getName() + "#" + lGroup.getComment());
+                            m_clistDataChild.put(lGroup.getName() + "#" + lGroup.getComment(),
                                     lGroup);
                         }
                     } else {
@@ -309,6 +349,7 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
         switch (apiMethod) {
+            case Constants.USERS:
             case Constants.CONNECTIONS:
                 m_cObjMainActivity.hideDialog();
                 if (error instanceof NoConnectionError) {

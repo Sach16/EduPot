@@ -12,16 +12,13 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,19 +26,18 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.activities.LessonsScreen;
-import com.cosmicdew.lessonpot.activities.ReceivedLessonsFilterScreen;
+import com.cosmicdew.lessonpot.activities.PotUserLessonScreen;
 import com.cosmicdew.lessonpot.activities.ShareScreen;
-import com.cosmicdew.lessonpot.adapters.CustomRecyclerAdapterForLessonsReceived;
+import com.cosmicdew.lessonpot.adapters.CustomRecyclerAdapterForLessonsViewed;
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
-import com.cosmicdew.lessonpot.customviews.RecyclerViewHeader;
 import com.cosmicdew.lessonpot.interfaces.RecyclerHomeListener;
 import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Attachments;
 import com.cosmicdew.lessonpot.models.BoardChoices;
 import com.cosmicdew.lessonpot.models.Chapters;
 import com.cosmicdew.lessonpot.models.LessonShares;
-import com.cosmicdew.lessonpot.models.LessonSharesAll;
 import com.cosmicdew.lessonpot.models.LessonViews;
+import com.cosmicdew.lessonpot.models.LessonViewsAll;
 import com.cosmicdew.lessonpot.models.Lessons;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
@@ -53,69 +49,62 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Optional;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by S.K. Pissay on 8/11/16.
+ * Created by S.K. Pissay on 24/1/17.
  */
 
-public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass implements RecyclerHomeListener {
+public class PotUserHomePublicFragment extends PotFragmentBaseClass implements RecyclerHomeListener {
 
     @Nullable
     @BindView(R.id.HOME_CLASS_MAIN_LAYOUT)
-    FrameLayout m_cRlMain;
+    RelativeLayout m_cRlMain;
 
     @Nullable
     @BindView(R.id.RECYC_HOME_CLASS_BOARDS)
     RecyclerView m_cRecycClasses;
 
-    @Nullable
-    @BindView(R.id.RECYCLERVIEW_HEADER)
-    RecyclerViewHeader m_cHeaderView;
-
-    @Nullable
-    @BindView(R.id.FILTER_LIST_IMG)
-    ImageView m_cFilterHeadImg;
-
     private int m_cPos;
     private String m_cKey;
     private Users m_cUser;
-    private BoardChoices m_cBoardChoices;
+    private BoardChoices m_cBoardChoice;
+    private Syllabi m_cSyllabi;
+    private Chapters m_cChapters;
 
     private RemoveLessonReceiver mRemvReceiver;
 
     private Dialog m_cObjDialog;
-    private String[] m_cUserIds;
+    private String mLessFromWhere;
 
     private boolean m_cLoading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     LinearLayoutManager m_cLayoutManager;
-    CustomRecyclerAdapterForLessonsReceived m_cRecycClassesAdapt;
+    CustomRecyclerAdapterForLessonsViewed m_cRecycClassesAdapt;
     ArrayList<Lessons> m_cLessonsList;
 
-    public PotUserHomeSubjectReceivedFragment() {
+    public PotUserHomePublicFragment() {
         super();
     }
 
-    public static PotUserHomeSubjectReceivedFragment newInstance(int pPosition, String pKey, Users pUser, BoardChoices pBoardChoices) {
-        PotUserHomeSubjectReceivedFragment lPotUserHomeSubjectReceivedFragment = new PotUserHomeSubjectReceivedFragment();
+    public static PotUserHomePublicFragment newInstance(int pPosition, String pKey, Users pUser, BoardChoices pBoardChoices,
+                                                        Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere) {
+        PotUserHomePublicFragment lPotUserHomePublicFragment = new PotUserHomePublicFragment();
 
         Bundle args = new Bundle();
         args.putInt("Position", pPosition);
         args.putString("KEY", pKey);
         args.putString(PotMacros.OBJ_USER, (new Gson()).toJson(pUser));
         args.putString(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(pBoardChoices));
-        lPotUserHomeSubjectReceivedFragment.setArguments(args);
+        args.putString(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(pSyllabi));
+        args.putString(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
+        args.putString(PotMacros.OBJ_LESSONFROM, pLessFromWhere);
+        lPotUserHomePublicFragment.setArguments(args);
 
-        return lPotUserHomeSubjectReceivedFragment;
+        return lPotUserHomePublicFragment;
     }
 
     @Override
@@ -131,14 +120,14 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        m_cObjMainView = inflater.inflate(R.layout.fragment_cust_recyclerview, container, false);
+        m_cObjMainView = inflater.inflate(R.layout.fragment_homeclasses, container, false);
         ButterKnife.bind(this, m_cObjMainView);
 
-        m_cObjMainActivity.m_cObjFragmentBase = PotUserHomeSubjectReceivedFragment.this;
+        m_cObjMainActivity.m_cObjFragmentBase = PotUserHomePublicFragment.this;
 
         mRemvReceiver = new RemoveLessonReceiver();
         LocalBroadcastManager.getInstance(m_cObjMainActivity).registerReceiver(mRemvReceiver,
-                new IntentFilter(PotMacros.REMOVELESSON_REFRESH_CONSTANT_RECEIVED));
+                new IntentFilter(PotMacros.REMOVELESSON_REFRESH_CONSTANT_VIEWED));
 
         return m_cObjMainView;
     }
@@ -150,7 +139,6 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
     }
 
     private class RemoveLessonReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (null != m_cRecycClassesAdapt) {
@@ -166,12 +154,14 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
         m_cPos = getArguments().getInt("Position", 0);
         m_cKey = getArguments().getString("KEY");
         m_cUser = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_USER), Users.class);
-        m_cBoardChoices = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
+        m_cBoardChoice = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
+        m_cSyllabi = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_SYLLABI), Syllabi.class);
+        m_cChapters = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_CHAPTERS), Chapters.class);
+        mLessFromWhere = getArguments().getString(PotMacros.OBJ_LESSONFROM);
         m_cLessonsList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         m_cRecycClasses.setLayoutManager(m_cLayoutManager);
-        m_cHeaderView.attachTo(m_cRecycClasses);
         m_cRecycClasses.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -196,25 +186,29 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
         });
 
         //Calling board class api
-        m_cObjMainActivity.displayProgressBar(-1, "");
-        HashMap<String, String> lParams = new HashMap<>();
-        StringBuffer lBuffer = new StringBuffer();
-        if (null != m_cUserIds) {
-            for (int i = 0; i < m_cUserIds.length; i++) {
-                if (i == 0)
-                    lBuffer.append(m_cUserIds[i]);
-                else
-                    lBuffer.append(",").append(m_cUserIds[i]);
-            }
-            lParams.put(Constants.USERS_TXT, lBuffer.toString());
-        }
+        /*m_cObjMainActivity.displayProgressBar(-1, "");
 
-        placeUserRequest(Constants.SHARED + Constants.BOARDCLASSES +
-                m_cBoardChoices.getBoardclass().getId() +
-                "/" +
-                Constants.LESSONS, LessonSharesAll.class, null, lParams, null, false);
+        //TODO : check i think both if else in not required
+        switch (mLessFromWhere) {
+            case PotMacros.OBJ_BOARDCHOICES:
+                placeUserRequest(Constants.VIEWED + Constants.GMR + Constants.LESSONS, LessonViewsAll.class, null, null, null, false);
 
+                break;
+            case PotMacros.OBJ_SYLLABI:
+                placeUserRequest(Constants.VIEWED + Constants.BOARDCLASSES +
+                        m_cBoardChoice.getBoardclass().getId() +
+                        "/" +
+                        Constants.GS +
+                        Constants.LESSONS, LessonViewsAll.class, null, null, null, false);
 
+                break;
+            case PotMacros.OBJ_CHAPTERS:
+                placeUserRequest(Constants.VIEWED + Constants.CHAPTERS +
+                        m_cChapters.getId() +
+                        "/" +
+                        Constants.LESSONS, LessonViewsAll.class, null, null, null, false);
+                break;
+        }*/
     }
 
     @Override
@@ -222,104 +216,39 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
         super.onViewCreated(view, savedInstanceState);
     }
 
-    @Optional
-    @OnClick({R.id.FILTER_LIST_IMG})
-    public void onClick(View v) {
-        final Intent lObjIntent;
-        lObjIntent = new Intent(m_cObjMainActivity, ReceivedLessonsFilterScreen.class);
-        switch (v.getId()) {
-            case R.id.FILTER_LIST_IMG:
-                if (null != m_cUserIds && m_cUserIds.length > 0) {
-                    final PopupMenu pum = new PopupMenu(m_cObjMainActivity, v);
-                    pum.inflate(R.menu.spinner_filter_menu);
-                    pum.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.action_remove_filter:
-                                    m_cUserIds = null;
-                                    m_cLessonsList.clear();
-                                    m_cRecycClassesAdapt.notifyDataSetChanged();
-                                    m_cFilterHeadImg.setImageResource(R.drawable.filericon);
-                                    init();
-                                    pum.dismiss();
-                                    break;
-                                case R.id.action_edit_filter:
-                                    lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_SYLLABI);
-                                    lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, PotMacros.OBJ_LESSON_MINE_TAB);
-                                    lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
-                                    lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
-                                    startActivityForResult(lObjIntent, PotMacros.LESSON_FILTER);
-                                    pum.dismiss();
-                                    break;
-                            }
-                            return true;
-                        }
-                    });
-                    pum.show();
-                } else {
-                    lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_SYLLABI);
-                    lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, PotMacros.OBJ_LESSON_MINE_TAB);
-                    lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
-                    lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
-                    startActivityForResult(lObjIntent, PotMacros.LESSON_FILTER);
-                }
-                break;
-            default:
-                super.onClick(v);
-                break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PotMacros.LESSON_FILTER:
-                if (resultCode == RESULT_OK) {
-                    m_cUserIds = data.getStringExtra(PotMacros.OBJ_LESSON_FILTER).split(" ");
-                    if (null != m_cUserIds && m_cUserIds.length > 0)
-                        m_cFilterHeadImg.setImageResource(R.drawable.filericon_blue);
-                    else
-                        m_cFilterHeadImg.setImageResource(R.drawable.filericon);
-                    m_cLessonsList.clear();
-                    m_cRecycClassesAdapt.notifyDataSetChanged();
-                }
-        }
-    }
-
     @Override
     protected void handleUIMessage(Message pObjMessage) {
         Intent lObjIntent;
         switch (pObjMessage.what){
-            case PotMacros.ON_INFO_LONG_CLICK_SHARED:
+            case PotMacros.ON_INFO_LONG_CLICK_VIEWED_LESSON:
                 switch (pObjMessage.arg1){
                     case R.id.action_share:
                         lObjIntent = new Intent(m_cObjMainActivity, ShareScreen.class);
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_SYLLABI);
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, PotMacros.OBJ_LESSON_RECEIVED_TAB);
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, PotMacros.OBJ_LESSON_VIEWED_TAB);
                         lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(((LessonShares)pObjMessage.obj).getLesson()));
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSONSHARES, (new Gson()).toJson((LessonShares) pObjMessage.obj));
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(((LessonViews)pObjMessage.obj).getLesson()));
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSONVIEWS, (new Gson()).toJson((LessonViews) pObjMessage.obj));
                         startActivity(lObjIntent);
                         break;
                     case R.id.action_edit:
-                        callLessonView((LessonShares) pObjMessage.obj, PotMacros.OBJ_LESSON_EDIT);
+                        callLessonView((LessonViews) pObjMessage.obj, PotMacros.OBJ_LESSON_EDIT);
                         break;
                     case R.id.action_delete:
-                        callDeleteLessonApi((LessonShares)pObjMessage.obj);
+                        callDeleteLessonApi((LessonViews)pObjMessage.obj);
                         break;
                     case R.id.action_remove:
                         m_cObjMainActivity.displayProgressBar(-1, "");
                         placeDeleteRequest(Constants.LESSONS +
-                                        ((LessonShares) pObjMessage.obj).getLesson().getId() +
+                                        ((LessonViews) pObjMessage.obj).getLesson().getId() +
                                         "/" +
                                         Constants.SOURCES +
-                                        ((LessonShares) pObjMessage.obj).getFromUser().getId() +
+                                        ((LessonViews) pObjMessage.obj).getSource().getId() +
                                         "/",
                                 Attachments.class, null, null, null, true);
                         break;
                     case R.id.action_add_syllabus:
-                        Lessons lessons = ((LessonShares)pObjMessage.obj).getLesson();
+                        Lessons lessons = ((LessonViews) pObjMessage.obj).getLesson();
                         m_cObjMainActivity.displayProgressBar(-1, "");
                         placeUserRequest(Constants.BOARDCLASSES +
                                         lessons.getChapter().getSyllabus().getBoardclass().getId() +
@@ -332,7 +261,7 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
                     case R.id.action_post_to_students:
                         m_cObjMainActivity.displayProgressBar(-1, "");
                         placeUserRequest(Constants.LESSONS +
-                                        ((LessonShares)pObjMessage.obj).getLesson().getId() +
+                                        ((LessonViews)pObjMessage.obj).getLesson().getId() +
                                         "/" +
                                         Constants.POST,
                                 Lessons.class, null, null, null, true);
@@ -344,13 +273,13 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
         }
     }
 
-    private void callDeleteLessonApi(LessonShares pLessonShares) {
+    private void callDeleteLessonApi(LessonViews pLessonViews) {
         m_cObjMainActivity.displayProgressBar(-1, "");
         placeDeleteRequest(Constants.CHAPTERS +
-                        pLessonShares.getLesson().getChapter().getId() +
+                        pLessonViews.getLesson().getChapter().getId() +
                         "/" +
                         Constants.LESSONS +
-                        pLessonShares.getLesson().getId() +
+                        pLessonViews.getLesson().getId() +
                         "/",
                 Attachments.class, null, null, null, true);
     }
@@ -363,7 +292,7 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
                     if (response == null) {
                         m_cObjMainActivity.hideDialog();
                         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(m_cObjMainActivity);
-                        Intent i = new Intent(PotMacros.REMOVELESSON_REFRESH_CONSTANT_VIEWED);
+                        Intent i = new Intent(PotMacros.REMOVELESSON_REFRESH_CONSTANT_RECEIVED);
                         lbm.sendBroadcast(i);
                         m_cLessonsList.clear();
                         m_cRecycClassesAdapt.notifyDataSetChanged();
@@ -384,47 +313,47 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
                     LessonViews lessonViews = (LessonViews) response;
                     if (lessonViews != null) {
                         Intent lObjIntent = new Intent(m_cObjMainActivity, LessonsScreen.class);
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSON_TYPE, (Integer) ((Object[])refObj)[1]);
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_SYLLABI);
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, PotMacros.OBJ_LESSON_RECEIVED_TAB);
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSON_TYPE, (Integer) refObj);
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, PotMacros.OBJ_LESSON_VIEWED_TAB);
                         lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
-                        lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
-                        lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(lessonViews.getLesson().getChapter().getSyllabus()));
-                        lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(lessonViews.getLesson().getChapter()));
+                        lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoice));
+                        lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
+                        lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(m_cChapters));
                         lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(lessonViews.getLesson()));
-                        lObjIntent.putExtra(PotMacros.OBJ_LESSONSHARES, (new Gson()).toJson((LessonShares) ((Object[]) refObj)[0]));
+                        lObjIntent.putExtra(PotMacros.OBJ_LESSONVIEWS, (new Gson()).toJson(lessonViews));
                         startActivity(lObjIntent);
                         m_cObjMainActivity.hideDialog();
                     }
-                }else if (apiMethod.contains(Constants.CHAPTERS)){
-                    if (response == null){
+                }else if (apiMethod.contains(Constants.LESSONS)) {
+                    if (response == null) {
                         m_cObjMainActivity.hideDialog();
                         init();
-                    }
-                } else if (apiMethod.contains(Constants.LESSONS)) {
-                    LessonSharesAll lLessonSharesAll = (LessonSharesAll) response;
-                    if (lLessonSharesAll != null && lLessonSharesAll.getLessonShares().size() > 0) {
-                        for (LessonShares lLessonShares : lLessonSharesAll.getLessonShares()) {
-//                            if (lLessons.getChapter().getIsGeneric())
-//                                ((PotUserLessonScreen) m_cObjMainActivity).setLessonsGen(lLessons);
-                            m_cLessonsList.add(lLessonShares.getLesson());
-                        }
-                        if (null != m_cLessonsList && m_cLessonsList.size() > 0) {
-                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForLessonsReceived(m_cObjMainActivity, m_cUser, m_cBoardChoices,
-                                    null, null, m_cLessonsList, lLessonSharesAll.getLessonShares(), null, this);
-                            m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
-                        }
                     } else {
-                        if (m_cLessonsList.size() >= 0) {
-                            if (null != m_cRecycClassesAdapt) {
-                                m_cLessonsList.clear();
-                                m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsReceived(m_cObjMainActivity, m_cUser, m_cBoardChoices,
-                                        null, null, m_cLessonsList, lLessonSharesAll.getLessonShares(), null, this));
-                                m_cRecycClasses.invalidate();
+                        LessonViewsAll lLessonViewsAll = (LessonViewsAll) response;
+                        if (lLessonViewsAll != null && lLessonViewsAll.getLessonViews().size() > 0) {
+                            for (LessonViews lessonViews : lLessonViewsAll.getLessonViews()) {
+                                if (lessonViews.getLesson().getChapter().getIsGeneric())
+                                    ((PotUserLessonScreen) m_cObjMainActivity).setLessonsGen(lessonViews.getLesson());
+                                m_cLessonsList.add(lessonViews.getLesson());
+                            }
+                            if (null != m_cLessonsList && m_cLessonsList.size() > 0) {
+                                m_cRecycClassesAdapt = new CustomRecyclerAdapterForLessonsViewed(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                                        m_cSyllabi, m_cChapters, m_cLessonsList, null, lLessonViewsAll.getLessonViews(), this);
+                                m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
+                            }
+                        } else {
+                            if (m_cLessonsList.size() >= 0) {
+                                if (null != m_cRecycClassesAdapt) {
+                                    m_cLessonsList.clear();
+                                    m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsViewed(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                                            m_cSyllabi, m_cChapters, m_cLessonsList, null, lLessonViewsAll.getLessonViews(), this));
+                                    m_cRecycClasses.invalidate();
+                                }
                             }
                         }
+                        m_cObjMainActivity.hideDialog();
                     }
-                    m_cObjMainActivity.hideDialog();
                 } else {
                     super.onAPIResponse(response, apiMethod, refObj);
                     m_cObjMainActivity.hideDialog();
@@ -460,28 +389,28 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
 
     @Override
     public void onInfoClick(int pPostion, BoardChoices pBoardChoices, Syllabi pSyllabi, Chapters pChapters, Lessons pLessons, LessonShares pLessonShares, LessonViews pLessonViews, View pView) {
-        callLessonView(pLessonShares, PotMacros.OBJ_LESSON_VIEW);
+        callLessonView(pLessonViews, PotMacros.OBJ_LESSON_VIEW);
     }
 
-    private void callLessonView(LessonShares pLessonShares, int pLessonType) {
+    private void callLessonView(LessonViews pLessonViews, int pLessonType) {
         m_cObjMainActivity.displayProgressBar(-1, "");
         JSONObject lJO = new JSONObject();
         try {
-            lJO.put(Constants.SOURCE, pLessonShares.getFromUser().getId());
+            lJO.put(Constants.SOURCE, pLessonViews.getSource().getId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         placeUserRequest(Constants.LESSONS +
-                        pLessonShares.getLesson().getId() +
+                        pLessonViews.getLesson().getId() +
                         "/" +
                         Constants.VIEWS,
-                LessonViews.class, new Object[]{pLessonShares, pLessonType}, null, lJO.toString(), true);
+                LessonViews.class, pLessonType, null, lJO.toString(), true);
     }
 
     @Override
     public void onInfoLongClick(int pPostion, BoardChoices pBoardChoices, Syllabi pSyllabi, Chapters pChapters, Lessons pLessons, LessonShares pLessonShares, LessonViews pLessonViews, View pView) {
         if (m_cUser.getId().equals(pLessons.getOwner().getId()))
-            displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_SHARED, pLessons.getName(),
+            displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_VIEWED_LESSON, pLessons.getName(),
                     Arrays.asList(getResources().getString(R.string.action_post_to_students),
                             getResources().getString(R.string.action_share),
                             getResources().getString(R.string.action_edit),
@@ -492,9 +421,9 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
                             R.id.action_edit,
                             R.id.action_delete,
                             R.id.action_add_syllabus),
-                    pLessonShares);
+                    pLessonViews);
         else
-            displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_SHARED, pLessons.getName(),
+            displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_VIEWED_LESSON, pLessons.getName(),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(getResources().getString(R.string.action_remove),
                                     getResources().getString(R.string.action_add_syllabus))
@@ -511,7 +440,7 @@ public class PotUserHomeSubjectReceivedFragment extends PotFragmentBaseClass imp
                                     R.id.action_share,
                                     R.id.action_remove,
                                     R.id.action_add_syllabus),
-                    pLessonShares);
+                    pLessonViews);
     }
 
     @Override

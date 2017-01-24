@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="@dimen/margin_med_large"
+    android:paddingLeft="@dimen/margin_med_large"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ALLERT_TXT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_med_large"
+        android:imeOptions="actionDone"
+        android:gravity="top|left"
+        android:textColor="@color/text_heading"
+        android:textCursorDrawable="@drawable/cursor_accent"
+        android:background="@android:color/transparent"
+        android:textSize="@dimen/sub_text_size" />
+
+    <TextView
+        style="@style/clickable_txt_blue"
+        android:layout_marginTop="@dimen/lesson_sides_margin"
+        android:imeOptions="actionDone"
+        android:gravity="top|left"
+        android:text="@string/update_highlights_txt"
+        android:textColor="@color/text_heading"
+        android:textCursorDrawable="@drawable/cursor_accent"
+        android:background="@android:color/transparent"
+        android:textSize="@dimen/sub_text_size" />
+
+    <TextView
+        android:id="@+id/ALLERT_TXT_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:gravity="top|left"
+        android:textColor="@color/text_heading"
+        android:textCursorDrawable="@drawable/cursor_accent"
+        android:background="@android:color/transparent"
+        android:textSize="@dimen/sub_text_size" />
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_med_large"
+        android:layout_marginBottom="@dimen/margin_med_large">
+
+        <TextView
+            android:id="@+id/NO_DIALOG_TXT"
+            style="@style/clikable_warm_txt"
+            android:gravity="center"
+            android:text="@string/no_txt"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/warm_grey" />
+
+        <TextView
+            android:id="@+id/YES_DIALOG_TXT"
+            style="@style/clikable_warm_txt"
+            android:gravity="center"
+            android:text="@string/yes_txt"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorAccent" />
+
+    </RelativeLayout>
+</LinearLayout>

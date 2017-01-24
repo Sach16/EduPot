@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User ID :"
+                android:text="Account Id :"
                 android:textColor="@color/text_body"
                 android:textSize="@dimen/mid_lar_text_size" />
 
@@ -47,7 +47,7 @@
                         android:background="@android:color/transparent"
                         android:drawablePadding="10dp"
                         android:gravity="center|left"
-                        android:imeOptions="actionNext"
+                        android:imeOptions="actionDone"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/text_heading"

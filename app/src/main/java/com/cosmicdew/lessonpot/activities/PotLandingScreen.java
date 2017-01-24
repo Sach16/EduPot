@@ -2,6 +2,7 @@ package com.cosmicdew.lessonpot.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -15,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.adapters.CustomRecyclerAdapterForUsers;
@@ -29,6 +29,8 @@ import com.cosmicdew.lessonpot.network.Constants;
 import com.cosmicdew.lessonpot.network.RequestManager;
 import com.google.gson.Gson;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -37,6 +39,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Optional;
 import me.leolin.shortcutbadger.ShortcutBadger;
+
+import static com.cosmicdew.lessonpot.network.RequestManager.LIVE_BASEFEED_URL;
+import static com.cosmicdew.lessonpot.network.RequestManager.TEST_BASEFEED_URL;
 
 /**
  * Created by S.K. Pissay on 17/10/16.
@@ -55,6 +60,8 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
     @Nullable
     @BindView(R.id.NO_DATA_RL)
     RelativeLayout rlNoData;
+
+    public static final int RE_FRESH = 7771;
 
     private boolean m_cLoading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -120,33 +127,65 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
             case PotMacros.ON_INFO_LONG_CLICK_USERS:
                 switch (pObjMessage.arg1){
                     case R.id.action_remove:
-                        Users lUsers = (Users) pObjMessage.obj;
+                        Object[] lObjects = (Object[]) pObjMessage.obj;
+                        Users lUsers = (Users) lObjects[0];
                         displayYesOrNoCustAlert(R.id.action_remove,
                                 getResources().getString(R.string.remove_user_txt),
                                 String.format("%s %s \n%s",
                                         lUsers.getFirstName() + " " +  lUsers.getLastName(),
                                         getResources().getString(R.string.will_be_removed_from_this_phone_txt),
                                         getResources().getString(R.string.do_you_want_to_proceed_txt)),
-                                lUsers);
+                                lObjects);
                         break;
                 }
                 break;
             case R.id.action_remove:
-                Object[] lObjects = (Object[]) pObjMessage.obj;
-                if ((boolean) lObjects[0]){
-                    Users lUsers = (Users) lObjects[1];
+                Object[] lObjectsAll = (Object[]) pObjMessage.obj;
+                if ((boolean) lObjectsAll[0]){
+                    Object[] lObjects = (Object[]) lObjectsAll[1];
+                    Users lUsers = (Users) lObjects[0];
                     displayProgressBar(-1, "Loading...");
-                    RequestManager.getInstance(this).placeUnivRequest(Constants.USERS +
-                                    lUsers.getId() +
-                                    "/" +
-                                    Constants.DEVICE +
-                                    PotMacros.getDeviceID(this) +
-                                    "/",
-                            Users.class, this, lUsers, null, null, Request.Method.DELETE);
+                    new DeleteUser().execute(Constants.USERS +
+                            lUsers.getId() +
+                            "/" +
+                            Constants.DEVICE +
+                            PotMacros.getDeviceID(this) +
+                            "/", lObjects);
                 }
+                break;
+            case RE_FRESH:
+                init();
                 break;
             default:
                 break;
+        }
+    }
+
+    public class DeleteUser extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+                try {
+                    URL url = new URL(RequestManager.IS_LIVE ? LIVE_BASEFEED_URL : TEST_BASEFEED_URL + objects[0]);
+                    HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+                    httpCon.setDoOutput(true);
+                    httpCon.setRequestProperty("Content-Type", "application/json");
+                    httpCon.setRequestProperty(Constants.AUTHORIZATION, PotMacros.getLoginAuth(PotLandingScreen.this));
+                    httpCon.setRequestMethod("DELETE");
+                    httpCon.connect();
+                    httpCon.getInputStream();
+                    int i = httpCon.getResponseCode();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            hideDialog();
+            init();
         }
     }
 
@@ -156,13 +195,13 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
         Intent lObjIntent;
         switch (v.getId()){
             case R.id.REGISTER_NEW_TXT:
-                lObjIntent = new Intent(this, RegisterationScreen.class);
+                lObjIntent = new Intent(this, TermsAndCondition.class);
+                lObjIntent.putExtra(PotMacros.OBJ_REGISTERATION, true);
                 startActivity(lObjIntent);
                 break;
             case R.id.ADD_EXISTING_TXT:
-//                lObjIntent = new Intent(this, LessonsScreen.class);
-//                lObjIntent.putExtra(PotMacros.OBJ_ISNEWLESSON, true);
-//                startActivity(lObjIntent);
+                lObjIntent = new Intent(this, PotAddExistingUserScreen.class);
+                startActivity(lObjIntent);
                 break;
             case R.id.OVERVIEW_TXT:
                 lObjIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.OVERVIEW));
@@ -203,15 +242,17 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
                     startActivity(lObjIntent);
                     finish();
                 }else if (apiMethod.contains(Constants.DEVICE)) {
-                    Users lUsers = (Users) refObj;
+                    Object[] lObjects = (Object[]) refObj;
+                    Users lUsers = (Users) lObjects[0];
                     PotMacros.clearNotifyCount(this, Constants.LESSON_SHARE, lUsers);
                     PotMacros.clearNotifyCount(this, Constants.CONNECTION_REQUEST, lUsers);
                     ShortcutBadger.applyCount(this, PotMacros.getNotifyAll(this)[0]);
                     if (null != m_cRecycAdUsers) {
-                        m_cUsersList.clear();
-                        m_cRecycAdUsers.notifyDataSetChanged();
-                        init();
-                        break;
+                        m_cUsersList.remove((int) lObjects[1]);
+                        m_cRecycUsers.setAdapter(new CustomRecyclerAdapterForUsers(this, m_cUsersList, this));
+                        m_cRecycUsers.invalidate();
+//                        m_cObjUIHandler.sendEmptyMessage(RE_FRESH);
+//                        break;
                     }
                 } else {
                     super.onAPIResponse(response, apiMethod, refObj);
@@ -273,7 +314,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
                 pUsers.getFirstName() + " " + pUsers.getLastName(),
                 Arrays.asList(getResources().getString(R.string.remove_user_txt)),
                 Arrays.asList(R.id.action_remove),
-                pUsers);
+                new Object[]{pUsers, pPostion});
     }
 
     public Users getUser() {

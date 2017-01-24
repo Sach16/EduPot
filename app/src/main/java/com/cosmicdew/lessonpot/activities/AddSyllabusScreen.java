@@ -55,6 +55,7 @@ public class AddSyllabusScreen extends PotBaseActivity implements RecyclerSelect
     FrameLayout m_cMainRL;
 
     private Users m_cUser;
+    private Users m_cLoggedInUser;
     private BoardChoices m_cBoardChoices;
     private Syllabi m_cSyllabi;
 
@@ -65,6 +66,7 @@ public class AddSyllabusScreen extends PotBaseActivity implements RecyclerSelect
         ButterKnife.bind(this);
 
         m_cUser = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_USER), Users.class);
+        m_cLoggedInUser = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_USER_MAIN), Users.class);
 
         if (m_cToolBar != null){
             setSupportActionBar(m_cToolBar);
@@ -187,10 +189,11 @@ public class AddSyllabusScreen extends PotBaseActivity implements RecyclerSelect
             case PotMacros.FRAG_CHAPTER:
                 lReturnIntent = new Intent();
                 setResult(Activity.RESULT_OK, lReturnIntent);
+                switchModeFragment(false, 1);
                 ((PotUserHomeChapterFragment) getSupportFragmentManager().findFragmentByTag(FRAG_CHAPTER)).onBackPressed();
-                ((PotUserHomeSubjectFragment) getSupportFragmentManager().findFragmentByTag(FRAG_SUBJECTS)).onBackPressed();
-                ((PotUserHomeClassesFragment) getSupportFragmentManager().findFragmentByTag(FRAG_CLASSES)).onBackPressed();
-                finish();
+//                ((PotUserHomeSubjectFragment) getSupportFragmentManager().findFragmentByTag(FRAG_SUBJECTS)).onBackPressed();
+//                ((PotUserHomeClassesFragment) getSupportFragmentManager().findFragmentByTag(FRAG_CLASSES)).onBackPressed();
+//                finish();
                 break;
         }
     }
