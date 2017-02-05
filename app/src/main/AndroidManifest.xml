@@ -155,8 +155,12 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="61799657aa7ca5ecb5d2e3eb39ddb61b727d5e5b"
-            />
+            android:value="61799657aa7ca5ecb5d2e3eb39ddb61b727d5e5b" />
+
+        <meta-data android:name="DATABASE" android:value="lessonpot.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.cosmicdew.lessonpot" />
 
     </application>
 

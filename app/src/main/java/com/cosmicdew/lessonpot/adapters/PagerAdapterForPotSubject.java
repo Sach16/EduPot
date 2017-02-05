@@ -22,40 +22,57 @@ public class PagerAdapterForPotSubject extends FragmentStatePagerAdapter {
     String m_cId;
     private Users m_cUser;
     private BoardChoices m_cBoardChoices;
+    private String m_cGoOffline;
 
     //write inner fragment items below
 
     public PotFragmentBaseClass m_cObjFragmentBase;
 
     public PagerAdapterForPotSubject(FragmentManager pFragment, PotFragmentBaseClass pObjFragmentBase,
-                                  int pNumOfTabs, String pId, Users pUser, BoardChoices pBoardChoices) {
+                                  int pNumOfTabs, String pId, Users pUser, BoardChoices pBoardChoices, String pGoOffline) {
         super(pFragment);
         this.m_cNumOfTabs = pNumOfTabs;
         this.m_cObjFragmentBase = pObjFragmentBase;
         this.m_cId = pId;
         this.m_cUser = pUser;
         this.m_cBoardChoices = pBoardChoices;
+        this.m_cGoOffline = pGoOffline;
 
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                m_cObjFragmentBase = PotUserHomeSubjectFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, null, null);
-                return m_cObjFragmentBase;
-            case 1:
-                m_cObjFragmentBase = PotUserHomeSubjectViewedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices);
-                return m_cObjFragmentBase;
-            case 2:
-                m_cObjFragmentBase = PotUserHomeSubjectReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices);
-                return m_cObjFragmentBase;
-            case 3:
-                m_cObjFragmentBase = PotUserHomeSubjectMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices);
-                return m_cObjFragmentBase;
-            default:
-                return null;
-        }
+        if (null == m_cGoOffline)
+            switch (position) {
+                case 0:
+                    m_cObjFragmentBase = PotUserHomeSubjectFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, null, null, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 1:
+                    m_cObjFragmentBase = PotUserHomeSubjectViewedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 2:
+                    m_cObjFragmentBase = PotUserHomeSubjectReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 3:
+                    m_cObjFragmentBase = PotUserHomeSubjectMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                default:
+                    return null;
+            }
+        else
+            switch (position) {
+                case 0:
+                    m_cObjFragmentBase = PotUserHomeSubjectFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, null, null, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 1:
+                    m_cObjFragmentBase = PotUserHomeSubjectReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 2:
+                    m_cObjFragmentBase = PotUserHomeSubjectMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                default:
+                    return null;
+            }
     }
 
     @Override

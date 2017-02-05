@@ -77,6 +77,8 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
 
     private RemoveLessonReceiver mRemvReceiver;
 
+    private String m_cGoOffline;
+
     private Dialog m_cObjDialog;
     private String mLessFromWhere;
 
@@ -91,7 +93,7 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
     }
 
     public static PotUserHomeLessonFragment newInstance(int pPosition, String pKey, Users pUser, BoardChoices pBoardChoices,
-                                                        Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere) {
+                                                        Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere, String pGoOffline) {
         PotUserHomeLessonFragment lPotUserHomeLessonFragment = new PotUserHomeLessonFragment();
 
         Bundle args = new Bundle();
@@ -102,6 +104,7 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
         args.putString(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(pSyllabi));
         args.putString(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
         args.putString(PotMacros.OBJ_LESSONFROM, pLessFromWhere);
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lPotUserHomeLessonFragment.setArguments(args);
 
         return lPotUserHomeLessonFragment;
@@ -158,6 +161,7 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
         m_cSyllabi = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_SYLLABI), Syllabi.class);
         m_cChapters = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_CHAPTERS), Chapters.class);
         mLessFromWhere = getArguments().getString(PotMacros.OBJ_LESSONFROM);
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
         m_cLessonsList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -265,6 +269,9 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
                                         "/" +
                                         Constants.POST,
                                 Lessons.class, null, null, null, true);
+                        break;
+                    case R.id.action_save:
+                        ((PotUserLessonScreen) m_cObjMainActivity).checkAndDownloadAttachments(((LessonViews) pObjMessage.obj).getLesson(), ((LessonViews) pObjMessage.obj).getSource().getId());
                         break;
                 }
                 break;
@@ -415,31 +422,37 @@ public class PotUserHomeLessonFragment extends PotFragmentBaseClass implements R
                             getResources().getString(R.string.action_share),
                             getResources().getString(R.string.action_edit),
                             getResources().getString(R.string.action_delete),
-                            getResources().getString(R.string.action_add_syllabus)),
+                            getResources().getString(R.string.action_add_syllabus),
+                            getResources().getString(R.string.action_save)),
                     Arrays.asList(R.id.action_post_to_students,
                             R.id.action_share,
                             R.id.action_edit,
                             R.id.action_delete,
-                            R.id.action_add_syllabus),
+                            R.id.action_add_syllabus,
+                            R.id.action_save),
                     pLessonViews);
         else
             displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_VIEWED_LESSON, pLessons.getName(),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus))
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save))
                             :
                             Arrays.asList(getResources().getString(R.string.action_post_to_students),
                                     getResources().getString(R.string.action_share),
                                     getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus)),
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save)),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(R.id.action_remove,
-                                    R.id.action_add_syllabus)
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save)
                             :
                             Arrays.asList(R.id.action_post_to_students,
                                     R.id.action_share,
                                     R.id.action_remove,
-                                    R.id.action_add_syllabus),
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save),
                     pLessonViews);
     }
 

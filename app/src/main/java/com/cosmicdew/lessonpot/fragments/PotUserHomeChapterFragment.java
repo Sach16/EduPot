@@ -31,12 +31,16 @@ import com.cosmicdew.lessonpot.models.ChaptersAll;
 import com.cosmicdew.lessonpot.models.LessonShares;
 import com.cosmicdew.lessonpot.models.LessonViews;
 import com.cosmicdew.lessonpot.models.Lessons;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +72,8 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
     private Syllabi m_cSyllabi;
     private String m_cSelectionType;
 
+    private String m_cGoOffline;
+
     private boolean m_cLoading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     LinearLayoutManager m_cLayoutManager;
@@ -81,7 +87,7 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
     }
 
     public static PotUserHomeChapterFragment newInstance(int pPosition, String pKey, Users pUser, BoardChoices pBoardChoices, Syllabi pSyllabi, String pSellectionType,
-                                                         RecyclerSelectionListener pRecyclerSelectionListener) {
+                                                         RecyclerSelectionListener pRecyclerSelectionListener, String pGoOffline) {
         PotUserHomeChapterFragment lPotUserHomeChapterFragment = new PotUserHomeChapterFragment();
 
         m_cRecyclerSelectionListener = pRecyclerSelectionListener;
@@ -93,6 +99,7 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
         args.putString(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(pBoardChoices));
         args.putString(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(pSyllabi));
         args.putString(PotMacros.OBJ_SELECTIONTYPE, pSellectionType);
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lPotUserHomeChapterFragment.setArguments(args);
 
         return lPotUserHomeChapterFragment;
@@ -132,6 +139,7 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
         m_cBoardChoices = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
         m_cSyllabi = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_SYLLABI), Syllabi.class);
         m_cSelectionType = getArguments().getString(PotMacros.OBJ_SELECTIONTYPE);
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
         m_cChaptersList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -164,14 +172,44 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
             }
         });
 
-        //Calling board class api
-        m_cObjMainActivity.displayProgressBar(-1, "");
-        placeUserRequest(Constants.SYLLABI+
-                        m_cSyllabi.getId()+
-                        "/"+
-                        Constants.CHAPTERS
-                , ChaptersAll.class, null, null, null, false);
+        if (null != m_cGoOffline){
+            initOffline();
+        }else {
+            //Calling board class api
+            m_cObjMainActivity.displayProgressBar(-1, "");
+            placeUserRequest(Constants.SYLLABI +
+                            m_cSyllabi.getId() +
+                            "/" +
+                            Constants.CHAPTERS
+                    , ChaptersAll.class, null, null, null, false);
+        }
+    }
 
+    private void initOffline() {
+        List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
+        List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class, "select * from lessons_table where user_id = ? and board_class like '%'||?||'%' and syllabi_name = ?",
+                String.valueOf(m_cUser.getId()),
+                m_cBoardChoices.getBoardclass().getName() + " " + m_cBoardChoices.getBoardclass().getBoard().getName(),
+                m_cSyllabi.getSubjectName());
+        Set<String> lSetChapters = new HashSet<>();
+        for (LessonsTable lessonsTable : lessonsTableList)
+            lSetChapters.add(lessonsTable.getChapterName());
+        if (null != lSetChapters && lSetChapters.size() > 0) {
+            for (String lChpName : lSetChapters) {
+                Chapters lChapters = new Chapters();
+                lChapters.setIsGeneric(false);
+                lChapters.setName(lChpName);
+                lChapters.setLessonCount(0);
+                m_cChaptersList.add(lChapters);
+            }
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForChapters(m_cObjMainActivity, m_cChaptersList, m_cSelectionType, this);
+            m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
+        } else {
+            if (null != m_cRecycClassesAdapt) {
+                m_cChaptersList.clear();
+                m_cRecycClassesAdapt.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -272,23 +310,34 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
     @Override
     public void onInfoClick(int pPostion, BoardChoices pBoardChoices, Syllabi pSyllabi, Chapters pChapters, Lessons pLessons, LessonShares pLessonShares, LessonViews pLessonViews, View pView) {
         Intent lObjIntent;
-        if (pChapters.getIsGeneric()){
+        if (null != m_cGoOffline){
             lObjIntent = new Intent(m_cObjMainActivity, PotUserLessonScreen.class);
+            lObjIntent.putExtra(PotMacros.GO_OFFLINE, m_cGoOffline);
             lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_CHAPTERS);
-            lObjIntent.putExtra(PotMacros.LESSON_HEADER, pChapters.getName());
             lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
             lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
             lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
             lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
             startActivity(lObjIntent);
         }else {
-            lObjIntent = new Intent(m_cObjMainActivity, PotUserLessonScreen.class);
-            lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_CHAPTERS);
-            lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
-            lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
-            lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
-            lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
-            startActivity(lObjIntent);
+            if (pChapters.getIsGeneric()) {
+                lObjIntent = new Intent(m_cObjMainActivity, PotUserLessonScreen.class);
+                lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_CHAPTERS);
+                lObjIntent.putExtra(PotMacros.LESSON_HEADER, pChapters.getName());
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
+                lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
+                lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
+                startActivity(lObjIntent);
+            } else {
+                lObjIntent = new Intent(m_cObjMainActivity, PotUserLessonScreen.class);
+                lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_CHAPTERS);
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoices));
+                lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
+                lObjIntent.putExtra(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
+                startActivity(lObjIntent);
+            }
         }
     }
 

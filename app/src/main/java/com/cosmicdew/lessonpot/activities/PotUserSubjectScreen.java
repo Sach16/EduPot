@@ -14,19 +14,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.adapters.PagerAdapterForPotSubject;
 import com.cosmicdew.lessonpot.baseclasses.PotBaseActivity;
 import com.cosmicdew.lessonpot.customviews.CustomTabLayout;
 import com.cosmicdew.lessonpot.macros.PotMacros;
+import com.cosmicdew.lessonpot.models.Attachments;
+import com.cosmicdew.lessonpot.models.AttachmentsAll;
 import com.cosmicdew.lessonpot.models.BoardChoices;
+import com.cosmicdew.lessonpot.models.Lessons;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
+import com.cosmicdew.lessonpot.network.RequestManager;
 import com.google.gson.Gson;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,6 +83,11 @@ public class PotUserSubjectScreen extends PotBaseActivity {
     private Syllabi m_cSyllabiGen;
     private PagerAdapterForPotSubject m_cPagerAdapter;
 
+    private String m_cGoOffline;
+    private LessonsTable m_cLessonsTable;
+    private HashMap<String, Attachments> m_cAttachList;
+    private int count;
+
     @Override
     protected void onCreate(Bundle pSavedInstance) {
         super.onCreate(pSavedInstance);
@@ -73,8 +96,9 @@ public class PotUserSubjectScreen extends PotBaseActivity {
 
         m_cUser = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_USER), Users.class);
         m_cBoardChoice = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
+        m_cGoOffline = getIntent().getStringExtra(PotMacros.GO_OFFLINE);
 
-        if (m_cToolBar != null){
+        if (m_cToolBar != null) {
             setSupportActionBar(m_cToolBar);
             /*getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
             getSupportActionBar().setTitle(getResources().getString(R.string.library_txt));
@@ -97,7 +121,8 @@ public class PotUserSubjectScreen extends PotBaseActivity {
 
     private void init() {
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Subjects"));
-        m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Viewed"));
+        if (null == m_cGoOffline)
+            m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Viewed"));
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Received"));
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Mine"));
 //        m_cTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -108,7 +133,8 @@ public class PotUserSubjectScreen extends PotBaseActivity {
                 m_cTabLayout.getTabCount(),
                 "",
                 m_cUser,
-                m_cBoardChoice);
+                m_cBoardChoice,
+                m_cGoOffline);
         m_cPager.setOffscreenPageLimit(2);
         m_cPager.setAdapter(m_cPagerAdapter);
 
@@ -226,7 +252,7 @@ public class PotUserSubjectScreen extends PotBaseActivity {
         Intent lObjIntent;
         switch (pObjMessage.what) {
             case R.id.action_notify:
-                if (pObjMessage.arg1 == 0){
+                if (pObjMessage.arg1 == 0) {
                     lObjIntent = new Intent(PotUserSubjectScreen.this, PotUserHomeScreen.class);
                     lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson((Users) pObjMessage.obj));
                     lObjIntent.putExtra(PotMacros.FROM_NETWORK_SCREEN, true);
@@ -236,7 +262,7 @@ public class PotUserSubjectScreen extends PotBaseActivity {
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     PotMacros.clearNotifyCount(this, Constants.LESSON_SHARE, (Users) pObjMessage.obj);
                     finish();
-                }else {
+                } else {
                     lObjIntent = new Intent(PotUserSubjectScreen.this, PotUserNetworkScreen.class);
                     lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson((Users) pObjMessage.obj));
                     lObjIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -271,6 +297,194 @@ public class PotUserSubjectScreen extends PotBaseActivity {
                 break;
             default:
                 super.onClick(v);
+                break;
+        }
+    }
+
+    public void checkAndDownloadAttachments(Lessons pLessons, int pSourceId) {
+        m_cAttachList = new HashMap<>();
+        displayProgressBar(-1, "Loading...");
+        RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                        pLessons.getId() +
+                        "/" +
+                        Constants.ATTACHMENTS, AttachmentsAll.class, this,
+                new Object[]{pLessons, pSourceId},
+                null, null, false);
+    }
+
+    public boolean checkAndUpdateLessons(Lessons pLessons, int pSourceId) {
+        boolean lRetVal = false;
+        List<LessonsTable> lessonsTableListAll = LessonsTable.listAll(LessonsTable.class);
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "lesson_id = ? and user_id = ?", String.valueOf(pLessons.getId()), String.valueOf(m_cUser.getId()));
+        if (lessonsTableList.size() == 0) {
+            m_cLessonsTable = new LessonsTable(pLessons.getId(), pLessons.getName(), pLessons.getComments(),
+                    pLessons.getCreated(), pLessons.getModified(), m_cUser.getId(), pLessons.getOwner().getId(), pSourceId != m_cUser.getId() ? pSourceId : -1,
+                    pLessons.getChapter().getName(),
+                    pLessons.getChapter().getSyllabus().getSubjectName(),
+                    pLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+                            pLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    pLessons.getLength().getLengthSum(),
+                    pLessons.getPosition(),
+                    pLessons.getViews());
+            m_cLessonsTable.save();
+            lRetVal = true;
+        } else {
+            List<LessonsTable> lessonsTableAll = LessonsTable.find(LessonsTable.class, "lesson_id = ?", String.valueOf(pLessons.getId()));
+            m_cLessonsTable = LessonsTable.find(LessonsTable.class, "lesson_id = ?", String.valueOf(pLessons.getId())).get(0);
+            m_cLessonsTable.setLessonId(pLessons.getId());
+            m_cLessonsTable.setName(pLessons.getName());
+            m_cLessonsTable.setComments(pLessons.getComments());
+            m_cLessonsTable.setCreated(pLessons.getCreated());
+            m_cLessonsTable.setModified(pLessons.getModified());
+            m_cLessonsTable.setUserId(m_cUser.getId());
+            m_cLessonsTable.setOwnerId(pLessons.getOwner().getId());
+            m_cLessonsTable.setSharerId(pSourceId != m_cUser.getId() ? pSourceId : -1);
+            m_cLessonsTable.setChapterName(pLessons.getChapter().getName());
+            m_cLessonsTable.setSyllabiName(pLessons.getChapter().getSyllabus().getSubjectName());
+            m_cLessonsTable.setBoardClass(pLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+                    pLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName());
+            m_cLessonsTable.setLengthSum(pLessons.getLength().getLengthSum());
+            m_cLessonsTable.setPosition(pLessons.getPosition());
+            m_cLessonsTable.setViews(pLessons.getViews());
+            m_cLessonsTable.save();
+            lRetVal = false;
+        }
+        return lRetVal;
+    }
+
+    private Attachments addAttachment(Integer pId, String pLessonType, String pAttach) {
+        Attachments lAttachments = new Attachments();
+        lAttachments.setId(pId);
+        lAttachments.setAttachmentType(pLessonType);
+        lAttachments.setAttachment(pAttach);
+        return lAttachments;
+    }
+
+    @Override
+    public void onAPIResponse(Object response, String apiMethod, Object refObj) {
+        switch (apiMethod) {
+            default:
+                if (apiMethod.contains(Constants.ATTACHMENTS)) {
+                    AttachmentsAll lAttachmentsAll = (AttachmentsAll) response;
+                    for (Attachments lAttachments : lAttachmentsAll.getAttachments()) {
+                        if (lAttachments.getAttachmentType().equalsIgnoreCase(Constants.IMAGE)) {
+                            switch (lAttachments.getSlot()) {
+                                case 1:
+                                    m_cAttachList.put(PotMacros.LESSON_IMG_1, addAttachment(lAttachments.getId(),
+                                            PotMacros.LESSON_IMG_1,
+                                            lAttachments.getAttachment()));
+                                    break;
+                                case 2:
+                                    m_cAttachList.put(PotMacros.LESSON_IMG_2, addAttachment(lAttachments.getId(),
+                                            PotMacros.LESSON_IMG_2,
+                                            lAttachments.getAttachment()));
+                                    break;
+                                case 3:
+                                    m_cAttachList.put(PotMacros.LESSON_IMG_3, addAttachment(lAttachments.getId(),
+                                            PotMacros.LESSON_IMG_3,
+                                            lAttachments.getAttachment()));
+                                    break;
+                            }
+                        } else if (lAttachments.getAttachmentType().equalsIgnoreCase(Constants.AUDIO)) {
+                            m_cAttachList.put(PotMacros.LESSON_AUDIO, addAttachment(lAttachments.getId(),
+                                    PotMacros.LESSON_AUDIO,
+                                    lAttachments.getAttachment()));
+                        }
+                    }
+                    Object[] lObjects = (Object[]) refObj;
+                    if (checkAndUpdateLessons((Lessons) lObjects[0], (int) lObjects[1])) {
+                        LinkedHashMap<String, Attachments> linkedHashMap = new LinkedHashMap<>(m_cAttachList);
+                        if (null != m_cAttachList && m_cAttachList.size() > 0) {
+                            for (int i = 0; i < m_cAttachList.size(); i++) {
+                                RequestManager.getInstance(this).placeStreamRequest((new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachment(),
+                                        Constants.OFFLINE_META,
+                                        Attachments.class, this,
+                                        (new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachmentType().equals(PotMacros.LESSON_AUDIO) ?
+                                                new Object[]{(new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachmentType(), PotMacros.getOfflineAudioFilePath(this) + "/" + PotMacros.getGUID() + ".aac",
+                                                        i == (m_cAttachList.size() - 1) ? (m_cAttachList.size() - 1) : -1} :
+                                                new Object[]{(new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachmentType(), PotMacros.getOfflineImageFilePath(this) + "/" + PotMacros.getGUID() + ".jpg",
+                                                        i == (m_cAttachList.size() - 1) ? (m_cAttachList.size() - 1) : -1},
+                                        null, null, false);
+                            }
+                        } else
+                            hideDialog();
+                    } else
+                        hideDialog();
+                } else if (apiMethod.contains(Constants.OFFLINE_META)) {
+                    Object[] lObjects = (Object[]) refObj;
+                    try {
+                        byte[] lByte = (byte[]) response;
+                        long lenghtOfFile = lByte.length;
+
+                        //coverting reponse to input stream
+                        InputStream input = new ByteArrayInputStream(lByte);
+                        File file = new File((String) lObjects[1]);
+                        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file));
+                        byte data[] = new byte[1024];
+
+                        long total = 0;
+
+                        while ((count = input.read(data)) != -1) {
+                            total += count;
+                            output.write(data, 0, count);
+                        }
+                        output.flush();
+                        output.close();
+                        input.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    switch ((String) lObjects[0]) {
+                        case PotMacros.LESSON_AUDIO:
+                            m_cLessonsTable.setAudio((String) lObjects[1]);
+                            break;
+                        case PotMacros.LESSON_IMG_1:
+                            m_cLessonsTable.setImg1((String) lObjects[1]);
+                            break;
+                        case PotMacros.LESSON_IMG_2:
+                            m_cLessonsTable.setImg2((String) lObjects[1]);
+                            break;
+                        case PotMacros.LESSON_IMG_3:
+                            m_cLessonsTable.setImg3((String) lObjects[1]);
+                            break;
+                    }
+                    m_cLessonsTable.save();
+                    if ((int) lObjects[2] > -1) {
+                        displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
+                        hideDialog();
+                    }
+                } else {
+                    super.onAPIResponse(response, apiMethod, refObj);
+                    hideDialog();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
+        switch (apiMethod) {
+            default:
+                if (apiMethod.contains(Constants.ATTACHMENTS) ||
+                        apiMethod.contains(Constants.OFFLINE_META)) {
+                    hideDialog();
+                    if (error instanceof NoConnectionError) {
+                        Toast.makeText(this, "Please check Network connection", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String lMsg = new String(error.networkResponse.data);
+                        showErrorMsg(lMsg);
+                    }
+                } else {
+                    super.onErrorResponse(error, apiMethod, refObj);
+                    hideDialog();
+                }
+                ;
                 break;
         }
     }

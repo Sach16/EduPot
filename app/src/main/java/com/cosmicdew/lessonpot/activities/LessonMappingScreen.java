@@ -82,7 +82,7 @@ public class LessonMappingScreen extends PotBaseActivity implements RecyclerSele
     private void init() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.CONTAINER_FL, new PotUserHomeClassesFragment().newInstance(-1, null, m_cUser, PotMacros.OBJ_SELECTIONTYPE, this), FRAG_CLASSES)
+                .add(R.id.CONTAINER_FL, new PotUserHomeClassesFragment().newInstance(-1, null, m_cUser, PotMacros.OBJ_SELECTIONTYPE, this, null), FRAG_CLASSES)
                 .commit();
     }
 
@@ -151,7 +151,7 @@ public class LessonMappingScreen extends PotBaseActivity implements RecyclerSele
                 if (!pBoardChoices.getBoardclass().getIsGeneric()) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .add(R.id.CONTAINER_FL, new PotUserHomeSubjectFragment().newInstance(-1, null, m_cUser, pBoardChoices, PotMacros.OBJ_SELECTIONTYPE, this), PotMacros.FRAG_SUBJECTS)
+                            .add(R.id.CONTAINER_FL, new PotUserHomeSubjectFragment().newInstance(-1, null, m_cUser, pBoardChoices, PotMacros.OBJ_SELECTIONTYPE, this, null), PotMacros.FRAG_SUBJECTS)
                             .commit();
                     switchModeFragment(false, 1);
                 } else {
@@ -169,7 +169,7 @@ public class LessonMappingScreen extends PotBaseActivity implements RecyclerSele
                 if (!pSyllabi.getIsGeneric()) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .add(R.id.CONTAINER_FL, new PotUserHomeChapterFragment().newInstance(-1, null, m_cUser, pBoardChoices, pSyllabi, PotMacros.OBJ_SELECTIONTYPE, this), PotMacros.FRAG_CHAPTER)
+                            .add(R.id.CONTAINER_FL, new PotUserHomeChapterFragment().newInstance(-1, null, m_cUser, pBoardChoices, pSyllabi, PotMacros.OBJ_SELECTIONTYPE, this, null), PotMacros.FRAG_CHAPTER)
                             .commit();
                     switchModeFragment(false, 2);
                 } else {

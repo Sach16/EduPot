@@ -36,6 +36,7 @@ import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.baseclasses.PotBaseActivity;
 import com.cosmicdew.lessonpot.customviews.TouchImageView;
 import com.cosmicdew.lessonpot.customviews.UserCircularImageView;
+import com.cosmicdew.lessonpot.fragments.PotGlobalSettingsFragment;
 import com.cosmicdew.lessonpot.fragments.PotRegisterPhoneNumbers;
 import com.cosmicdew.lessonpot.fragments.PotUserCredentialsFragment;
 import com.cosmicdew.lessonpot.interfaces.RefreshEditProfileListener;
@@ -113,6 +114,7 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
 
     public static final String FRAG_CREDENTIALS_FRAGMENT = "FRAG_CREDENTIALS_FRAGMENT";
     public static final String FRAG_REG_PHONENUMBERS = "FRAG_REG_PHONENUMBERS";
+    public static final String FRAG_GLOBAL_SETTINGS = "FRAG_GLOBAL_SETTINGS";
 
     public static final int TAKE_PICTURE = 101;
     public static final int PROCESS_PICTURE = 111;
@@ -322,10 +324,15 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
                         .commit();
                 switchModeFragment(true, FRAG_REG_PHONENUMBERS);
                 break;
+            case R.id.SETTINGS_RL:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.EDIT_PRO_MAIN_RL, new PotGlobalSettingsFragment().newInstance(1, m_cUser, this), FRAG_GLOBAL_SETTINGS)
+                        .commit();
+                switchModeFragment(true, FRAG_GLOBAL_SETTINGS);
+                break;
             case R.id.PAGER_DELETE_IMG:
                 viewStub.setVisibility(View.GONE);
-                break;
-            case R.id.SETTINGS_RL:
                 break;
         }
     }
@@ -337,6 +344,9 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
                 break;
             case FRAG_REG_PHONENUMBERS:
                 getSupportActionBar().setTitle(getResources().getString(R.string.registered_phone_numbers_txt));
+                break;
+            case FRAG_GLOBAL_SETTINGS:
+                getSupportActionBar().setTitle(getResources().getString(R.string.global_permission_settings_txt));
                 break;
             default:
                 getSupportActionBar().setTitle(getResources().getString(R.string.edit_profile_txt));
@@ -351,6 +361,9 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             switchModeFragment(false, "");
         } else if (getSupportFragmentManager().findFragmentByTag(FRAG_REG_PHONENUMBERS) != null) {
             ((PotRegisterPhoneNumbers) getSupportFragmentManager().findFragmentByTag(FRAG_REG_PHONENUMBERS)).onBackPressed();
+            switchModeFragment(false, "");
+        } else if (getSupportFragmentManager().findFragmentByTag(FRAG_GLOBAL_SETTINGS) != null) {
+            ((PotGlobalSettingsFragment) getSupportFragmentManager().findFragmentByTag(FRAG_GLOBAL_SETTINGS)).onBackPressed();
             switchModeFragment(false, "");
         } else {
             Intent lReturnIntent = new Intent();

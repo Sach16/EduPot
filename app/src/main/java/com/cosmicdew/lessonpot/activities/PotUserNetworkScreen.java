@@ -147,6 +147,23 @@ public class PotUserNetworkScreen extends PotBaseActivity implements NavigationV
                 }
             }
         });
+        TextView lGoOffline = (TextView) m_cView.findViewById(R.id.NAV_GO_OFFLINE);
+        lGoOffline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent lObjIntent;
+                if (null != m_cDrawerLayout) {
+                    m_cDrawerLayout.closeDrawer(GravityCompat.START);
+                    lObjIntent = new Intent(PotUserNetworkScreen.this, PotLandingScreen.class);
+                    lObjIntent.putExtra(PotMacros.GO_OFFLINE, PotMacros.GO_OFFLINE);
+                    lObjIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    lObjIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(lObjIntent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    finish();
+                }
+            }
+        });
         TextView lSwitchUser = (TextView) m_cView.findViewById(R.id.NAV_SIGN_OUT);
         lSwitchUser.setOnClickListener(new View.OnClickListener() {
             @Override

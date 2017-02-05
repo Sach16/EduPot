@@ -32,12 +32,16 @@ import com.cosmicdew.lessonpot.interfaces.OnStartDragListener;
 import com.cosmicdew.lessonpot.interfaces.RecyclerHomeListener;
 import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Attachments;
+import com.cosmicdew.lessonpot.models.Board;
 import com.cosmicdew.lessonpot.models.BoardChoices;
+import com.cosmicdew.lessonpot.models.BoardClass;
 import com.cosmicdew.lessonpot.models.Chapters;
+import com.cosmicdew.lessonpot.models.Length;
 import com.cosmicdew.lessonpot.models.LessonShares;
 import com.cosmicdew.lessonpot.models.LessonViews;
 import com.cosmicdew.lessonpot.models.Lessons;
 import com.cosmicdew.lessonpot.models.LessonsAll;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
@@ -99,6 +103,8 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
     private Dialog m_cObjDialog;
     private String mLessFromWhere;
 
+    private String m_cGoOffline;
+
     private boolean m_cLoading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     LinearLayoutManager m_cLayoutManager;
@@ -110,7 +116,7 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
     }
 
     public static PotUserHomeMineFragment newInstance(int pPosition, String pKey, Users pUser, BoardChoices pBoardChoices,
-                                                        Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere) {
+                                                        Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere, String pGoOffline) {
         PotUserHomeMineFragment lPotUserHomeMineFragment = new PotUserHomeMineFragment();
 
         Bundle args = new Bundle();
@@ -121,6 +127,7 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
         args.putString(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(pSyllabi));
         args.putString(PotMacros.OBJ_CHAPTERS, (new Gson()).toJson(pChapters));
         args.putString(PotMacros.OBJ_LESSONFROM, pLessFromWhere);
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lPotUserHomeMineFragment.setArguments(args);
 
         return lPotUserHomeMineFragment;
@@ -161,6 +168,7 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
         m_cSyllabi = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_SYLLABI), Syllabi.class);
         m_cChapters = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_CHAPTERS), Chapters.class);
         mLessFromWhere = getArguments().getString(PotMacros.OBJ_LESSONFROM);
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
         m_cLessonsList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -194,32 +202,93 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
             }
         });
 
-        //Calling board class api
-        m_cObjMainActivity.displayProgressBar(-1, "");
+        if (null != m_cGoOffline){
+            initOffline();
+        }else {
+            //Calling board class api
+            m_cObjMainActivity.displayProgressBar(-1, "");
 
-        switch (mLessFromWhere) {
-            case PotMacros.OBJ_BOARDCHOICES:
-                placeUserRequest(Constants.CREATED +
-                        Constants.GMR +
-                        Constants.LESSONS, LessonsAll.class, null, null, null, false);
+            switch (mLessFromWhere) {
+                case PotMacros.OBJ_BOARDCHOICES:
+                    placeUserRequest(Constants.CREATED +
+                            Constants.GMR +
+                            Constants.LESSONS, LessonsAll.class, null, null, null, false);
 
-                break;
-            case PotMacros.OBJ_SYLLABI:
-                placeUserRequest(Constants.CREATED + Constants.BOARDCLASSES +
-                        m_cBoardChoice.getBoardclass().getId() +
-                        "/" +
-                        Constants.GS +
-                        Constants.LESSONS, LessonsAll.class, null, null, null, false);
+                    break;
+                case PotMacros.OBJ_SYLLABI:
+                    placeUserRequest(Constants.CREATED + Constants.BOARDCLASSES +
+                            m_cBoardChoice.getBoardclass().getId() +
+                            "/" +
+                            Constants.GS +
+                            Constants.LESSONS, LessonsAll.class, null, null, null, false);
 
-                break;
-            case PotMacros.OBJ_CHAPTERS:
-                HashMap<String, String> lParams = new HashMap<>();
-                lParams.put(Constants.ORDERING, Constants.POSITION);
-                placeUserRequest(Constants.CREATED + Constants.CHAPTERS +
-                        m_cChapters.getId() +
-                        "/" +
-                        Constants.LESSONS, LessonsAll.class, null, lParams, null, false);
-                break;
+                    break;
+                case PotMacros.OBJ_CHAPTERS:
+                    HashMap<String, String> lParams = new HashMap<>();
+                    lParams.put(Constants.ORDERING, Constants.POSITION);
+                    placeUserRequest(Constants.CREATED + Constants.CHAPTERS +
+                            m_cChapters.getId() +
+                            "/" +
+                            Constants.LESSONS, LessonsAll.class, null, lParams, null, false);
+                    break;
+            }
+        }
+    }
+
+    private void initOffline() {
+        List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
+        /*"user_id = ? and owner_id = ? and board_class = ? and syllabi_name = ? and chapter_name = ?"*/
+        List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class,
+                "select * from lessons_table where user_id = ? and owner_id = ? and board_class like '%'||?||'%' and syllabi_name = ? and chapter_name = ?",
+                String.valueOf(m_cUser.getId()),
+                String.valueOf(m_cUser.getId()),
+                m_cBoardChoice.getBoardclass().getName() + " " + m_cBoardChoice.getBoardclass().getBoard().getName(),
+                m_cSyllabi.getSubjectName(),
+                m_cChapters.getName());
+        if (null != lessonsTableList && lessonsTableList.size() > 0) {
+            for (LessonsTable lessonsTable : lessonsTableList) {
+                Lessons lessons = new Lessons();
+                lessons.setId(lessonsTable.getLessonId());
+                lessons.setName(lessonsTable.getName());
+                lessons.setComments(lessonsTable.getComments());
+                lessons.setCreated(lessonsTable.getCreated());
+                lessons.setModified(lessonsTable.getModified());
+
+                String[] lStrArr = lessonsTable.getBoardClass().split(" ");
+                BoardClass lBoardClass = new BoardClass();
+                lBoardClass.setName(lStrArr[0]);
+                Board lBoard = new Board();
+                lBoard.setName(lStrArr[1]);
+                lBoardClass.setBoard(lBoard);
+                lBoardClass.setIsGeneric(false);
+
+                Chapters lChapters = new Chapters();
+                Syllabi lSyllabi = new Syllabi();
+                lSyllabi.setBoardclass(lBoardClass);
+                lSyllabi.setName(lessonsTable.getSyllabiName());
+                lChapters.setSyllabus(lSyllabi);
+                lChapters.setName(lessonsTable.getChapterName());
+
+
+                lessons.setChapter(lChapters);
+                Users lUsers = new Users();
+                lUsers.setId(lessonsTable.getOwnerId());
+                lessons.setOwner(lUsers);
+                lessons.setPosition(lessonsTable.getPosition());
+                Length length = new Length();
+                length.setLengthSum(lessonsTable.getLengthSum());
+                lessons.setLength(length);
+                lessons.setViews(lessonsTable.getViews());
+                m_cLessonsList.add(lessons);
+            }
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForLessonsMine(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                    m_cSyllabi, m_cChapters, m_cLessonsList, null, null, this, this, mLessFromWhere, m_cIsInReorder);
+            m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
+        } else {
+            if (null != m_cRecycClassesAdapt) {
+                m_cLessonsList.clear();
+                m_cRecycClassesAdapt.notifyDataSetChanged();
+            }
         }
     }
 
@@ -315,7 +384,9 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
                                         Constants.POST,
                                 Lessons.class, null, null, null, true);
                         break;
-
+                    case R.id.action_save:
+                        ((PotUserLessonScreen) m_cObjMainActivity).checkAndDownloadAttachments((Lessons) pObjMessage.obj, ((Lessons) pObjMessage.obj).getOwner().getId());
+                        break;
                 }
                 break;
             default:
@@ -459,31 +530,37 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
                             getResources().getString(R.string.action_share),
                             getResources().getString(R.string.action_edit),
                             getResources().getString(R.string.action_delete),
-                            getResources().getString(R.string.action_add_syllabus)),
+                            getResources().getString(R.string.action_add_syllabus),
+                            getResources().getString(R.string.action_save)),
                     Arrays.asList(R.id.action_post_to_students,
                             R.id.action_share,
                             R.id.action_edit,
                             R.id.action_delete,
-                            R.id.action_add_syllabus),
+                            R.id.action_add_syllabus,
+                            R.id.action_save),
                     pLessons);
         else
             displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_MINE_LESSON, pLessons.getName(),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus))
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save))
                             :
                             Arrays.asList(getResources().getString(R.string.action_post_to_students),
                                     getResources().getString(R.string.action_share),
                                     getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus)),
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save)),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(R.id.action_remove,
-                                    R.id.action_add_syllabus)
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save)
                             :
                             Arrays.asList(R.id.action_post_to_students,
                                     R.id.action_share,
                                     R.id.action_remove,
-                                    R.id.action_add_syllabus),
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save),
                     pLessons);
     }
 

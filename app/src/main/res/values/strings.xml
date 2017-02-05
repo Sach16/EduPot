@@ -45,6 +45,7 @@
     <string name="action_add_syllabus">Add Syllabus</string>
     <string name="action_post_to_students">Post to Students with this Syllabus</string>
     <string name="options_txt">Options</string>
+    <string name="action_save">Save</string>
 
     <string name="action_add">Add</string>
     <string name="action_notify">Notify</string>
@@ -153,6 +154,7 @@
     <string name="syllabus_added_successfully_txt">Syllabus added successfully</string>
     <string name="user_credentials_txt">Account Id</string>
     <string name="registered_phone_numbers_txt">Registered Phone numbers</string>
+    <string name="global_permission_settings_txt">Global Permission Settings</string>
 
     <string name="newly_received_lessons_txt">Newly Received Lessons</string>
     <string name="newly_connection_requests_txt">New Connection Requests</string>
@@ -211,6 +213,10 @@
     <string name="sms1_txt">I am on the LessonPot app for education and would like to connect with you through it.</string>
     <string name="sms2_txt">The app is located on Google Playstore at</string>
     <string name="sms3_txt">Try it out.</string>
+
+    <string name="allow_shares_txt">Allow shares</string>
+    <string name="allow_offline_save_txt">Allow offline save</string>
+    <string name="lesson_saved_successfully_txt">Lesson saved successfully</string>
 
     <string-array name="add_photo_arr">
         <item>Go to camera</item>

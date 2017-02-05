@@ -3,6 +3,7 @@ package com.cosmicdew.lessonpot;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.orm.SugarContext;
 
 import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -22,10 +23,12 @@ public class LessonPot extends MultiDexApplication {
                 .build()
         );
         Fabric.with(this, new Crashlytics());
+        SugarContext.init(this);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
+        SugarContext.terminate();
     }
 }

@@ -65,6 +65,7 @@ public class Constants {
     public static final String USERDEVICES = "userdevices/";
     public static final String LESSONSHARES = "lessonshares/";
     public static final String APPCONFIG = "appconfig/";
+    public static final String OFFLINE_META = "offlinemeta/";
 
     public static final String PHONE = "phone";
     public static final String OTP = "otp";

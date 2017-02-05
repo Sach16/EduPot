@@ -23,6 +23,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.activities.LessonsScreen;
+import com.cosmicdew.lessonpot.activities.PotUserHomeScreen;
 import com.cosmicdew.lessonpot.activities.ShareScreen;
 import com.cosmicdew.lessonpot.adapters.CustomRecyclerAdapterForLessonsMine;
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
@@ -30,12 +31,16 @@ import com.cosmicdew.lessonpot.interfaces.OnStartDragListener;
 import com.cosmicdew.lessonpot.interfaces.RecyclerHomeListener;
 import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Attachments;
+import com.cosmicdew.lessonpot.models.Board;
 import com.cosmicdew.lessonpot.models.BoardChoices;
+import com.cosmicdew.lessonpot.models.BoardClass;
 import com.cosmicdew.lessonpot.models.Chapters;
+import com.cosmicdew.lessonpot.models.Length;
 import com.cosmicdew.lessonpot.models.LessonShares;
 import com.cosmicdew.lessonpot.models.LessonViews;
 import com.cosmicdew.lessonpot.models.Lessons;
 import com.cosmicdew.lessonpot.models.LessonsAll;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
@@ -77,17 +82,20 @@ public class PotUserHomeClassesMineFragment extends PotFragmentBaseClass impleme
     CustomRecyclerAdapterForLessonsMine m_cRecycClassesAdapt;
     ArrayList<Lessons> m_cLessonsList;
 
+    private String m_cGoOffline;
+
     public PotUserHomeClassesMineFragment() {
         super();
     }
 
-    public static PotUserHomeClassesMineFragment newInstance(int pPosition, String pKey, Users pUser) {
+    public static PotUserHomeClassesMineFragment newInstance(int pPosition, String pKey, Users pUser, String pGoOffline) {
         PotUserHomeClassesMineFragment lPotUserHomeClassesMineFragment = new PotUserHomeClassesMineFragment();
 
         Bundle args = new Bundle();
         args.putInt("Position", pPosition);
         args.putString("KEY", pKey);
         args.putString(PotMacros.OBJ_USER, (new Gson()).toJson(pUser));
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lPotUserHomeClassesMineFragment.setArguments(args);
 
         return lPotUserHomeClassesMineFragment;
@@ -124,6 +132,7 @@ public class PotUserHomeClassesMineFragment extends PotFragmentBaseClass impleme
         m_cPos = getArguments().getInt("Position", 0);
         m_cKey = getArguments().getString("KEY");
         m_cUser = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_USER), Users.class);
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
         m_cLessonsList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -151,11 +160,65 @@ public class PotUserHomeClassesMineFragment extends PotFragmentBaseClass impleme
             }
         });
 
-        //Calling board class api
-        m_cObjMainActivity.displayProgressBar(-1, "");
+        if (null != m_cGoOffline){
+            initOffline();
+        }else {
+            //Calling board class api
+            m_cObjMainActivity.displayProgressBar(-1, "");
 
-        placeUserRequest(Constants.CREATED + Constants.LESSONS, LessonsAll.class, null, null, null, false);
+            placeUserRequest(Constants.CREATED + Constants.LESSONS, LessonsAll.class, null, null, null, false);
+        }
 
+    }
+
+    private void initOffline() {
+        List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "user_id = ? and owner_id = ?",String.valueOf(m_cUser.getId()), String.valueOf(m_cUser.getId()));
+        if (null != lessonsTableList && lessonsTableList.size() > 0) {
+            for (LessonsTable lessonsTable : lessonsTableList) {
+                Lessons lessons = new Lessons();
+                lessons.setId(lessonsTable.getLessonId());
+                lessons.setName(lessonsTable.getName());
+                lessons.setComments(lessonsTable.getComments());
+                lessons.setCreated(lessonsTable.getCreated());
+                lessons.setModified(lessonsTable.getModified());
+
+                String[] lStrArr = lessonsTable.getBoardClass().split(" ");
+                BoardClass lBoardClass = new BoardClass();
+                lBoardClass.setName(lStrArr[0]);
+                Board lBoard = new Board();
+                lBoard.setName(lStrArr[1]);
+                lBoardClass.setBoard(lBoard);
+                lBoardClass.setIsGeneric(false);
+
+                Chapters lChapters = new Chapters();
+                Syllabi lSyllabi = new Syllabi();
+                lSyllabi.setBoardclass(lBoardClass);
+                lSyllabi.setName(lessonsTable.getSyllabiName());
+                lChapters.setSyllabus(lSyllabi);
+                lChapters.setName(lessonsTable.getChapterName());
+
+
+                lessons.setChapter(lChapters);
+                Users lUsers = new Users();
+                lUsers.setId(lessonsTable.getOwnerId());
+                lessons.setOwner(lUsers);
+                lessons.setPosition(lessonsTable.getPosition());
+                Length length = new Length();
+                length.setLengthSum(lessonsTable.getLengthSum());
+                lessons.setLength(length);
+                lessons.setViews(lessonsTable.getViews());
+                m_cLessonsList.add(lessons);
+            }
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForLessonsMine(m_cObjMainActivity, m_cUser, null,
+                    null, null, m_cLessonsList, null, null, this, this, null, false);
+            m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
+        } else {
+            if (null != m_cRecycClassesAdapt) {
+                m_cLessonsList.clear();
+                m_cRecycClassesAdapt.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -201,6 +264,9 @@ public class PotUserHomeClassesMineFragment extends PotFragmentBaseClass impleme
                                         "/" +
                                         Constants.POST,
                                 Lessons.class, null, null, null, true);
+                        break;
+                    case R.id.action_save:
+                        ((PotUserHomeScreen) m_cObjMainActivity).checkAndDownloadAttachments((Lessons) pObjMessage.obj, ((Lessons) pObjMessage.obj).getOwner().getId());
                         break;
                 }
                 break;
@@ -341,31 +407,37 @@ public class PotUserHomeClassesMineFragment extends PotFragmentBaseClass impleme
                             getResources().getString(R.string.action_share),
                             getResources().getString(R.string.action_edit),
                             getResources().getString(R.string.action_delete),
-                            getResources().getString(R.string.action_add_syllabus)),
+                            getResources().getString(R.string.action_add_syllabus),
+                            getResources().getString(R.string.action_save)),
                     Arrays.asList(R.id.action_post_to_students,
                             R.id.action_share,
                             R.id.action_edit,
                             R.id.action_delete,
-                            R.id.action_add_syllabus),
+                            R.id.action_add_syllabus,
+                            R.id.action_save),
                     pLessons);
         else
             displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_MINE, pLessons.getName(),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus))
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save))
                             :
                             Arrays.asList(getResources().getString(R.string.action_post_to_students),
                                     getResources().getString(R.string.action_share),
                                     getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus)),
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save)),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(R.id.action_remove,
-                                    R.id.action_add_syllabus)
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save)
                             :
                             Arrays.asList(R.id.action_post_to_students,
                                     R.id.action_share,
                                     R.id.action_remove,
-                                    R.id.action_add_syllabus),
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save),
                     pLessons);
     }
 

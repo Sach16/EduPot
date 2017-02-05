@@ -25,6 +25,7 @@ import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Sessions;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.models.UsersAll;
+import com.cosmicdew.lessonpot.models.UsersTable;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.cosmicdew.lessonpot.network.RequestManager;
 import com.google.gson.Gson;
@@ -33,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,6 +73,8 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
 
     private Users m_cUser;
 
+    private String m_cGoOffline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +92,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
     }
 
     private void init() {
+        m_cGoOffline = getIntent().getStringExtra(PotMacros.GO_OFFLINE);
         m_cUsersList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(this);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -115,9 +120,40 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
             }
         });
 
-        displayProgressBar(-1, "Loading...");
-        RequestManager.getInstance(this).placeRequest(Constants.USERS, UsersAll.class, this, null, null, null, false);
+        if (null != m_cGoOffline){
+            initOffline();
+        }else {
+            displayProgressBar(-1, "Loading...");
+            RequestManager.getInstance(this).placeRequest(Constants.USERS, UsersAll.class, this, null, null, null, false);
+        }
 
+    }
+
+    private void initOffline() {
+        List<UsersTable> lUsersAll = UsersTable.listAll(UsersTable.class);
+        if (null != lUsersAll && lUsersAll.size() > 0) {
+            for (UsersTable lUsersTable : lUsersAll) {
+                Users lUsers = new Users();
+                lUsers.setId(lUsersTable.getUserId());
+                lUsers.setFirstName(lUsersTable.getFirstName());
+                lUsers.setMiddleName(lUsersTable.getMiddleName());
+                lUsers.setLastName(lUsersTable.getLastName());
+                lUsers.setUsername(lUsersTable.getUsername());
+                lUsers.setRoleTitle(lUsersTable.getRole());
+                lUsers.setTermsAccepted(lUsersTable.getTermsAccepted());
+                lUsers.setIsAdmin(lUsersTable.getIsAdmin());
+                m_cUsersList.add(lUsers);
+            }
+            m_cRecycAdUsers = new CustomRecyclerAdapterForUsers(this, m_cUsersList, this);
+            m_cRecycUsers.setAdapter(m_cRecycAdUsers);
+            rlNoData.setVisibility(View.GONE);
+        }else {
+            if (null != m_cRecycAdUsers) {
+                m_cUsersList.clear();
+                m_cRecycAdUsers.notifyDataSetChanged();
+            }
+            rlNoData.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -202,6 +238,9 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
             case R.id.ADD_EXISTING_TXT:
                 lObjIntent = new Intent(this, PotAddExistingUserScreen.class);
                 startActivity(lObjIntent);
+                /*deleteRecursive(PotMacros.getOfflineAudioFilePath(this));
+                deleteRecursive(PotMacros.getOfflineImageFilePath(this));
+                LessonsTable.deleteAll(LessonsTable.class);*/
                 break;
             case R.id.OVERVIEW_TXT:
                 lObjIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PotMacros.OVERVIEW));
@@ -217,6 +256,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
             case Constants.USERS:
                 UsersAll lUsersAll = (UsersAll) response;
                 if (null != lUsersAll && lUsersAll.getUsers().size() > 0) {
+                    checkAndUpdateUsers(lUsersAll);
                     for (Users lUsers : lUsersAll.getUsers()) {
                         m_cUsersList.add(lUsers);
                     }
@@ -262,6 +302,30 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
         }
     }
 
+    private void checkAndUpdateUsers(UsersAll pUsersAll) {
+        for (Users lUsers : pUsersAll.getUsers()) {
+//            List<UsersTable> lUsersTableListAll = UsersTable.listAll(UsersTable.class);
+            List<UsersTable> lUsersTableList = UsersTable.find(UsersTable.class, "user_id = ?", String.valueOf(lUsers.getId()));
+            if (lUsersTableList.size() == 0) {
+                UsersTable lUsersTable = new UsersTable(lUsers.getId(), lUsers.getFirstName(), lUsers.getMiddleName(),
+                        lUsers.getLastName(), lUsers.getUsername(), lUsers.getRole(), lUsers.getTermsAccepted(), lUsers.getIsAdmin());
+                lUsersTable.save();
+            } else {
+//                List<UsersTable> lUsersTableAll = UsersTable.find(UsersTable.class, "user_id = ?", String.valueOf(lUsers.getId()));
+                UsersTable lUsersTable = UsersTable.find(UsersTable.class, "user_id = ?", String.valueOf(lUsers.getId())).get(0);
+                lUsersTable.setUserId(lUsers.getId());
+                lUsersTable.setFirstName(lUsers.getFirstName());
+                lUsersTable.setMiddleName(lUsers.getMiddleName());
+                lUsersTable.setLastName(lUsers.getLastName());
+                lUsersTable.setUsername(lUsers.getUsername());
+                lUsersTable.setRole(lUsers.getRole());
+                lUsersTable.setTermsAccepted(lUsers.getTermsAccepted());
+                lUsersTable.setIsAdmin(lUsers.getIsAdmin());
+                lUsersTable.save();
+            }
+        }
+    }
+
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
         switch (apiMethod){
@@ -295,16 +359,24 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
     @Override
     public void onInfoClick(int pPostion, Users pUsers, View pView) {
         Intent lObjIntent;
-        int sessionId = PotMacros.getSessionId(this) > -1 ? PotMacros.getSessionId(this) : PotMacros.getGreenSessionId(this);
-        if (null != pUsers){
-            displayProgressBar(-1, "Loading...");
-            RequestManager.getInstance(this).placeRequest(Constants.SESSIONS +
-                    sessionId +
-                    "/" +
-                    Constants.USERS +
-                    pUsers.getId() +
-                    "/", Sessions.class, this, null, null, null, true);
-            setUser(pUsers);
+        if (null != m_cGoOffline){
+            lObjIntent = new Intent(this, PotUserHomeScreen.class);
+            lObjIntent.putExtra(PotMacros.GO_OFFLINE, PotMacros.GO_OFFLINE);
+            lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(pUsers));
+            startActivity(lObjIntent);
+            finish();
+        }else {
+            int sessionId = PotMacros.getSessionId(this) > -1 ? PotMacros.getSessionId(this) : PotMacros.getGreenSessionId(this);
+            if (null != pUsers) {
+                displayProgressBar(-1, "Loading...");
+                RequestManager.getInstance(this).placeRequest(Constants.SESSIONS +
+                        sessionId +
+                        "/" +
+                        Constants.USERS +
+                        pUsers.getId() +
+                        "/", Sessions.class, this, null, null, null, true);
+                setUser(pUsers);
+            }
         }
     }
 

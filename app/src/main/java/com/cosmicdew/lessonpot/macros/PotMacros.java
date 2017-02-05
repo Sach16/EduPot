@@ -79,6 +79,8 @@ public class PotMacros {
     public static final String REMOVELESSON_REFRESH_CONSTANT_VIEWED = "REMOVELESSON_REFRESH_CONSTANT_VIEWED";
     public static final String REMOVELESSON_REFRESH_CONSTANT_RECEIVED = "REMOVELESSON_REFRESH_CONSTANT_RECEIVED";
 
+    public static final String GO_OFFLINE = "GO_OFFLINE";
+
     public static final int APPCONFIG = 1612;
 
     public static final int LESSONPOSITION = 1342;
@@ -855,6 +857,22 @@ public class PotMacros {
 
     public static File getAudioFilePath(Context pObjScreen) {
         File lObjMediaStorageDir = new File(getRootMediaFilePath(pObjScreen), "Audio");
+        if(!lObjMediaStorageDir.exists()) {
+            lObjMediaStorageDir.mkdirs();
+        }
+        return lObjMediaStorageDir;
+    }
+
+    public static File getOfflineImageFilePath(Context pObjScreen) {
+        File lObjMediaStorageDir = new File(getRootMediaFilePath(pObjScreen), "offlineimages");
+        if(!lObjMediaStorageDir.exists()) {
+            lObjMediaStorageDir.mkdirs();
+        }
+        return lObjMediaStorageDir;
+    }
+
+    public static File getOfflineAudioFilePath(Context pObjScreen) {
+        File lObjMediaStorageDir = new File(getRootMediaFilePath(pObjScreen), "offlineaudio");
         if(!lObjMediaStorageDir.exists()) {
             lObjMediaStorageDir.mkdirs();
         }

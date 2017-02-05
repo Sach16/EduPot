@@ -75,6 +75,12 @@
             android:text="My Account" />
 
         <TextView
+            android:id="@+id/NAV_GO_OFFLINE"
+            style="@style/nav_sub_txt"
+            android:drawableLeft="@drawable/offlineicon"
+            android:text="Go Offline" />
+
+        <TextView
             android:id="@+id/NAV_SIGN_OUT"
             style="@style/nav_sub_txt"
             android:drawableLeft="@drawable/logouticon"

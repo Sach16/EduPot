@@ -29,6 +29,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.activities.LessonsScreen;
+import com.cosmicdew.lessonpot.activities.PotUserHomeScreen;
 import com.cosmicdew.lessonpot.activities.ReceivedLessonsFilterScreen;
 import com.cosmicdew.lessonpot.activities.ShareScreen;
 import com.cosmicdew.lessonpot.adapters.CustomRecyclerAdapterForLessonsReceived;
@@ -37,12 +38,16 @@ import com.cosmicdew.lessonpot.customviews.RecyclerViewHeader;
 import com.cosmicdew.lessonpot.interfaces.RecyclerHomeListener;
 import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Attachments;
+import com.cosmicdew.lessonpot.models.Board;
 import com.cosmicdew.lessonpot.models.BoardChoices;
+import com.cosmicdew.lessonpot.models.BoardClass;
 import com.cosmicdew.lessonpot.models.Chapters;
+import com.cosmicdew.lessonpot.models.Length;
 import com.cosmicdew.lessonpot.models.LessonShares;
 import com.cosmicdew.lessonpot.models.LessonSharesAll;
 import com.cosmicdew.lessonpot.models.LessonViews;
 import com.cosmicdew.lessonpot.models.Lessons;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
@@ -102,17 +107,20 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
     CustomRecyclerAdapterForLessonsReceived m_cRecycClassesAdapt;
     ArrayList<Lessons> m_cLessonsList;
 
+    private String m_cGoOffline;
+
     public PotUserHomeClassesReceivedFragment() {
         super();
     }
 
-    public static PotUserHomeClassesReceivedFragment newInstance(int pPosition, String pKey, Users pUser) {
+    public static PotUserHomeClassesReceivedFragment newInstance(int pPosition, String pKey, Users pUser, String pGoOffline) {
         PotUserHomeClassesReceivedFragment lPotUserHomeClassesReceivedFragment = new PotUserHomeClassesReceivedFragment();
 
         Bundle args = new Bundle();
         args.putInt("Position", pPosition);
         args.putString("KEY", pKey);
         args.putString(PotMacros.OBJ_USER, (new Gson()).toJson(pUser));
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lPotUserHomeClassesReceivedFragment.setArguments(args);
 
         return lPotUserHomeClassesReceivedFragment;
@@ -170,6 +178,7 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
         m_cPos = getArguments().getInt("Position", 0);
         m_cKey = getArguments().getString("KEY");
         m_cUser = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_USER), Users.class);
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
         m_cLessonsList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -198,22 +207,84 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
             }
         });
 
-        //Calling board class api
-        m_cObjMainActivity.displayProgressBar(-1, "");
+        if (null != m_cGoOffline){
+            initOffline();
+        }else {
+            //Calling board class api
+            m_cObjMainActivity.displayProgressBar(-1, "");
 
-        HashMap<String, String> lParams = new HashMap<>();
-        StringBuffer lBuffer = new StringBuffer();
-        if (null != m_cUserIds) {
-            for (int i = 0; i < m_cUserIds.length; i++) {
-                if (i == 0)
-                    lBuffer.append(m_cUserIds[i]);
-                else
-                    lBuffer.append(",").append(m_cUserIds[i]);
+            HashMap<String, String> lParams = new HashMap<>();
+            StringBuffer lBuffer = new StringBuffer();
+            if (null != m_cUserIds) {
+                for (int i = 0; i < m_cUserIds.length; i++) {
+                    if (i == 0)
+                        lBuffer.append(m_cUserIds[i]);
+                    else
+                        lBuffer.append(",").append(m_cUserIds[i]);
+                }
+                lParams.put(Constants.USERS_TXT, lBuffer.toString());
             }
-            lParams.put(Constants.USERS_TXT, lBuffer.toString());
+            placeUserRequest(Constants.SHARED + Constants.LESSONS, LessonSharesAll.class, null, lParams, null, false);
         }
-        placeUserRequest(Constants.SHARED + Constants.LESSONS, LessonSharesAll.class, null, lParams, null, false);
 
+    }
+
+    private void initOffline() {
+        List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "sharer_id != ? and sharer_id != -1 and user_id = ?", String.valueOf(m_cUser.getId()), String.valueOf(m_cUser.getId()));
+        ArrayList<LessonShares> m_cLessonSharesList = new ArrayList<>();
+        if (null != lessonsTableList && lessonsTableList.size() > 0) {
+            for (LessonsTable lessonsTable : lessonsTableList) {
+                Lessons lessons = new Lessons();
+                lessons.setId(lessonsTable.getLessonId());
+                lessons.setName(lessonsTable.getName());
+                lessons.setComments(lessonsTable.getComments());
+                lessons.setCreated(lessonsTable.getCreated());
+                lessons.setModified(lessonsTable.getModified());
+
+                String[] lStrArr = lessonsTable.getBoardClass().split(" ");
+                BoardClass lBoardClass = new BoardClass();
+                lBoardClass.setName(lStrArr[0]);
+                Board lBoard = new Board();
+                lBoard.setName(lStrArr[1]);
+                lBoardClass.setBoard(lBoard);
+                lBoardClass.setIsGeneric(false);
+
+                Chapters lChapters = new Chapters();
+                Syllabi lSyllabi = new Syllabi();
+                lSyllabi.setBoardclass(lBoardClass);
+                lSyllabi.setName(lessonsTable.getSyllabiName());
+                lChapters.setSyllabus(lSyllabi);
+                lChapters.setName(lessonsTable.getChapterName());
+
+
+                lessons.setChapter(lChapters);
+                Users lUsers = new Users();
+                lUsers.setId(lessonsTable.getOwnerId());
+                lessons.setOwner(lUsers);
+                lessons.setPosition(lessonsTable.getPosition());
+                Length length = new Length();
+                length.setLengthSum(lessonsTable.getLengthSum());
+                lessons.setLength(length);
+                lessons.setViews(lessonsTable.getViews());
+                m_cLessonsList.add(lessons);
+
+                LessonShares lessonShares = new LessonShares();
+                Users lUserShare = new Users();
+                lUserShare.setId(lessonsTable.getSharerId());
+                lessonShares.setFromUser(lUserShare);
+                lessonShares.setLesson(lessons);
+                m_cLessonSharesList.add(lessonShares);
+            }
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForLessonsReceived(m_cObjMainActivity, m_cUser, null,
+                    null, null, m_cLessonsList, m_cLessonSharesList, null, this);
+            m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
+        } else {
+            if (null != m_cRecycClassesAdapt) {
+                m_cLessonsList.clear();
+                m_cRecycClassesAdapt.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -333,6 +404,9 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
                                         "/" +
                                         Constants.POST,
                                 Lessons.class, null, null, null, true);
+                        break;
+                    case R.id.action_save:
+                        ((PotUserHomeScreen) m_cObjMainActivity).checkAndDownloadAttachments(((LessonShares) pObjMessage.obj).getLesson(), ((LessonShares) pObjMessage.obj).getFromUser().getId());
                         break;
                 }
                 break;
@@ -485,31 +559,37 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
                             getResources().getString(R.string.action_share),
                             getResources().getString(R.string.action_edit),
                             getResources().getString(R.string.action_delete),
-                            getResources().getString(R.string.action_add_syllabus)),
+                            getResources().getString(R.string.action_add_syllabus),
+                            getResources().getString(R.string.action_save)),
                     Arrays.asList(R.id.action_post_to_students,
                             R.id.action_share,
                             R.id.action_edit,
                             R.id.action_delete,
-                            R.id.action_add_syllabus),
+                            R.id.action_add_syllabus,
+                            R.id.action_save),
                     pLessonShares);
         else
             displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_SHARED, pLessons.getName(),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus))
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save))
                             :
                             Arrays.asList(getResources().getString(R.string.action_post_to_students),
                                     getResources().getString(R.string.action_share),
                                     getResources().getString(R.string.action_remove),
-                                    getResources().getString(R.string.action_add_syllabus)),
+                                    getResources().getString(R.string.action_add_syllabus),
+                                    getResources().getString(R.string.action_save)),
                     m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT) ?
                             Arrays.asList(R.id.action_remove,
-                                    R.id.action_add_syllabus)
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save)
                             :
                             Arrays.asList(R.id.action_post_to_students,
                                     R.id.action_share,
                                     R.id.action_remove,
-                                    R.id.action_add_syllabus),
+                                    R.id.action_add_syllabus,
+                                    R.id.action_save),
                     pLessonShares);
     }
 

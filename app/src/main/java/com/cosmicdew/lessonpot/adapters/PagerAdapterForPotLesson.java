@@ -27,6 +27,7 @@ public class PagerAdapterForPotLesson extends FragmentStatePagerAdapter {
     private Syllabi m_cSyllabi;
     private Chapters m_cChapters;
     private String m_cLessFromWhere;
+    private String m_cGoOffline;
 
     //write inner fragment items below
 
@@ -34,7 +35,8 @@ public class PagerAdapterForPotLesson extends FragmentStatePagerAdapter {
 
     public PagerAdapterForPotLesson(FragmentManager pFragment, PotFragmentBaseClass pObjFragmentBase,
                                      int pNumOfTabs, String pId, Users pUser, BoardChoices pBoardChoices,
-                                    Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere) {
+                                    Syllabi pSyllabi, Chapters pChapters, String pLessFromWhere,
+                                    String pGoOffline) {
         super(pFragment);
         this.m_cNumOfTabs = pNumOfTabs;
         this.m_cObjFragmentBase = pObjFragmentBase;
@@ -44,26 +46,39 @@ public class PagerAdapterForPotLesson extends FragmentStatePagerAdapter {
         this.m_cSyllabi = pSyllabi;
         this.m_cChapters = pChapters;
         this.m_cLessFromWhere = pLessFromWhere;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                m_cObjFragmentBase = PotUserHomePublicFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
-                return m_cObjFragmentBase;
-            case 1:
-                m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
-                return m_cObjFragmentBase;
-            case 2:
-                m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
-                return m_cObjFragmentBase;
-            case 3:
-                m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere);
-                return m_cObjFragmentBase;
-            default:
-                return null;
-        }
+        if (null == m_cGoOffline)
+            switch (position) {
+                case 0:
+                    m_cObjFragmentBase = PotUserHomePublicFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 1:
+                    m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 2:
+                    m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 3:
+                    m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                default:
+                    return null;
+            }
+        else
+            switch (position) {
+                case 0:
+                    m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 1:
+                    m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                default:
+                    return null;
+            }
     }
 
     @Override

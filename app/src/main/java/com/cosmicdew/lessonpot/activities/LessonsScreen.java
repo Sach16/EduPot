@@ -50,6 +50,7 @@ import com.cosmicdew.lessonpot.models.Chapters;
 import com.cosmicdew.lessonpot.models.LessonShares;
 import com.cosmicdew.lessonpot.models.LessonViews;
 import com.cosmicdew.lessonpot.models.Lessons;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
@@ -63,12 +64,17 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -225,6 +231,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
     private int length;
+    private int count;
 
     private long m_cStartRecTime;
     boolean m_cImageProcessing;
@@ -240,6 +247,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     private boolean mIsLessonMapped = false;
     private String m_cAudioUrl;
     private HashMap<String, Attachments> m_cAttachList;
+
+    private LessonsTable m_cLessonsTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -508,6 +517,23 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         Lessons.class, this, null, null, null, true);
 
                 return true;
+            case R.id.action_save:
+                if (checkAndUpdateLessons()) {
+                    displayProgressBar(-1, "");
+                    LinkedHashMap<String, Attachments> linkedHashMap = new LinkedHashMap<>(m_cAttachList);
+                    for (int i = 0; i < m_cAttachList.size(); i++) {
+                        RequestManager.getInstance(this).placeStreamRequest((new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachment(),
+                                Constants.OFFLINE_META,
+                                Attachments.class, this,
+                                (new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachmentType().equals(PotMacros.LESSON_AUDIO) ?
+                                        new Object[]{(new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachmentType(), PotMacros.getOfflineAudioFilePath(this) + "/" + PotMacros.getGUID() + ".aac",
+                                                i == (m_cAttachList.size() - 1) ? (m_cAttachList.size() - 1) : -1} :
+                                        new Object[]{(new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachmentType(), PotMacros.getOfflineImageFilePath(this) + "/" + PotMacros.getGUID() + ".jpg",
+                                                i == (m_cAttachList.size() - 1) ? (m_cAttachList.size() - 1) : -1},
+                                null, null, false);
+                    }
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -522,6 +548,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             menu.findItem(R.id.action_remove).setVisible(false);
             menu.findItem(R.id.action_add_syllabus).setVisible(false);
             menu.findItem(R.id.action_post_to_students).setVisible(false);
+            menu.findItem(R.id.action_save).setVisible(false);
         } else if (m_cLessType == PotMacros.OBJ_LESSON_VIEW) {
             if (m_cUser.getId().equals(m_cLessons.getOwner().getId())) {
                 menu.findItem(R.id.action_remove).setVisible(false);
@@ -540,6 +567,62 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
 //        MenuItem register = menu.findItem(R.id.action_delete);
 //        register.setVisible(false);  //userRegistered is boolean, pointing if the user has registered or not.
 //        return true;
+    }
+
+    private boolean checkAndUpdateLessons() {
+        boolean lRetVal = false;
+        List<LessonsTable> lessonsTableListAll = LessonsTable.listAll(LessonsTable.class);
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "lesson_id = ? and user_id = ?", String.valueOf(m_cLessons.getId()), String.valueOf(m_cUser.getId()));
+        int lSourceId = -1;
+        switch (mLessFromWhereWchTab) {
+            case PotMacros.OBJ_LESSON_RECEIVED_TAB:
+                lSourceId = m_cLessonShares.getFromUser().getId();
+                break;
+            case PotMacros.OBJ_LESSON_VIEWED_TAB:
+                lSourceId = m_cLessonViews.getSource().getId();
+                break;
+            case PotMacros.OBJ_LESSON_MINE_TAB:
+                lSourceId = m_cLessons.getOwner().getId();
+                break;
+        }
+        if (lessonsTableList.size() == 0) {
+            m_cLessonsTable = new LessonsTable(m_cLessons.getId(), m_cLessons.getName(), m_cLessons.getComments(),
+                    m_cLessons.getCreated(), m_cLessons.getModified(), m_cUser.getId(), m_cLessons.getOwner().getId(), lSourceId != m_cUser.getId() ? lSourceId : -1,
+                    m_cLessons.getChapter().getName(),
+                    m_cLessons.getChapter().getSyllabus().getSubjectName(),
+                    m_cLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+                    m_cLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    m_cLessons.getLength().getLengthSum(),
+                    m_cLessons.getPosition(),
+                    m_cLessons.getViews());
+            m_cLessonsTable.save();
+            lRetVal = true;
+        } else {
+            List<LessonsTable> lessonsTableAll = LessonsTable.find(LessonsTable.class, "lesson_id = ?", String.valueOf(m_cLessons.getId()));
+            m_cLessonsTable = LessonsTable.find(LessonsTable.class, "lesson_id = ?", String.valueOf(m_cLessons.getId())).get(0);
+            m_cLessonsTable.setLessonId(m_cLessons.getId());
+            m_cLessonsTable.setName(m_cLessons.getName());
+            m_cLessonsTable.setComments(m_cLessons.getComments());
+            m_cLessonsTable.setCreated(m_cLessons.getCreated());
+            m_cLessonsTable.setModified(m_cLessons.getModified());
+            m_cLessonsTable.setUserId(m_cUser.getId());
+            m_cLessonsTable.setOwnerId(m_cLessons.getOwner().getId());
+            m_cLessonsTable.setSharerId(lSourceId != m_cUser.getId() ? lSourceId : -1);
+            m_cLessonsTable.setChapterName(m_cLessons.getChapter().getName());
+            m_cLessonsTable.setSyllabiName(m_cLessons.getChapter().getSyllabus().getSubjectName());
+            m_cLessonsTable.setBoardClass(m_cLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+                    m_cLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName());
+            m_cLessonsTable.setLengthSum(m_cLessons.getLength().getLengthSum());
+            m_cLessonsTable.setPosition(m_cLessons.getPosition());
+            m_cLessonsTable.setViews(m_cLessons.getViews());
+            m_cLessonsTable.save();
+            lRetVal = false;
+        }
+        return lRetVal;
     }
 
     private Attachments addAttachment(Integer pId, String pLessonType, String pAttach) {
@@ -1251,12 +1334,12 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (apiMethod.contains(Constants.SOURCES)){
+                if (apiMethod.contains(Constants.SOURCES)) {
                     if (response == null) {
                         hideDialog();
                         onBackPressed();
                     }
-                } else if (response instanceof Syllabi){
+                } else if (response instanceof Syllabi) {
                     Syllabi lSyllabi = (Syllabi) response;
                     if (lSyllabi != null) {
                         hideDialog();
@@ -1288,7 +1371,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         m_cAttachList.remove((String) refObj);
                         if (m_cAttachList.size() > 0) {
                             callAttachmentsApi();
-                        }else {
+                        } else {
                             hideDialog();
                             navigate();
                         }
@@ -1377,6 +1460,51 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     } else {
                         hideDialog();
                         navigate();
+                    }
+                } else if (apiMethod.contains(Constants.OFFLINE_META)) {
+                    Object[] lObjects = (Object[]) refObj;
+                    try {
+                        byte[] lByte = (byte[]) response;
+                        long lenghtOfFile = lByte.length;
+
+                        //coverting reponse to input stream
+                        InputStream input = new ByteArrayInputStream(lByte);
+                        File file = new File((String) lObjects[1]);
+                        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file));
+                        byte data[] = new byte[1024];
+
+                        long total = 0;
+
+                        while ((count = input.read(data)) != -1) {
+                            total += count;
+                            output.write(data, 0, count);
+                        }
+                        output.flush();
+                        output.close();
+                        input.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    switch ((String) lObjects[0]) {
+                        case PotMacros.LESSON_AUDIO:
+                            m_cLessonsTable.setAudio((String) lObjects[1]);
+                            break;
+                        case PotMacros.LESSON_IMG_1:
+                            m_cLessonsTable.setImg1((String) lObjects[1]);
+                            break;
+                        case PotMacros.LESSON_IMG_2:
+                            m_cLessonsTable.setImg2((String) lObjects[1]);
+                            break;
+                        case PotMacros.LESSON_IMG_3:
+                            m_cLessonsTable.setImg3((String) lObjects[1]);
+                            break;
+                    }
+                    m_cLessonsTable.save();
+                    if ((int) lObjects[2] > -1) {
+                        displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
+                        hideDialog();
                     }
                 } else {
                     super.onAPIResponse(response, apiMethod, refObj);

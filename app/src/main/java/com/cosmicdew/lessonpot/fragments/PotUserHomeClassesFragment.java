@@ -33,8 +33,11 @@ import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
 import com.cosmicdew.lessonpot.interfaces.RecyclerClassBoardsListener;
 import com.cosmicdew.lessonpot.interfaces.RecyclerSelectionListener;
 import com.cosmicdew.lessonpot.macros.PotMacros;
+import com.cosmicdew.lessonpot.models.Board;
 import com.cosmicdew.lessonpot.models.BoardChoices;
 import com.cosmicdew.lessonpot.models.BoardChoicesAll;
+import com.cosmicdew.lessonpot.models.BoardClass;
+import com.cosmicdew.lessonpot.models.LessonsTable;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.cosmicdew.lessonpot.network.RequestManager;
@@ -42,7 +45,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +79,8 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
     private Users m_cUser;
     private String m_cSelectionType;
 
+    private String m_cGoOffline;
+
     private boolean m_cLoading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     LinearLayoutManager m_cLayoutManager;
@@ -87,7 +94,7 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
     }
 
     public static PotUserHomeClassesFragment newInstance(int pPosition, String pKey, Users pUser, String pSellectionType,
-                                                         RecyclerSelectionListener pRecyclerSelectionListener) {
+                                                         RecyclerSelectionListener pRecyclerSelectionListener, String pGoOffline) {
         PotUserHomeClassesFragment lPotUserHomeClassesFragment = new PotUserHomeClassesFragment();
 
         m_cRecyclerSelectionListener = pRecyclerSelectionListener;
@@ -97,6 +104,7 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
         args.putString("KEY", pKey);
         args.putString("OBJECT", (new Gson()).toJson(pUser));
         args.putString(PotMacros.OBJ_SELECTIONTYPE, pSellectionType);
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lPotUserHomeClassesFragment.setArguments(args);
 
         return lPotUserHomeClassesFragment;
@@ -134,6 +142,7 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
         m_cKey = getArguments().getString("KEY");
         m_cUser = (new Gson()).fromJson(getArguments().getString("OBJECT"), Users.class);
         m_cSelectionType = getArguments().getString(PotMacros.OBJ_SELECTIONTYPE);
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
         if (null == m_cSelectionType)
             m_cRightSyllabusLL.setVisibility(View.VISIBLE);
         m_cBoardClassList = new ArrayList<>();
@@ -163,16 +172,50 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
             }
         });
 
-        //Calling board class api
-        if (null != m_cSelectionType &&
-                m_cSelectionType.equalsIgnoreCase(PotMacros.OBJ_SELECTIONTYPE_ADDSYLLABUS))
-            placeUserRequest(Constants.USER +
-                    m_cUser.getId() +
-                    "/" +
-                    Constants.BOARDCLASSES, BoardChoicesAll.class, null, null, null, false);
-        else
-            placeUserRequest(Constants.BOARDCLASSES, BoardChoicesAll.class, null, null, null, false);
+        if (null != m_cGoOffline) {
+            initOffline();
+        } else {
+            //Calling board class api
+            if (null != m_cSelectionType &&
+                    m_cSelectionType.equalsIgnoreCase(PotMacros.OBJ_SELECTIONTYPE_ADDSYLLABUS))
+                placeUserRequest(Constants.USER +
+                        m_cUser.getId() +
+                        "/" +
+                        Constants.BOARDCLASSES, BoardChoicesAll.class, null, null, null, false);
+            else
+                placeUserRequest(Constants.BOARDCLASSES, BoardChoicesAll.class, null, null, null, false);
+        }
 
+    }
+
+    private void initOffline() {
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "user_id = ?", String.valueOf(m_cUser.getId()));
+        Set<String> lSetBoards = new HashSet<>();
+        for (LessonsTable lessonsTable : lessonsTableList)
+            lSetBoards.add(lessonsTable.getBoardClass());
+        if (null != lSetBoards && lSetBoards.size() > 0) {
+            for (String lClassBoard : lSetBoards) {
+                String[] lStrArr = lClassBoard.split(" ");
+                BoardChoices lBoardChoices = new BoardChoices();
+                BoardClass lBoardClass = new BoardClass();
+                lBoardClass.setName(lStrArr[0]);
+                Board lBoard = new Board();
+                lBoard.setName(lStrArr[1]);
+                lBoardClass.setBoard(lBoard);
+                lBoardClass.setIsGeneric(false);
+                lBoardChoices.setBoardclass(lBoardClass);
+                lBoardChoices.setSyllabusCount(0);
+                lBoardChoices.setChapterCount(0);
+                m_cBoardClassList.add(lBoardChoices);
+            }
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForClasses(m_cObjMainActivity, m_cBoardClassList, m_cSelectionType, this);
+            m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
+        } else {
+            if (null != m_cRecycClassesAdapt) {
+                m_cBoardClassList.clear();
+                m_cRecycClassesAdapt.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -293,18 +336,26 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
     @Override
     public void onInfoClick(int pPostion, BoardChoices pBoardChoices, View pView) {
         Intent lObjIntent;
-        if (pBoardChoices.getBoardclass().getIsGeneric()) {
-            lObjIntent = new Intent(m_cObjMainActivity, PotUserLessonScreen.class);
-            lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_BOARDCHOICES);
-            lObjIntent.putExtra(PotMacros.LESSON_HEADER, pBoardChoices.getBoardclass().getName());
-            lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
-            lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(pBoardChoices));
-            startActivity(lObjIntent);
-        } else {
+        if (null != m_cGoOffline){
             lObjIntent = new Intent(m_cObjMainActivity, PotUserSubjectScreen.class);
+            lObjIntent.putExtra(PotMacros.GO_OFFLINE, m_cGoOffline);
             lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(pBoardChoices));
             lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
             startActivity(lObjIntent);
+        }else {
+            if (pBoardChoices.getBoardclass().getIsGeneric()) {
+                lObjIntent = new Intent(m_cObjMainActivity, PotUserLessonScreen.class);
+                lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_BOARDCHOICES);
+                lObjIntent.putExtra(PotMacros.LESSON_HEADER, pBoardChoices.getBoardclass().getName());
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(pBoardChoices));
+                startActivity(lObjIntent);
+            } else {
+                lObjIntent = new Intent(m_cObjMainActivity, PotUserSubjectScreen.class);
+                lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(pBoardChoices));
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                startActivity(lObjIntent);
+            }
         }
     }
 

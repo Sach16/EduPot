@@ -10,7 +10,7 @@ import java.util.List;
  * Created by S.K. Pissay on 5/10/16.
  */
 
-public class Users {
+public class Users{
 
     @SerializedName("id")
     @Expose
@@ -70,6 +70,8 @@ public class Users {
     private List<Syllabi> syllabi = new ArrayList<Syllabi>();
 
     private boolean isSelected;
+
+    public Users(){}
 
     /**
      *
