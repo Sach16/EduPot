@@ -101,6 +101,14 @@ public abstract class PotFragmentBaseClass extends Fragment implements View.OnCl
         RequestManager.getInstance(getActivity()).placeUserRequest(methodName, clazz, this, refObj, params, body, isPOST);
     }
 
+    public void placeUnivRequest(String methodName, Class clazz, Object refObj, HashMap<String, String> feedParams, String body, Integer requestMethod) {
+        RequestManager.getInstance(getActivity()).placeUnivRequest(methodName, clazz, this, refObj, feedParams, body, requestMethod);
+    }
+
+    public void placeUnivUserRequest(String methodName, Class clazz, Object refObj, HashMap<String, String> feedParams, String body, Integer requestMethod) {
+        RequestManager.getInstance(getActivity()).placeUnivUserRequest(methodName, clazz, this, refObj, feedParams, body, requestMethod);
+    }
+
     public void placeDeleteRequest(String methodName, Class clazz, Object refObj, HashMap<String, String> params, String body, boolean isDELETE) {
         RequestManager.getInstance(getActivity()).placeDeleteRequest(methodName, clazz, this, refObj, params, body, isDELETE);
     }

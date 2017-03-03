@@ -18,17 +18,19 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<String> mList;
     private int mPos;
     private Context mCtx;
+    private String m_cGoOffline;
 
-    public ScreenSlidePagerAdapter(FragmentManager fm, Context pCtx, int pPos, ArrayList<String> pList) {
+    public ScreenSlidePagerAdapter(FragmentManager fm, Context pCtx, int pPos, ArrayList<String> pList, String pGoOffline) {
         super(fm);
         this.mList = pList;
         this.mPos = pPos;
         this.mCtx = pCtx;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return ScreenSlidePageFragment.newInstance(mPos, mList.get(position));
+        return ScreenSlidePageFragment.newInstance(mPos, mList.get(position), m_cGoOffline);
     }
 
     @Override

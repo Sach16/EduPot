@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/CV_USER_CELL"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/pot_cell_margin">
+
+    <com.cosmicdew.lessonpot.customviews.UserCircularImageView
+        android:id="@+id/USER_CIV_CELL"
+        style="@style/circular_imageview"
+        android:src="@drawable/profile_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/USER_CIV_CELL"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/NAMING_LL"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/USER_FULL_NAME_TXT"
+                style="@style/note_normal_black_bold_txt"
+                android:layout_marginTop="2dp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/USER_ROLL_OR_COMMENT_TXT"
+                style="@style/note_nor_txt"
+                android:textColor="@android:color/black" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/TIMESTAMP_TXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_body"
+                    android:textSize="@dimen/small_text_size" />
+
+                <TextView
+                    android:id="@+id/LESSON_NAME_TXT"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/clikable_txt"
+                    android:textColor="@color/text_body"
+                    android:layout_toRightOf="@+id/TIMESTAMP_TXT"
+                    android:layout_marginLeft="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/small_text_size" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/lighter_grey" />
+
+</RelativeLayout>

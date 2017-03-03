@@ -36,6 +36,7 @@ public class Constants {
     public static final String STATES = "states/";
     public static final String SYSTEMBOARDS = "systemboards/";
     public static final String SYSTEMBOARDCLASSES = "systemboardclasses/";
+    public static final String PUBLIC = "public/"; //Public Tab
     public static final String VIEWED = "viewed/"; //Viewed Tab
     public static final String SHARED = "shared/"; //Recieved Tab
     public static final String CREATED = "created/"; //Mine Tab
@@ -66,6 +67,11 @@ public class Constants {
     public static final String LESSONSHARES = "lessonshares/";
     public static final String APPCONFIG = "appconfig/";
     public static final String OFFLINE_META = "offlinemeta/";
+    public static final String LESSON_LIKES = "likes/";
+    public static final String LESSON_COMMENTS = "comments/";
+    public static final String FOLLOWERS = "followers/";
+    public static final String FOLLOWING = "following/";
+    public static final String PUBLICSHARE = "publicshare/";
 
     public static final String PHONE = "phone";
     public static final String OTP = "otp";
@@ -74,6 +80,7 @@ public class Constants {
     public static final String PIN = "pin";
     public static final String NAME = "name";
     public static final String COMMENTS = "comments";
+    public static final String COMMENT = "comment";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String USERNAME = "username";
@@ -112,6 +119,23 @@ public class Constants {
     public static final String ORDERING = "ordering";
     public static final String LESSON__POSITION = "lesson__position";
     public static final String POSITION = "position";
+    public static final String OFFLINEABLE = "offlineable";
+    public static final String SHARABLE = "sharable";
+    public static final String PUBLICABLE = "public";
+    public static final String TO_USER = "to_user";
+    public static final String POST_TO_FOLLOWERS = "post_to_followers";
+    public static final String SCOPE = "scope";
+    public static final String SCOPE_ALL = "all";
+    public static final String SCOPE_MINE = "mine";
+    public static final String PUBLIC_USER = "public_user";
+    public static final String SHOW_ACCOUNT_ID = "show_account_id";
+    public static final String BIO = "bio";
+    public static final String CONTENT_EDITED = "content_edited";
+
+    public static final String POSTED_TO = "posted_to";
+    public static final String POSTED_NONE = "none";
+    public static final String POSTED_CONNECTIONS = "connections";
+    public static final String POSTED_FOLLOWERS = "followers";
 
     public static final String INSCLUDE = "include";
     public static final String MESSAGES = "messages";

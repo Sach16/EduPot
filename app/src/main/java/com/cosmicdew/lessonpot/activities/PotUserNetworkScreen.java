@@ -194,6 +194,22 @@ public class PotUserNetworkScreen extends PotBaseActivity implements NavigationV
                 }
             }
         });
+
+        TextView lLikesAndComment = (TextView) m_cView.findViewById(R.id.NAV_LIKES_COMMENTS);
+        lLikesAndComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent lObjIntent;
+                if (null != m_cDrawerLayout) {
+                    m_cDrawerLayout.closeDrawer(GravityCompat.START);
+                    lObjIntent = new Intent(PotUserNetworkScreen.this, PotUserLikesCommentsScreen.class);
+                    lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                    startActivity(lObjIntent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            }
+        });
+
         TextView lSuppTxt = (TextView) m_cView.findViewById(R.id.NAV_SUPPORT);
         lSuppTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +270,7 @@ public class PotUserNetworkScreen extends PotBaseActivity implements NavigationV
     private void init() {
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText(getResources().getString(R.string.requests_txt)));
         m_cTabLayout.addTab(m_cTabLayout.newTab().setText(getResources().getString(R.string.my_connections_txt)));
+        m_cTabLayout.addTab(m_cTabLayout.newTab().setText(getResources().getString(R.string.people_i_follow_txt)));
 //        m_cTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         m_cPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(m_cTabLayout));
@@ -282,6 +299,12 @@ public class PotUserNetworkScreen extends PotBaseActivity implements NavigationV
                         // NOTHING TO DO HERE
                         break;
                     case 1:
+//                        setTitle("Lead Name", false, false, true, false);
+//                        swipeView.setEnabled(true);
+//                        displayProgressBar(-1, "Loading Packages,..");
+//                        m_cObjTransportMgr.getPackages("", EURemediesSpecialityScreen.this);
+                        break;
+                    case 2:
 //                        setTitle("Lead Name", false, false, true, false);
 //                        swipeView.setEnabled(true);
 //                        displayProgressBar(-1, "Loading Packages,..");

@@ -64,12 +64,22 @@ public class LessonsTable extends SugarRecord{
     @SerializedName("views")
     @Expose
     private Integer views;
+    @SerializedName("is_edited")
+    @Expose
+    private boolean isEdited ;
+    @SerializedName("owner")
+    @Expose
+    private String owner ;
+    @SerializedName("source")
+    @Expose
+    private String source ;
 
     public LessonsTable(){}
 
     public LessonsTable(Integer lessonId, String name, String comments, String created, String modified, Integer userId,
                         Integer ownerId, Integer sharerId, String chapterName, String syllabiName, String boardClass, String img1,
-                        String img2, String img3, String audio, Integer lengthSum, Integer position, Integer views){
+                        String img2, String img3, String audio, Integer lengthSum, Integer position, Integer views, boolean isEdited,
+                        String owner, String source){
         this.lessonId = lessonId;
         this.name = name;
         this.comments = comments;
@@ -88,6 +98,9 @@ public class LessonsTable extends SugarRecord{
         this.lengthSum = lengthSum;
         this.position = position;
         this.views = views;
+        this.isEdited = isEdited;
+        this.owner = owner;
+        this.source = source;
     }
 
     public Integer getLessonId() {
@@ -232,5 +245,29 @@ public class LessonsTable extends SugarRecord{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public boolean isEdited() {
+        return isEdited;
+    }
+
+    public void setEdited(boolean edited) {
+        isEdited = edited;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

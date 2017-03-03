@@ -52,6 +52,7 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
     private static Chapters m_cChapters;
     private static String m_cLessFromWhere;
     private static boolean m_cIsInReorder;
+    private static String m_cGoOffline;
     private static Context m_cObjContext;
 
     public CustomRecyclerAdapterForLessonsMine(Context pContext, Users pUsers, BoardChoices pBoardChoices,
@@ -62,6 +63,7 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
                                                RecyclerHomeListener pListener,
                                                OnStartDragListener pDragStartListener,
                                                String pLessFromWhere,
+                                               String pGoOffline,
                                                boolean pIsInReorder) {
         this.m_cObjContext = pContext;
         this.m_cObjLessons = pLessons;
@@ -75,6 +77,7 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
         this.m_cChapters = pChapters;
         this.m_cLessFromWhere = pLessFromWhere;
         this.m_cIsInReorder = pIsInReorder;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
@@ -155,6 +158,18 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
         @BindView(R.id.CREATEDTIME_TXT)
         TextView modifiedTime;
 
+        @Nullable
+        @BindView(R.id.LIKE_LIST_TXT)
+        TextView likesCount;
+
+        @Nullable
+        @BindView(R.id.COMMENT_LIST_TXT)
+        TextView commentsCount;
+
+        @Nullable
+        @BindView(R.id.LIKES_COMMENTS_LL)
+        LinearLayout likesCommLL;
+
         public DataObjectHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -222,6 +237,18 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
         if (holder instanceof CustomRecyclerAdapterForLessonsMine.DataObjectHolder) {
+
+            try {
+                if (null != m_cGoOffline) {
+                    ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).likesCommLL.setVisibility(View.INVISIBLE);
+                    if (m_cObjLessons.get(position).getId() == -1){
+                        ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).classBoardTxt.setVisibility(View.INVISIBLE);
+                        ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).subChapterTxt.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             /*final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
                 public void onLongPress(MotionEvent e) {
@@ -333,6 +360,22 @@ public class CustomRecyclerAdapterForLessonsMine extends RecyclerView.Adapter im
                         .setText(m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getName() +
                                 ", " +
                                 m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getBoard().getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int likesCount = m_cObjLessons.get(position).getLikesCount();
+                ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).likesCount
+                        .setText(likesCount > 99 ? "99+" : String.valueOf(likesCount));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int commentsCount = m_cObjLessons.get(position).getCommentsCount();
+                ((CustomRecyclerAdapterForLessonsMine.DataObjectHolder) holder).commentsCount
+                        .setText(commentsCount > 99 ? "99+" : String.valueOf(commentsCount));
             } catch (Exception e) {
                 e.printStackTrace();
             }

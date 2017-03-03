@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -13,27 +14,32 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
 import com.cosmicdew.lessonpot.interfaces.RefreshEditProfileListener;
-import com.cosmicdew.lessonpot.macros.Credentials;
 import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import butterknife.Optional;
 
 /**
  * Created by S.K. Pissay on 25/1/17.
  */
 
-public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements CompoundButton.OnCheckedChangeListener{
+public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements CompoundButton.OnCheckedChangeListener,
+        View.OnTouchListener {
 
     @Nullable
     @BindView(R.id.MAIN_RL)
@@ -49,6 +55,9 @@ public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements C
 
     private int m_cPos = -1;
     private Users m_cUsers;
+
+    private boolean m_cIsShareTouched;
+    private boolean m_cIsOfflineTouched;
 
     private static RefreshEditProfileListener m_cRefreshListener;
 
@@ -87,8 +96,6 @@ public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements C
 
         m_cObjMainActivity.m_cObjFragmentBase = PotGlobalSettingsFragment.this;
 
-        init();
-
         return m_cObjMainView;
     }
 
@@ -101,6 +108,9 @@ public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements C
     private void init() {
         m_cPos = getArguments().getInt("Position");
         m_cUsers = (new Gson()).fromJson(getArguments().getString(PotMacros.OBJ_USER), Users.class);
+
+        m_cSharesSwch.setChecked(m_cUsers.getSharable());
+        m_cOfflineSwch.setChecked(m_cUsers.getOfflineable());
     }
 
     @Override
@@ -111,21 +121,39 @@ public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements C
 
     @Optional
     @OnClick({})
-    public void onClick(View v) {}
+    public void onClick(View v) {
+    }
 
     @Override
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
-            case Constants.CREDENTIALS:
-                m_cObjMainActivity.hideDialog();
-                Credentials lCredentials = (Credentials) response;
-                if (null != lCredentials){
-                    m_cRefreshListener.onUpdate(m_cPos, m_cUsers, null);
-                    onBackPressed();
-                }
-                break;
             default:
-                super.onAPIResponse(response, apiMethod, refObj);
+                if (apiMethod.contains(Constants.USERS)) {
+                    m_cObjMainActivity.hideDialog();
+                    Users lUsers = (Users) response;
+                    Object[] lObjects = (Object[]) refObj;
+                    if (null != lUsers) {
+                        m_cUsers = lUsers;
+                        switch ((String) lObjects[0]) {
+                            case Constants.SHARABLE:
+                                if ((boolean) lObjects[1])
+                                    m_cObjMainActivity.displaySnack(m_cRelL, "Shares Enabled");
+                                else
+                                    m_cObjMainActivity.displaySnack(m_cRelL, "Shares Disabled");
+                                break;
+                            case Constants.OFFLINEABLE:
+                                if ((boolean) lObjects[1])
+                                    m_cObjMainActivity.displaySnack(m_cRelL, "Offline Save Enabled");
+                                else
+                                    m_cObjMainActivity.displaySnack(m_cRelL, "Offline Save Disabled");
+                                break;
+                        }
+                        m_cRefreshListener.onUpdate(m_cPos, lUsers, null);
+                    }
+                } else {
+                    super.onAPIResponse(response, apiMethod, refObj);
+                    m_cObjMainActivity.hideDialog();
+                }
                 break;
         }
     }
@@ -133,17 +161,19 @@ public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements C
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
         switch (apiMethod) {
-            case Constants.CREDENTIALS:
-                m_cObjMainActivity.hideDialog();
-                if (error instanceof NoConnectionError) {
-                    Toast.makeText(m_cObjMainActivity, "Please check Network connection", Toast.LENGTH_SHORT).show();
-                } else {
-                    String lMsg = new String(error.networkResponse.data);
-                    m_cObjMainActivity.showErrorMsg(lMsg);
-                }
-                break;
             default:
-                super.onErrorResponse(error, apiMethod, refObj);
+                if (apiMethod.contains(Constants.USERS)) {
+                    m_cObjMainActivity.hideDialog();
+                    if (error instanceof NoConnectionError) {
+                        Toast.makeText(m_cObjMainActivity, "Please check Network connection", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String lMsg = new String(error.networkResponse.data);
+                        m_cObjMainActivity.showErrorMsg(lMsg);
+                    }
+                } else {
+                    super.onErrorResponse(error, apiMethod, refObj);
+                    m_cObjMainActivity.hideDialog();
+                }
                 break;
         }
     }
@@ -161,17 +191,54 @@ public class PotGlobalSettingsFragment extends PotFragmentBaseClass implements C
     public void onCheckedChanged(CompoundButton view, boolean isChecked) {
         switch (view.getId()) {
             case R.id.SHARES_SWITCH:
-                if (isChecked)
-                    m_cObjMainActivity.displaySnack(m_cRelL, "Shares Enabled");
-                else
-                    m_cObjMainActivity.displaySnack(m_cRelL, "Shares Disabled");
+                if (m_cIsShareTouched) {
+                    m_cIsShareTouched = false;
+                    callSwitchApi(isChecked, 0);
+                }
                 break;
             case R.id.OFFLINE_SWITCH:
-                if (isChecked)
-                    m_cObjMainActivity.displaySnack(m_cRelL, "Offline Save Enabled");
-                else
-                    m_cObjMainActivity.displaySnack(m_cRelL, "Offline Save Disabled");
+                if (m_cIsOfflineTouched) {
+                    m_cIsOfflineTouched = false;
+                    callSwitchApi(isChecked, 1);
+                }
                 break;
         }
+    }
+
+    private void callSwitchApi(boolean isChecked, int pCase) {
+        String lStrObj = null;
+        JSONObject lJO = new JSONObject();
+        try {
+            switch (pCase) {
+                case 0:
+                    lJO.put(Constants.SHARABLE, isChecked);
+                    lStrObj = Constants.SHARABLE;
+                    break;
+                case 1:
+                    lJO.put(Constants.OFFLINEABLE, isChecked);
+                    lStrObj = Constants.OFFLINEABLE;
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        placeUnivRequest(Constants.USERS +
+                m_cUsers.getId() +
+                "/",
+                Users.class, new Object[]{lStrObj, isChecked}, null, lJO.toString(), Request.Method.PATCH);
+    }
+
+    @Optional
+    @OnTouch({R.id.SHARES_SWITCH, R.id.OFFLINE_SWITCH})
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId()) {
+            case R.id.SHARES_SWITCH:
+                m_cIsShareTouched = true;
+                break;
+            case R.id.OFFLINE_SWITCH:
+                m_cIsOfflineTouched = true;
+                break;
+        }
+        return false;
     }
 }

@@ -37,13 +37,17 @@ public class CustomRecyclerAdapterForSubjects extends RecyclerView.Adapter{
     private static RecyclerHomeListener m_cClickListener;
     private static List<Syllabi> m_cObjSyllabi;
     private static String m_cSelectionType;
+    private static String m_cGoOffline;
     private Context m_cObjContext;
 
-    public CustomRecyclerAdapterForSubjects(Context pContext, List<Syllabi> pSyllabi, String pSellectionType, RecyclerHomeListener pListener) {
+    public CustomRecyclerAdapterForSubjects(Context pContext, List<Syllabi> pSyllabi, String pSellectionType,
+                                            String pGoOffline,
+                                            RecyclerHomeListener pListener) {
         this.m_cObjContext = pContext;
         this.m_cObjSyllabi = pSyllabi;
         this.m_cSelectionType = pSellectionType;
         this.m_cClickListener = pListener;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
@@ -157,6 +161,13 @@ public class CustomRecyclerAdapterForSubjects extends RecyclerView.Adapter{
                 ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).chapterRecordingTxt.setVisibility(View.GONE);
                 if (m_cObjSyllabi.get(position).getIsGeneric())
                     ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).arrowClickImg.setVisibility(View.GONE);
+            }
+
+            try {
+                if (null != m_cGoOffline)
+                    ((CustomRecyclerAdapterForSubjects.DataObjectHolder) holder).chapterRecordingTxt.setVisibility(View.GONE);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             try {

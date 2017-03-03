@@ -24,13 +24,15 @@ public class ScreenSlidePageFragment extends PotFragmentBaseClass{
     TouchImageView imageZom;
     int m_cPos;
     String m_cKey;
+    String m_cGoOffline;
 
-    public static ScreenSlidePageFragment newInstance(int pPosition, String pUrl) {
+    public static ScreenSlidePageFragment newInstance(int pPosition, String pUrl, String pGoOffline) {
         ScreenSlidePageFragment lScreenSlidePageFragment = new ScreenSlidePageFragment();
 
         Bundle args = new Bundle();
         args.putInt("Position", pPosition);
         args.putString("URL", pUrl);
+        args.putString(PotMacros.GO_OFFLINE, pGoOffline);
         lScreenSlidePageFragment.setArguments(args);
 
         return lScreenSlidePageFragment;
@@ -45,34 +47,63 @@ public class ScreenSlidePageFragment extends PotFragmentBaseClass{
 
         m_cPos = getArguments().getInt("Position", 0);
         m_cKey = getArguments().getString("URL");
+        m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
 
-        if (m_cKey.contains(PotMacros.HTTP_PREFIX)){
-            try {
-                Picasso.with(m_cObjMainActivity)
-                        .load(m_cKey)
-                        .error(R.drawable.profile_placeholder)
-                        .placeholder(R.drawable.profile_placeholder)
-                        .config(Bitmap.Config.RGB_565)
-                        .fit()
-                        .into(imageZom);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }else {
-            try {
-                Picasso.with(m_cObjMainActivity)
-                        .load(new File(PotMacros.getImageFilePath(m_cObjMainActivity), m_cKey))
-                        .error(R.drawable.profile_placeholder)
-                        .placeholder(R.drawable.profile_placeholder)
-                        .config(Bitmap.Config.RGB_565)
-                        .fit()
-                        .into(imageZom);
-            } catch (Exception e){
-                e.printStackTrace();
+        if (m_cKey.contains(PotMacros.HTTP_PREFIX)) {
+            loadServerKey(m_cKey);
+        } else {
+            if (null != m_cGoOffline)
+                loadFileKey(m_cKey);
+            else {
+                if (m_cKey.contains("tempimages"))
+                    loadFileKey(m_cKey);
+                else
+                    loadImageFileKey(m_cKey);
             }
         }
-
         return lView;
+    }
+
+    private void loadServerKey(String m_cKey) {
+        try {
+            Picasso.with(m_cObjMainActivity)
+                    .load(m_cKey)
+                    .error(R.drawable.profile_placeholder)
+                    .placeholder(R.drawable.profile_placeholder)
+                    .config(Bitmap.Config.RGB_565)
+                    .fit()
+                    .into(imageZom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadFileKey(String m_cKey) {
+        try {
+            Picasso.with(m_cObjMainActivity)
+                    .load(new File(m_cKey))
+                    .error(R.drawable.profile_placeholder)
+                    .placeholder(R.drawable.profile_placeholder)
+                    .config(Bitmap.Config.RGB_565)
+                    .fit()
+                    .into(imageZom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadImageFileKey(String m_cKey) {
+        try {
+            Picasso.with(m_cObjMainActivity)
+                    .load(new File(PotMacros.getImageFilePath(m_cObjMainActivity), m_cKey))
+                    .error(R.drawable.profile_placeholder)
+                    .placeholder(R.drawable.profile_placeholder)
+                    .config(Bitmap.Config.RGB_565)
+                    .fit()
+                    .into(imageZom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

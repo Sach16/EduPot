@@ -1,5 +1,6 @@
 package com.cosmicdew.lessonpot.fragments;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -70,6 +71,7 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
     private String m_cKey;
     private Users m_cUser;
     private String m_cSelectionType;
+    protected AlertDialog m_cObjDialog;
 
     private View mHeaderView;
 
@@ -206,7 +208,7 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
                             break;
                         case R.id.action_delete:
                             Connections pConnections = (Connections) pObjMessage.obj;
-                            m_cObjMainActivity.displayYesOrNoCustAlert(R.id.action_delete,
+                            displayYesOrNoCustAlert(R.id.action_delete,
                                     getResources().getString(R.string.delete_connection_txt),
                                     String.format("%s \n\n%s",
                                             getResources().getString(R.string.all_lessons_shared_txt),
@@ -226,7 +228,7 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
                             break;
                         case R.id.action_delete:
                             Role pRole = (Role) pObjMessage.obj;
-                            m_cObjMainActivity.displayYesOrNoCustAlert(R.id.action_delete,
+                            displayYesOrNoCustAlert(R.id.action_delete,
                                     getResources().getString(R.string.delete_connection_txt),
                                     String.format("%s \n\n%s",
                                             getResources().getString(R.string.all_lessons_shared_txt),
@@ -436,5 +438,34 @@ public class PotUserNetworkConnectionsFragment extends PotFragmentBaseClass impl
                 m_cExpandView.collapseGroup(previousItem);
             previousItem = groupPosition;
         }
+    }
+
+    public void displayYesOrNoCustAlert(final int pId, String pTitle, String pMessage, final Object pObj) {
+        AlertDialog.Builder lObjBuilder = new AlertDialog.Builder(m_cObjMainActivity);
+        View lView = LayoutInflater.from(m_cObjMainActivity).inflate(R.layout.spinner_header, null);
+        ((TextView) lView.findViewById(R.id.TEXT_HEAD)).setText(pTitle);
+        lObjBuilder.setCustomTitle(lView);
+        final View lMainView = LayoutInflater.from(m_cObjMainActivity).inflate(R.layout.lesson_yes_no_dialog, null);
+        ((TextView) lMainView.findViewById(R.id.ALLERT_TXT)).setText(pMessage);
+        lObjBuilder.setView(lMainView);
+        ((TextView) lMainView.findViewById(R.id.NO_DIALOG_TXT)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_cObjDialog.dismiss();
+            }
+        });
+        ((TextView) lMainView.findViewById(R.id.YES_DIALOG_TXT)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message lMsg = new Message();
+                lMsg.what = pId;
+                lMsg.obj = new Object[]{true, pObj};
+                m_cObjUIHandler.sendMessage(lMsg);
+                m_cObjDialog.dismiss();
+            }
+        });
+        m_cObjDialog = lObjBuilder.create();
+        m_cObjDialog.setCanceledOnTouchOutside(false);
+        m_cObjDialog.show();
     }
 }

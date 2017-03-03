@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
@@ -22,6 +23,7 @@ import com.cosmicdew.lessonpot.adapters.CustomRecyclerAdapterForUsers;
 import com.cosmicdew.lessonpot.baseclasses.PotBaseActivity;
 import com.cosmicdew.lessonpot.interfaces.RecyclerUsersListener;
 import com.cosmicdew.lessonpot.macros.PotMacros;
+import com.cosmicdew.lessonpot.models.Follows;
 import com.cosmicdew.lessonpot.models.Sessions;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.models.UsersAll;
@@ -62,6 +64,14 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
     @Nullable
     @BindView(R.id.NO_DATA_RL)
     RelativeLayout rlNoData;
+
+    @Nullable
+    @BindView(R.id.REGISTER_NEW_TXT)
+    TextView regNewTxt;
+
+    @Nullable
+    @BindView(R.id.ADD_EXISTING_TXT)
+    TextView addExTxt;
 
     public static final int RE_FRESH = 7771;
 
@@ -122,6 +132,8 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
 
         if (null != m_cGoOffline){
             initOffline();
+            regNewTxt.setVisibility(View.GONE);
+            addExTxt.setVisibility(View.GONE);
         }else {
             displayProgressBar(-1, "Loading...");
             RequestManager.getInstance(this).placeRequest(Constants.USERS, UsersAll.class, this, null, null, null, false);
@@ -139,6 +151,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
                 lUsers.setMiddleName(lUsersTable.getMiddleName());
                 lUsers.setLastName(lUsersTable.getLastName());
                 lUsers.setUsername(lUsersTable.getUsername());
+                lUsers.setRole(lUsersTable.getRole());
                 lUsers.setRoleTitle(lUsersTable.getRole());
                 lUsers.setTermsAccepted(lUsersTable.getTermsAccepted());
                 lUsers.setIsAdmin(lUsersTable.getIsAdmin());
@@ -382,11 +395,18 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
 
     @Override
     public void onInfoLongClick(int pPostion, Users pUsers, View pView) {
-        displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_USERS,
-                pUsers.getFirstName() + " " + pUsers.getLastName(),
-                Arrays.asList(getResources().getString(R.string.remove_user_txt)),
-                Arrays.asList(R.id.action_remove),
-                new Object[]{pUsers, pPostion});
+        if (null == m_cGoOffline) {
+            displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_USERS,
+                    pUsers.getFirstName() + " " + pUsers.getLastName(),
+                    Arrays.asList(getResources().getString(R.string.remove_user_txt)),
+                    Arrays.asList(R.id.action_remove),
+                    new Object[]{pUsers, pPostion});
+        }
+    }
+
+    @Override
+    public void onOptionsClick(int pPostion, Follows pFollows, View pView, int pOpt) {
+
     }
 
     public Users getUser() {

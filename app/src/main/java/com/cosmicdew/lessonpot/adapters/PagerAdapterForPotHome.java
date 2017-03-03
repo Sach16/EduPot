@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeClassesFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeClassesMineFragment;
+import com.cosmicdew.lessonpot.fragments.PotUserHomeClassesOfflineFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeClassesReceivedFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeClassesViewedFragment;
 import com.cosmicdew.lessonpot.models.Users;
@@ -64,9 +65,12 @@ public class PagerAdapterForPotHome extends FragmentStatePagerAdapter{
                     m_cObjFragmentBase = PotUserHomeClassesFragment.newInstance(position, m_cId, m_cUser, null, null, m_cGoOffline);
                     return m_cObjFragmentBase;
                 case 1:
-                    m_cObjFragmentBase = PotUserHomeClassesReceivedFragment.newInstance(position, m_cId, m_cUser, m_cGoOffline);
+                    m_cObjFragmentBase = PotUserHomeClassesOfflineFragment.newInstance(position, m_cId, m_cUser, m_cGoOffline);
                     return m_cObjFragmentBase;
                 case 2:
+                    m_cObjFragmentBase = PotUserHomeClassesReceivedFragment.newInstance(position, m_cId, m_cUser, m_cGoOffline);
+                    return m_cObjFragmentBase;
+                case 3:
                     m_cObjFragmentBase = PotUserHomeClassesMineFragment.newInstance(position, m_cId, m_cUser, m_cGoOffline);
                     return m_cObjFragmentBase;
                 default:

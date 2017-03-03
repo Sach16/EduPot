@@ -35,14 +35,17 @@ public class CustomRecyclerAdapterForClasses extends RecyclerView.Adapter{
     private static RecyclerClassBoardsListener m_cClickListener;
     private static List<BoardChoices> m_cObjBoardChoices;
     private static String m_cSelectionType;
+    private static String m_cGoOffline;
     private Context m_cObjContext;
 
     public CustomRecyclerAdapterForClasses(Context pContext, List<BoardChoices> pBoardChoices,String pSellectionType,
+                                           String pGoOffline,
                                            RecyclerClassBoardsListener pListener) {
         this.m_cObjContext = pContext;
         this.m_cObjBoardChoices = pBoardChoices;
         this.m_cClickListener = pListener;
         this.m_cSelectionType = pSellectionType;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
@@ -143,6 +146,13 @@ public class CustomRecyclerAdapterForClasses extends RecyclerView.Adapter{
                 if (m_cObjBoardChoices.get(position).getBoardclass().getIsGeneric())
                     ((CustomRecyclerAdapterForClasses.DataObjectHolder) holder).arrowClickImg.setVisibility(View.GONE);
 
+            }
+
+            try {
+                if (null != m_cGoOffline)
+                    ((CustomRecyclerAdapterForClasses.DataObjectHolder) holder).schoolNameLocTxt.setVisibility(View.GONE);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             try {

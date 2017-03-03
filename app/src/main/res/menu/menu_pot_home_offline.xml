@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/action_add"
+        android:icon="@mipmap/add"
+        android:orderInCategory="101"
+        android:title="EditProfile"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_offline"
+        android:orderInCategory="100"
+        android:icon="@drawable/offlineicon_white"
+        android:title="@string/action_notify"
+        app:showAsAction="always" />
+</menu>

@@ -186,21 +186,25 @@ public class PotUserChapterScreen extends PotBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_pot_home, menu);
+        if (null != m_cGoOffline)
+            inflater.inflate(R.menu.menu_pot_home_offline, menu);
+        else {
+            inflater.inflate(R.menu.menu_pot_home, menu);
 
-        MenuItem item = menu.findItem(R.id.action_notify);
-        MenuItemCompat.setActionView(item, R.layout.menu_action_badge_item);
-        View view = MenuItemCompat.getActionView(item);
-        TextView notifCount = (TextView) view.findViewById(R.id.menu_badge);
-        int lNotifyCount = getNotifyCount(this, m_cUser)[0] + getNotifyCount(this, m_cUser)[1];
-        if (lNotifyCount > 0)
-            notifCount.setText(String.valueOf(lNotifyCount));
-        else
-            notifCount.setVisibility(View.GONE);
-        ImageView icon = (ImageView) view.findViewById(R.id.menu_badge_icon);
-        icon.setImageResource(R.mipmap.notify_bell);
-        if (view != null) {
-            view.setOnClickListener(this);
+            MenuItem item = menu.findItem(R.id.action_notify);
+            MenuItemCompat.setActionView(item, R.layout.menu_action_badge_item);
+            View view = MenuItemCompat.getActionView(item);
+            TextView notifCount = (TextView) view.findViewById(R.id.menu_badge);
+            int lNotifyCount = getNotifyCount(this, m_cUser)[0] + getNotifyCount(this, m_cUser)[1];
+            if (lNotifyCount > 0)
+                notifCount.setText(String.valueOf(lNotifyCount));
+            else
+                notifCount.setVisibility(View.GONE);
+            ImageView icon = (ImageView) view.findViewById(R.id.menu_badge_icon);
+            icon.setImageResource(R.mipmap.notify_bell);
+            if (view != null) {
+                view.setOnClickListener(this);
+            }
         }
         return true;
     }
@@ -216,7 +220,10 @@ public class PotUserChapterScreen extends PotBaseActivity {
                 onBackPressed();
                 return true;
             case R.id.action_add:
-                lObjIntent = new Intent(this, LessonsScreen.class);
+                if (null != m_cGoOffline)
+                    lObjIntent = new Intent(this, LessonsOfflineScreen.class);
+                else
+                    lObjIntent = new Intent(this, LessonsScreen.class);
                 lObjIntent.putExtra(PotMacros.OBJ_LESSON_TYPE, PotMacros.OBJ_LESSON_NEW);
                 lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_CHAPTERS);
                 lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
@@ -232,19 +239,21 @@ public class PotUserChapterScreen extends PotBaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.action_notify);
-        MenuItemCompat.setActionView(item, R.layout.menu_action_badge_item);
-        View view = MenuItemCompat.getActionView(item);
-        TextView notifCount = (TextView) view.findViewById(R.id.menu_badge);
-        int lNotifyCount = getNotifyCount(this, m_cUser)[0] + getNotifyCount(this, m_cUser)[1];
-        if (lNotifyCount > 0)
-            notifCount.setText(String.valueOf(lNotifyCount));
-        else
-            notifCount.setVisibility(View.GONE);
-        ImageView icon = (ImageView) view.findViewById(R.id.menu_badge_icon);
-        icon.setImageResource(R.mipmap.notify_bell);
-        if (view != null) {
-            view.setOnClickListener(this);
+        if (null == m_cGoOffline) {
+            MenuItem item = menu.findItem(R.id.action_notify);
+            MenuItemCompat.setActionView(item, R.layout.menu_action_badge_item);
+            View view = MenuItemCompat.getActionView(item);
+            TextView notifCount = (TextView) view.findViewById(R.id.menu_badge);
+            int lNotifyCount = getNotifyCount(this, m_cUser)[0] + getNotifyCount(this, m_cUser)[1];
+            if (lNotifyCount > 0)
+                notifCount.setText(String.valueOf(lNotifyCount));
+            else
+                notifCount.setVisibility(View.GONE);
+            ImageView icon = (ImageView) view.findViewById(R.id.menu_badge_icon);
+            icon.setImageResource(R.mipmap.notify_bell);
+            if (view != null) {
+                view.setOnClickListener(this);
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -303,18 +312,18 @@ public class PotUserChapterScreen extends PotBaseActivity {
         }
     }
 
-    public void checkAndDownloadAttachments(Lessons pLessons, int pSourceId) {
+    public void checkAndDownloadAttachments(Lessons pLessons, int pSourceId, String pSource) {
         m_cAttachList = new HashMap<>();
         displayProgressBar(-1, "Loading...");
         RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
                         pLessons.getId() +
                         "/" +
                         Constants.ATTACHMENTS, AttachmentsAll.class, this,
-                new Object[]{pLessons, pSourceId},
+                new Object[]{pLessons, pSourceId, pSource},
                 null, null, false);
     }
 
-    public boolean checkAndUpdateLessons(Lessons pLessons, int pSourceId) {
+    public boolean checkAndUpdateLessons(Lessons pLessons, int pSourceId, String pSource) {
         boolean lRetVal = false;
         List<LessonsTable> lessonsTableListAll = LessonsTable.listAll(LessonsTable.class);
         List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "lesson_id = ? and user_id = ?", String.valueOf(pLessons.getId()), String.valueOf(m_cUser.getId()));
@@ -323,7 +332,7 @@ public class PotUserChapterScreen extends PotBaseActivity {
                     pLessons.getCreated(), pLessons.getModified(), m_cUser.getId(), pLessons.getOwner().getId(), pSourceId != m_cUser.getId() ? pSourceId : -1,
                     pLessons.getChapter().getName(),
                     pLessons.getChapter().getSyllabus().getSubjectName(),
-                    pLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+                    pLessons.getChapter().getSyllabus().getBoardclass().getName() + "," +
                             pLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName(),
                     null,
                     null,
@@ -331,7 +340,10 @@ public class PotUserChapterScreen extends PotBaseActivity {
                     null,
                     pLessons.getLength().getLengthSum(),
                     pLessons.getPosition(),
-                    pLessons.getViews());
+                    pLessons.getViews(),
+                    false,
+                    pLessons.getOwner().getFirstName() + " " + pLessons.getOwner().getLastName(),
+                    pSource);
             m_cLessonsTable.save();
             lRetVal = true;
         } else {
@@ -347,13 +359,28 @@ public class PotUserChapterScreen extends PotBaseActivity {
             m_cLessonsTable.setSharerId(pSourceId != m_cUser.getId() ? pSourceId : -1);
             m_cLessonsTable.setChapterName(pLessons.getChapter().getName());
             m_cLessonsTable.setSyllabiName(pLessons.getChapter().getSyllabus().getSubjectName());
-            m_cLessonsTable.setBoardClass(pLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+            m_cLessonsTable.setBoardClass(pLessons.getChapter().getSyllabus().getBoardclass().getName() + "," +
                     pLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName());
             m_cLessonsTable.setLengthSum(pLessons.getLength().getLengthSum());
             m_cLessonsTable.setPosition(pLessons.getPosition());
             m_cLessonsTable.setViews(pLessons.getViews());
+            m_cLessonsTable.setEdited(false);
+            if (null != m_cLessonsTable.getAudio())
+                checkAndDelete(m_cLessonsTable.getAudio());
+            if (null != m_cLessonsTable.getImg1())
+                checkAndDelete(m_cLessonsTable.getImg1());
+            if (null != m_cLessonsTable.getImg2())
+                checkAndDelete(m_cLessonsTable.getImg2());
+            if (null != m_cLessonsTable.getImg3())
+                checkAndDelete(m_cLessonsTable.getImg3());
+            m_cLessonsTable.setAudio(null);
+            m_cLessonsTable.setImg1(null);
+            m_cLessonsTable.setImg2(null);
+            m_cLessonsTable.setImg3(null);
+            m_cLessonsTable.setOwner(pLessons.getOwner().getFirstName() + " " + pLessons.getOwner().getLastName());
+            m_cLessonsTable.setSource(pSource);
             m_cLessonsTable.save();
-            lRetVal = false;
+            lRetVal = true;
         }
         return lRetVal;
     }
@@ -398,7 +425,7 @@ public class PotUserChapterScreen extends PotBaseActivity {
                         }
                     }
                     Object[] lObjects = (Object[]) refObj;
-                    if (checkAndUpdateLessons((Lessons) lObjects[0], (int) lObjects[1])) {
+                    if (checkAndUpdateLessons((Lessons) lObjects[0], (int) lObjects[1], (String) lObjects[2])) {
                         LinkedHashMap<String, Attachments> linkedHashMap = new LinkedHashMap<>(m_cAttachList);
                         if (null != m_cAttachList && m_cAttachList.size() > 0) {
                             for (int i = 0; i < m_cAttachList.size(); i++) {
@@ -444,15 +471,23 @@ public class PotUserChapterScreen extends PotBaseActivity {
                     }
                     switch ((String) lObjects[0]) {
                         case PotMacros.LESSON_AUDIO:
+                            if (null != m_cLessonsTable.getAudio())
+                                checkAndDelete(m_cLessonsTable.getAudio());
                             m_cLessonsTable.setAudio((String) lObjects[1]);
                             break;
                         case PotMacros.LESSON_IMG_1:
+                            if (null != m_cLessonsTable.getImg1())
+                                checkAndDelete(m_cLessonsTable.getImg1());
                             m_cLessonsTable.setImg1((String) lObjects[1]);
                             break;
                         case PotMacros.LESSON_IMG_2:
+                            if (null != m_cLessonsTable.getImg2())
+                                checkAndDelete(m_cLessonsTable.getImg2());
                             m_cLessonsTable.setImg2((String) lObjects[1]);
                             break;
                         case PotMacros.LESSON_IMG_3:
+                            if (null != m_cLessonsTable.getImg3())
+                                checkAndDelete(m_cLessonsTable.getImg3());
                             m_cLessonsTable.setImg3((String) lObjects[1]);
                             break;
                     }
@@ -473,7 +508,8 @@ public class PotUserChapterScreen extends PotBaseActivity {
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (apiMethod.contains(Constants.ATTACHMENTS) ||
+                if (apiMethod.contains(Constants.LESSONS) ||
+                        apiMethod.contains(Constants.ATTACHMENTS) ||
                         apiMethod.contains(Constants.OFFLINE_META)) {
                     hideDialog();
                     if (error instanceof NoConnectionError) {

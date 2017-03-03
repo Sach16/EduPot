@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/EDIT_PRO_MAIN_RL"
@@ -238,6 +237,7 @@
 
                     <RelativeLayout
                         android:id="@+id/REG_PH_TXT_RL"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -296,6 +296,40 @@
 
                         <ImageView
                             android:id="@+id/ARROW_CLICK_IMG4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/arrow_right" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/PROFILE_INFO_RL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/ARROW_CLICK_IMG5"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/PROFILE_INFO_TXT"
+                                style="@style/note_normal_black_bold_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center|left"
+                                android:text="@string/profile_information_txt" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ARROW_CLICK_IMG5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"

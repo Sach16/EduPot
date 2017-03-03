@@ -276,6 +276,21 @@
         <item name="fontPath">fonts/Roboto-Medium.ttf</item>
     </style>
 
+    <style name="clikable_txt">
+        <item name="android:textSize">15.6sp</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="clikable_small_txt">
+        <item name="android:textSize">13.5sp</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="clikable_u_small_txt">
+        <item name="android:textSize">12sp</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
     <style name="clikable_warm_header_txt">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -298,6 +313,15 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:textSize">@dimen/mid_lar_text_size</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="user_small_nav_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
         <item name="fontPath">fonts/Roboto-Medium.ttf</item>
         <item name="android:gravity">center</item>
     </style>

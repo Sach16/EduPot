@@ -255,6 +255,13 @@ public class ReceivedLessonsFilterScreen extends PotBaseActivity implements Recy
                             lClass, this, null, lParams, null, false);
 
                 break;
+            case PotMacros.OBJ_LESSON_PUBLIC_TAB:
+                RequestManager.getInstance(this).placeUserRequest(Constants.PUBLIC +
+                        Constants.CHAPTERS +
+                        m_cChapters.getId() +
+                        "/" +
+                        Constants.USERFILTER, lClass, this, null, lParams, null, false);
+                break;
         }
     }
 
@@ -314,7 +321,7 @@ public class ReceivedLessonsFilterScreen extends PotBaseActivity implements Recy
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (apiMethod.contains(Constants.SHARED)) {
+                if (apiMethod.contains(Constants.SHARED) || apiMethod.contains(Constants.PUBLIC)) {
                     if (m_cIsFlatView) {
                         RoleFilters lRoleFilters = (RoleFilters) response;
                         if (null != lRoleFilters && lRoleFilters.getRoleFilters().size() > 0) {
@@ -388,6 +395,7 @@ public class ReceivedLessonsFilterScreen extends PotBaseActivity implements Recy
         switch (apiMethod) {
             default:
                 if (apiMethod.contains(Constants.SHARE) ||
+                        apiMethod.contains(Constants.PUBLIC) ||
                         apiMethod.contains(Constants.LESSONS) ||
                         apiMethod.contains(Constants.CONNECTIONS)) {
                     hideDialog();

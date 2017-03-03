@@ -207,7 +207,7 @@
                 style="@style/title_regular"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="Last Listened : iuwniucen" />
+                android:text="Last Listened : " />
 
 
             <TextView
@@ -222,22 +222,20 @@
                 style="@style/title_regular"
                 android:layout_marginTop="@dimen/lesson_sides_margin"
                 android:ellipsize="end"
-                android:maxLines="3"
-                android:text="@string/dummy_txt" />
+                android:maxLines="3" />
 
             <TextView
                 android:id="@+id/NUM_OF_LISTENS_TXT"
                 style="@style/title_regular"
                 android:layout_marginTop="@dimen/lesson_sides_margin"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:text="Number of Listens : 5" />
+                android:maxLines="2" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/lesson_top_margin_high"
-                android:layout_marginBottom="@dimen/lesson_top_margin_high">
+                android:layout_marginBottom="@dimen/lesson_top_margin_high"
+                android:layout_marginTop="@dimen/lesson_top_margin_high">
 
                 <TextView
                     android:id="@+id/IMAGES_TITLE_TXT"
@@ -301,9 +299,139 @@
 
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/LESSON_SWITCH_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/ALLOW_SHARES_TXT"
+                        style="@style/clikable_small_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:text="@string/allow_shares_txt" />
+
+                    <Switch
+                        android:id="@+id/SHARES_SWITCH"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:scaleX="0.75"
+                        android:scaleY="0.75"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/ALLOW_OFFLINE_TXT"
+                        style="@style/clikable_small_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:text="@string/allow_offline_save_txt" />
+
+                    <Switch
+                        android:id="@+id/OFFLINE_SWITCH"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:scaleX="0.75"
+                        android:scaleY="0.75"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/LIKE_COMMENT_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/LIKE_TXT"
+                style="@style/clikable_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingBottom="@dimen/tab_text_size"
+                android:paddingTop="@dimen/tab_text_size"
+                android:text="@string/lesson_like_txt"
+                android:textColor="@color/warm_grey" />
+
+            <TextView
+                android:id="@+id/COMMENT_TXT"
+                style="@style/clikable_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingBottom="@dimen/tab_text_size"
+                android:paddingTop="@dimen/tab_text_size"
+                android:text="@string/lesson_comment_txt"
+                android:textColor="@color/warm_grey" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/LIKE_LIST_TXT"
+                style="@style/clikable_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableRight="@drawable/like"
+                android:gravity="center"
+                android:padding="@dimen/tab_text_size"
+                android:textColor="@color/warm_grey" />
+
+            <TextView
+                android:id="@+id/COMMENT_LIST_TXT"
+                style="@style/clikable_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableRight="@drawable/comment"
+                android:gravity="center"
+                android:padding="@dimen/tab_text_size"
+                android:textColor="@color/warm_grey" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/SAVE_CANCEL_LL"

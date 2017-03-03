@@ -131,6 +131,14 @@ public class CustomRecyclerAdapterForLessonsViewed extends RecyclerView.Adapter{
         @BindView(R.id.CREATEDTIME_TXT)
         TextView modifiedTime;
 
+        @Nullable
+        @BindView(R.id.LIKE_LIST_TXT)
+        TextView likesCount;
+
+        @Nullable
+        @BindView(R.id.COMMENT_LIST_TXT)
+        TextView commentsCount;
+
         public DataObjectHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -247,6 +255,22 @@ public class CustomRecyclerAdapterForLessonsViewed extends RecyclerView.Adapter{
                         .setText(m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getName()+
                                 ", "+
                                 m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getBoard().getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int likesCount = m_cObjLessons.get(position).getLikesCount();
+                ((CustomRecyclerAdapterForLessonsViewed.DataObjectHolder) holder).likesCount
+                        .setText(likesCount > 99 ? "99+" : String.valueOf(likesCount));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int commentsCount = m_cObjLessons.get(position).getCommentsCount();
+                ((CustomRecyclerAdapterForLessonsViewed.DataObjectHolder) holder).commentsCount
+                        .setText(commentsCount > 99 ? "99+" : String.valueOf(commentsCount));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -2,6 +2,7 @@ package com.cosmicdew.lessonpot.adapters;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,6 +100,10 @@ public class CustomRecyclerAdapterForLessons extends RecyclerView.Adapter{
         LinearLayout llUserCell;
 
         @Nullable
+        @BindView(R.id.ROUND_CARDVIEW)
+        CardView roundDotCV;
+
+        @Nullable
         @BindView(R.id.LESSON_NAME_TXT)
         TextView lessonNameTxt;
 
@@ -125,6 +130,14 @@ public class CustomRecyclerAdapterForLessons extends RecyclerView.Adapter{
         @Nullable
         @BindView(R.id.CREATEDTIME_TXT)
         TextView modifiedTime;
+
+        @Nullable
+        @BindView(R.id.LIKE_LIST_TXT)
+        TextView likesCount;
+
+        @Nullable
+        @BindView(R.id.COMMENT_LIST_TXT)
+        TextView commentsCount;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
@@ -175,6 +188,13 @@ public class CustomRecyclerAdapterForLessons extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof CustomRecyclerAdapterForLessons.DataObjectHolder) {
+
+            try{
+                ((CustomRecyclerAdapterForLessons.DataObjectHolder) holder).roundDotCV.setVisibility(View.INVISIBLE);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             try {
                 String[] lTimer = PotMacros.getFormatedTimer(m_cObjLessons.get(position).getLength().getLengthSum()).split(":");
                 ((CustomRecyclerAdapterForLessons.DataObjectHolder) holder).timeStamp
@@ -236,6 +256,22 @@ public class CustomRecyclerAdapterForLessons extends RecyclerView.Adapter{
                         .setText(m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getName()+
                                 ", "+
                                 m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getBoard().getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int likesCount = m_cObjLessons.get(position).getLikesCount();
+                ((CustomRecyclerAdapterForLessons.DataObjectHolder) holder).likesCount
+                        .setText(likesCount > 99 ? "99+" : String.valueOf(likesCount));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int commentsCount = m_cObjLessons.get(position).getCommentsCount();
+                ((CustomRecyclerAdapterForLessons.DataObjectHolder) holder).commentsCount
+                        .setText(commentsCount > 99 ? "99+" : String.valueOf(commentsCount));
             } catch (Exception e) {
                 e.printStackTrace();
             }

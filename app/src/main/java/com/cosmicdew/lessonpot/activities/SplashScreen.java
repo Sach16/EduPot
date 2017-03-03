@@ -6,11 +6,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
@@ -22,6 +23,9 @@ import com.cosmicdew.lessonpot.models.AppConfig;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.cosmicdew.lessonpot.network.RequestManager;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by S.K. Pissay on 5/10/16.
@@ -29,8 +33,11 @@ import com.cosmicdew.lessonpot.network.RequestManager;
 
 public class SplashScreen extends PotBaseActivity {
 
-    public static final int STARTAPPLICATION = 1000;
+    @Nullable
+    @BindView(R.id.MAIN_RL)
+    RelativeLayout m_cMainRL;
 
+    public static final int STARTAPPLICATION = 1000;
     private Dialog m_cObjDialog;
 
     @Override
@@ -38,13 +45,14 @@ public class SplashScreen extends PotBaseActivity {
         super.onCreate(pSavedInstance);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash_screen);
-        updateAuth();
-        refreshToken();
+        ButterKnife.bind(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        updateAuth();
+        refreshToken();
         init();
     }
 
@@ -58,6 +66,7 @@ public class SplashScreen extends PotBaseActivity {
         Intent lObjIntent;
         switch (pObjMessage.what) {
             case STARTAPPLICATION:
+                PotMacros.setPushSetting(this, true);
                 if (null != PotMacros.getLoginAuth(this) && -1 != PotMacros.getGreenSessionId(this)) {
                     lObjIntent = new Intent(this, PotLandingScreen.class);
                     lObjIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -80,6 +89,16 @@ public class SplashScreen extends PotBaseActivity {
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     finish();
                 }
+                break;
+            case PotMacros.NOTIFICATION_NO_NETWORK_CONNECTION_RETRY:
+                PotMacros.setPushSetting(this, false);
+                lObjIntent = new Intent(this, PotLandingScreen.class);
+                lObjIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                lObjIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                lObjIntent.putExtra(PotMacros.GO_OFFLINE, PotMacros.GO_OFFLINE);
+                startActivity(lObjIntent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
                 break;
             case PotMacros.APPCONFIG:
                 Intent lObjInt;
@@ -128,7 +147,7 @@ public class SplashScreen extends PotBaseActivity {
             case Constants.APPCONFIG:
                 hideDialog();
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(this, "Please check Network connection", Toast.LENGTH_SHORT).show();
+                    displaySnackRetry(m_cMainRL, getResources().getString(R.string.no_connection));
                     hideDialog();
                 } else {
                     String lMsg = new String(error.networkResponse.data);

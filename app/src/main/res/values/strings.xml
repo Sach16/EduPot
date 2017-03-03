@@ -40,12 +40,30 @@
     Add Syllabus
     <string name="action_share">Share</string>
     <string name="action_edit">Edit</string>
-    <string name="action_remove">Remove</string>
+    <string name="action_remove">Remove Lesson</string>
     <string name="action_delete">Delete</string>
     <string name="action_add_syllabus">Add Syllabus</string>
     <string name="action_post_to_students">Post to Students with this Syllabus</string>
     <string name="options_txt">Options</string>
-    <string name="action_save">Save</string>
+    <string name="action_save">Save Offline</string>
+    <string name="action_upload">Upload</string>
+    <string name="action_offline">Offline</string>
+    <string name="action_report_spam">Report Spam</string>
+    <string name="action_post_to_public">Post to Public</string>
+    <string name="action_post_to_connections">Post to connections</string>
+    <string name="action_follow">Follow</string>
+    <string name="action_delete_lesson">Delete Lesson</string>
+    <string name="action_delete_all_shares">Delete All Shares</string>
+    <string name="action_delete_my_shares">Delete My Shares</string>
+    <string name="action_unpost_from_public">Unpost from Public</string>
+    <string name="action_extend_post_to_public">Extend Post to Public</string>
+    <string name="action_extend_post_to_followers">Extend Post to Followers</string>
+    <string name="action_unpost_from_connections">Unpost from connections</string>
+    <string name="action_post_to_followers_and_connections">Post to Followers and Connections</string>
+    <string name="action_unpost_from_followers">Unpost from followers</string>
+    <string name="action_include_in_online_received_tab">Include in Online Received Tab</string>
+    <string name="action_view_creator_profile">View Creator Profile</string>
+    <string name="action_view_sharer_profile">View Sharer Profile</string>
 
     <string name="action_add">Add</string>
     <string name="action_notify">Notify</string>
@@ -101,6 +119,7 @@
 
     <string name="add_lesson_txt">Add Lesson</string>
     <string name="edit_lesson_txt">Edit Lesson</string>
+    <string name="upload_lesson_txt">Upload Lesson</string>
     <string name="edit_profile_txt">My Account</string>
     <string name="add_photo_txt">Add Photo</string>
     <string name="timer_nutral">00:00</string>
@@ -130,6 +149,7 @@
     <string name="my_network_txt">My Network</string>
     <string name="requests_txt">Requests</string>
     <string name="my_connections_txt">My Connections</string>
+    <string name="people_i_follow_txt">People I Follow</string>
     <string name="accept_txt">Accept</string>
     <string name="delete_txt">Delete</string>
     <string name="add_connection_txt">Add Connection</string>
@@ -143,8 +163,12 @@
     <string name="connection_marked_as_spam_txt">Connection marked as spam</string>
     <string name="connection_accepted_successfully_txt">Connection accepted successfully</string>
     <string name="lesson_posted_successfully_txt">Lesson posted successfully</string>
+    <string name="lesson_unposted_successfully_txt">Lesson Unposted successfully</string>
+    <string name="deleted_all_shares_txt">Deleted all shares</string>
+    <string name="deleted_my_shares_txt">Deleted my shares</string>
     <string name="lesson_shared_successfully_txt">Lesson shared successfully</string>
     <string name="connection_deleted_txt">Connection deleted</string>
+    <string name="connection_request_deleted_txt">Connection request deleted</string>
     <string name="show_groups_txt">Show Groups</string>
     <string name="select_users_txt">Select Accounts</string>
     <string name="connections_not_found_txt">No Connections found!</string>
@@ -214,9 +238,67 @@
     <string name="sms2_txt">The app is located on Google Playstore at</string>
     <string name="sms3_txt">Try it out.</string>
 
-    <string name="allow_shares_txt">Allow shares</string>
+    <string name="allow_shares_txt">Allow sharing</string>
     <string name="allow_offline_save_txt">Allow offline save</string>
     <string name="lesson_saved_successfully_txt">Lesson saved successfully</string>
+
+    <string name="go_online">Go Online</string>
+    <string name="no_connection">No Connection</string>
+
+    <string name="lesson_like_txt">Like</string>
+    <string name="lesson_comment_txt">Comment</string>
+
+    <string name="lesson_likes_txt">Likes</string>
+    <string name="lesson_comments_txt">Comments</string>
+    <string name="my_likes_comments_txt">My Likes &amp; Comments</string>
+    <string name="post_txt">Post</string>
+    <string name="write_a_comment_txt">Write a comment...</string>
+    <string name="tell_people_about_txt">Tell people about yourself...</string>
+    <string name="online_lesson_not_found_txt">Online lesson not found</string>
+    <string name="online_lesson_no_longer_exists_txt">Online lesson no longer exists. \nDo you want to upload as a new lesson?</string>
+    <string name="permission_txt">Allow sharable</string>
+    <string name="lesson_sharable_permission_txt">Only lessons marked Shareable can be Post to Public. Confirm that you want to mark this lesson as Shareable</string>
+    <string name="sharable_txt">Sharable :</string>
+    <string name="offlineable_txt">Offlineable :</string>
+
+    <string name="not_sharable_txt">Lesson not Sharable</string>
+    <string name="not_offlineable_txt">Lesson not Offlinable</string>
+
+    <string name="shares_enabled_txt">Shares Enabled</string>
+    <string name="shares_disabled_txt">Shares Disabled</string>
+    <string name="offline_save_enabled_txt">Offline Save Enabled</string>
+    <string name="offline_save_disabled_txt">Offline Save Disabled</string>
+    <string name="posted_to_public_txt">Posted to Public</string>
+    <string name="unpost_from_public_txt">Unposted from Public</string>
+    <string name="following_success_txt">You are now following</string>
+    <string name="marked_as_spam_txt">Marked as Spam</string>
+    <string name="removed_spam_txt">Removed Spam</string>
+    <string name="followers_txt">Follower(s)</string>
+    <string name="follow_txt">Follow</string>
+    <string name="Include_Account_Id_txt">Include Account Id</string>
+    <string name="lesson_successfully_included_txt">Lesson successfully included in online received tab</string>
+
+    <string name="unfollow_txt">Unfollow</string>
+    <string name="unfollowed_txt">Unfollowed</string>
+    <string name="user_profile_txt">User Profile</string>
+
+    <string name="profile_information_txt">Profile Information</string>
+    <string name="information_you_provide_txt">Information you provide here will be visible to all users.</string>
+    <string name="about_me_txt">About Me :</string>
+    <string name="about_txt">About :</string>
+    <string name="your_connect_status_txt">Your connect status:</string>
+    <string name="none_txt">none</string>
+    <string name="lesson_settings_txt">Lesson Settings:</string>
+
+    <string name="edit_location_txt">Edit Location</string>
+    <string name="syllabus_change_will_txt">Syllabus change will make this a freshly created lesson not shared with anybody. Post/share again if you want. \nDo you want to proceed?</string>
+    <string name="delete_online_lesson_desc_txt">You, along with everyone, will completely lose this lesson online. \nDo you want to proceed?</string>
+    <string name="delete_offline_lesson_desc_txt">The offline version on this phone will be deleted. \nDo you want to proceed?</string>
+    <string name="delete_all_shares_desc_txt">Only you will now have access to this lesson online. \nDo you want to proceed?</string>
+    <string name="delete_my_shares_desc_txt">This removes all past shares and posts done by you of this lesson. \nDo you want to proceed?</string>
+    <string name="lesson_cannot_be_shared_txt">This lesson cannot be shared by others anymore.</string>
+    <string name="lesson_cannot_be_offlinable_txt">This lesson cannot be saved offline by others anymore.</string>
+    <string name="lesson_cannot_be_visible_txt">Lesson will no longer be visible to Public.\nIt also cannot be shared by others anymore.</string>
 
     <string-array name="add_photo_arr">
         <item>Go to camera</item>

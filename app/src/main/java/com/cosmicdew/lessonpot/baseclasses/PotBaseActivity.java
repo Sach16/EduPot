@@ -248,7 +248,7 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
             hideDialog();
         }
         if (error.networkResponse == null) {
-            Toast.makeText(this, "Please check network connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please check Network connection", Toast.LENGTH_SHORT).show();
             hideDialog();
         }
     }
@@ -307,6 +307,12 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
         toast.show();
     }
 
+    public void displayToastLong(String message){
+        Toast toast= Toast.makeText(getApplicationContext(),
+                message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
     public void displaySnack(View pView, String pSnackText) {
         hideDialog();
         m_cSnackBar = Snackbar.make(pView, pSnackText, Snackbar.LENGTH_LONG);
@@ -316,7 +322,7 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
     public void displaySnackRetry(View pView, String pSnackText) {
         hideDialog();
         m_cSnackBar = Snackbar.make(pView, pSnackText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("Retry", new View.OnClickListener() {
+                .setAction("Go Offline", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         m_cObjUIHandler.sendEmptyMessage(PotMacros.NOTIFICATION_NO_NETWORK_CONNECTION_RETRY);
@@ -562,6 +568,82 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
                 Message lMsg = new Message();
                 lMsg.what = pId;
                 lMsg.obj =  ((EditText) lMainView.findViewById(R.id.COMMENTS_EDIT)).getText().toString();
+                m_cObjUIHandler.sendMessage(lMsg);
+                hideDialog();
+            }
+        });
+        m_cObjDialog = lObjBuilder.create();
+        m_cObjDialog.setCanceledOnTouchOutside(true);
+        m_cObjDialog.show();
+    }
+
+    public void displayCommentDialog(final int pId, String pTitle, final String pComment, final boolean pIsViewMode, final Object pObj) {
+        AlertDialog.Builder lObjBuilder = new AlertDialog.Builder(this);
+        View lView = LayoutInflater.from(this).inflate(R.layout.spinner_header_2, null);
+        if (pComment != null && pComment.trim().length() > 0) {
+            ((ImageView) lView.findViewById(R.id.DELETE_COMMENT_IMG)).setVisibility(View.VISIBLE);
+            ((ImageView) lView.findViewById(R.id.DELETE_COMMENT_IMG)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Message lMsg = new Message();
+                    lMsg.what = pId;
+                    lMsg.obj = new Object[]{null, pObj};
+                    m_cObjUIHandler.sendMessage(lMsg);
+                    hideDialog();
+                }
+            });
+        }
+        ((TextView) lView.findViewById(R.id.TEXT_HEAD)).setText(pTitle);
+        lObjBuilder.setCustomTitle(lView);
+        final View lMainView = LayoutInflater.from(this).inflate(R.layout.lesson_comment_dialog, null);
+        EditText lEditText = (EditText) lMainView.findViewById(R.id.COMMENTS_EDIT);
+        lEditText.setText("");
+        lEditText.append(pComment != null ? pComment + " " : "");
+        lEditText.setLinksClickable(true);
+        lEditText.setAutoLinkMask(Linkify.WEB_URLS);
+        lEditText.setMovementMethod(CustomMovementMethod.getInstance());
+
+        lEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (pIsViewMode) {
+                    Linkify.addLinks(s, Linkify.WEB_URLS);
+                }
+            }
+        });
+        if (pIsViewMode) {
+            lEditText.setFocusable(false);
+            lEditText.setClickable(false);
+            //NOTE: Hyper links only on view mode
+            Linkify.addLinks(lEditText, Linkify.WEB_URLS);
+//            ((EditText) lMainView.findViewById(R.id.COMMENTS_EDIT)).setEnabled(false);
+            ((TextView) lMainView.findViewById(R.id.DONE_DIALOG_TXT)).setVisibility(View.GONE);
+            ((ImageView) lView.findViewById(R.id.DELETE_COMMENT_IMG)).setVisibility(View.GONE);
+            ((TextView) lMainView.findViewById(R.id.CANCEL_DIALOG_TXT)).setVisibility(View.GONE);
+        }
+        lObjBuilder.setView(lMainView);
+
+        ((TextView) lMainView.findViewById(R.id.CANCEL_DIALOG_TXT)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideDialog();
+            }
+        });
+        ((TextView) lMainView.findViewById(R.id.DONE_DIALOG_TXT)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message lMsg = new Message();
+                lMsg.what = pId;
+                lMsg.obj = new Object[]{((EditText) lMainView.findViewById(R.id.COMMENTS_EDIT)).getText().toString(),
+                        pObj};
                 m_cObjUIHandler.sendMessage(lMsg);
                 hideDialog();
             }
@@ -1280,12 +1362,14 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
         }
     }
 
-    public class checkIsNetWorkAvailable extends AsyncTask<String, Void, String> {
+    public class CheckIsNetWorkAvailable extends AsyncTask<String, Void, String> {
         private boolean isSucesses = false;
         private boolean m_cIsDialogReq = false;
+        private Object m_cObj;
 
-        public checkIsNetWorkAvailable(boolean pIsDialogReq){
+        public CheckIsNetWorkAvailable(boolean pIsDialogReq, Object pObj){
             this.m_cIsDialogReq = pIsDialogReq;
+            this.m_cObj = pObj;
         }
 
         @Override
@@ -1313,7 +1397,10 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
                 hideDialog();
             }
             if(isSucesses) {
-                m_cObjUIHandler.sendEmptyMessage(PotMacros.NOTIFICATION_FOR_NETWORK_CONNECTION_AVAILABLE);
+                Message lMessage = new Message();
+                lMessage.what = PotMacros.NOTIFICATION_FOR_NETWORK_CONNECTION_AVAILABLE;
+                lMessage.obj = m_cObj;
+                m_cObjUIHandler.sendMessage(lMessage);
             } else {
                 displayToast("Please check network connection");
             }
@@ -1386,6 +1473,12 @@ public abstract class PotBaseActivity extends AppCompatActivity implements View.
         public void onReceive(Context context, Intent intent) {
             m_cObjUIHandler.sendEmptyMessage(PotMacros.REFRESH_NOTIFY_CONSTANT_KEY);
         }
+    }
+
+    public void checkAndDelete(String pFilePath) {
+        if (null != pFilePath)
+            if (new File(pFilePath).exists())
+                new File(pFilePath).delete();
     }
 
     @Override

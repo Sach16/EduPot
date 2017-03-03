@@ -57,6 +57,24 @@ public class Users{
     @SerializedName("list_in_shares")
     @Expose
     private Boolean listInShares;
+    @SerializedName("offlineable")
+    @Expose
+    private Boolean offlineable;
+    @SerializedName("sharable")
+    @Expose
+    private Boolean sharable;
+    @SerializedName("relationship")
+    @Expose
+    private String relationship;
+    @SerializedName("show_account_id")
+    @Expose
+    private Boolean showAccountId;
+    @SerializedName("followers")
+    @Expose
+    private Integer followers;
+    @SerializedName("bio")
+    @Expose
+    private String bio;
 
     //TODO : NOTE : uncomment when required
     @SerializedName("devices")
@@ -363,6 +381,62 @@ public class Users{
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public Boolean getOfflineable() {
+        return offlineable;
+    }
+
+    public void setOfflineable(Boolean offlineable) {
+        this.offlineable = offlineable;
+    }
+
+    public Boolean getSharable() {
+        return sharable;
+    }
+
+    public void setSharable(Boolean sharable) {
+        this.sharable = sharable;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public Boolean getShowAccountId() {
+        return showAccountId;
+    }
+
+    public void setShowAccountId(Boolean showAccountId) {
+        this.showAccountId = showAccountId;
+    }
+
+    public Integer getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Integer followers) {
+        this.followers = followers;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }
 

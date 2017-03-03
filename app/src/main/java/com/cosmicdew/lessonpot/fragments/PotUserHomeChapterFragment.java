@@ -187,9 +187,9 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
 
     private void initOffline() {
         List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
-        List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class, "select * from lessons_table where user_id = ? and board_class like '%'||?||'%' and syllabi_name = ?",
+        List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class, "select * from lessons_table where user_id = ? and board_class like '%'||?||'%' and syllabi_name = ? and lesson_id != -1",
                 String.valueOf(m_cUser.getId()),
-                m_cBoardChoices.getBoardclass().getName() + " " + m_cBoardChoices.getBoardclass().getBoard().getName(),
+                m_cBoardChoices.getBoardclass().getName() + "," + m_cBoardChoices.getBoardclass().getBoard().getName(),
                 m_cSyllabi.getSubjectName());
         Set<String> lSetChapters = new HashSet<>();
         for (LessonsTable lessonsTable : lessonsTableList)
@@ -202,7 +202,8 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
                 lChapters.setLessonCount(0);
                 m_cChaptersList.add(lChapters);
             }
-            m_cRecycClassesAdapt = new CustomRecyclerAdapterForChapters(m_cObjMainActivity, m_cChaptersList, m_cSelectionType, this);
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForChapters(m_cObjMainActivity, m_cChaptersList, m_cSelectionType,
+                    m_cGoOffline, this);
             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
         } else {
             if (null != m_cRecycClassesAdapt) {
@@ -268,7 +269,8 @@ public class PotUserHomeChapterFragment extends PotFragmentBaseClass implements 
                                 m_cChaptersList.add(lChapters);
                         }
                         if (null != m_cChaptersList && m_cChaptersList.size() > 0) {
-                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForChapters(m_cObjMainActivity, m_cChaptersList, m_cSelectionType, this);
+                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForChapters(m_cObjMainActivity, m_cChaptersList, m_cSelectionType,
+                                    m_cGoOffline, this);
                             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
                         }
                     } else {

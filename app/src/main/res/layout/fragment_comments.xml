@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/HOME_CLASS_MAIN_LAYOUT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RECYC_HOME_CLASS_BOARDS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/COMMENTS_AD_EDIT_LL"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/COMMENTS_AD_EDIT_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/margin_med_large"
+        android:paddingRight="@dimen/margin_med_large">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="3dp"
+            android:background="@color/lighter_grey" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_sides_size"
+            android:layout_marginTop="@dimen/margin_sides_size">
+
+            <EditText
+                android:id="@+id/COMMENTS_EDIT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/margin_med_large"
+                android:layout_toLeftOf="@+id/DONE_DIALOG_TXT"
+                android:background="@drawable/edit_txt_box"
+                android:layout_centerVertical="true"
+                android:gravity="top|left"
+                android:maxLines="3"
+                android:hint="@string/write_a_comment_txt"
+                android:imeOptions="actionDone"
+                android:padding="5dp"
+                android:textColor="@color/text_heading"
+                android:layout_marginRight="@dimen/lesson_top_margin"
+                android:textCursorDrawable="@drawable/cursor_accent"
+                android:textSize="@dimen/sub_text_size" />
+
+            <TextView
+                android:id="@+id/DONE_DIALOG_TXT"
+                style="@style/clikable_warm_txt"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="@string/post_txt"
+                android:textColor="@color/colorAccent" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -7,7 +7,9 @@ import android.support.v4.view.PagerAdapter;
 
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
 import com.cosmicdew.lessonpot.fragments.PotUserNetworkConnectionsFragment;
+import com.cosmicdew.lessonpot.fragments.PotUserNetworkFollowingFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserNetworkRequestsFragment;
+import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.Users;
 
 /**
@@ -42,6 +44,9 @@ public class PagerAdapterForPotNetwork extends FragmentStatePagerAdapter {
                 return m_cObjFragmentBase;
             case 1:
                 m_cObjFragmentBase = PotUserNetworkConnectionsFragment.newInstance(position, m_cId, m_cUser, null, null);
+                return m_cObjFragmentBase;
+            case 2:
+                m_cObjFragmentBase = PotUserNetworkFollowingFragment.newInstance(position, m_cId, m_cUser, PotMacros.FRAG_FOLLOWING, null);
                 return m_cObjFragmentBase;
             default:
                 return null;

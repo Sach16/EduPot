@@ -195,9 +195,9 @@ public class PotUserHomeSubjectFragment extends PotFragmentBaseClass implements 
 
     private void initOffline() {
         List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
-        List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class, "select * from lessons_table where user_id = ? and board_class like '%'||?||'%'",
+        List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class, "select * from lessons_table where user_id = ? and board_class like '%'||?||'%' and lesson_id != -1",
                 String.valueOf(m_cUser.getId()),
-                m_cBoardChoices.getBoardclass().getName() + " " + m_cBoardChoices.getBoardclass().getBoard().getName());
+                m_cBoardChoices.getBoardclass().getName() + "," + m_cBoardChoices.getBoardclass().getBoard().getName());
         Set<String> lSetSyllabi = new HashSet<>();
         for (LessonsTable lessonsTable : lessonsTableList)
             lSetSyllabi.add(lessonsTable.getSyllabiName());
@@ -210,7 +210,8 @@ public class PotUserHomeSubjectFragment extends PotFragmentBaseClass implements 
                 lSyllabi.setLessonCount(0);
                 m_cSyllabiList.add(lSyllabi);
             }
-            m_cRecycClassesAdapt = new CustomRecyclerAdapterForSubjects(m_cObjMainActivity, m_cSyllabiList, m_cSelectionType, this);
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForSubjects(m_cObjMainActivity, m_cSyllabiList, m_cSelectionType,
+                    m_cGoOffline, this);
             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
         } else {
             if (null != m_cRecycClassesAdapt) {
@@ -244,16 +245,37 @@ public class PotUserHomeSubjectFragment extends PotFragmentBaseClass implements 
                 break;
             case R.id.action_remove:
                 Object[] lObjects = (Object[]) pObjMessage.obj;
-                if ((boolean) lObjects[0]) {
-                    Syllabi lSyllabi = (Syllabi) lObjects[1];
-                    m_cObjMainActivity.displayProgressBar(-1, "Loading...");
-                    RequestManager.getInstance(m_cObjMainActivity).placeUnivUserRequest(Constants.BOARDCLASSES +
-                                    m_cBoardChoices.getBoardclass().getId() +
-                                    "/" +
-                                    Constants.SYLLABI +
-                                    lSyllabi.getId() +
-                                    "/"
-                            , Users.class, this, PotMacros.ON_INFO_LONG_CLICK_SYLLABI, null, null, Request.Method.DELETE);
+                Syllabi lSyllabi = (Syllabi) lObjects[1];
+                if (null != m_cGoOffline) {
+                    List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class,
+                            "select * from lessons_table where user_id = ? and board_class like '%'||?||'%' and syllabi_name = ?",
+                            String.valueOf(m_cUser.getId()),
+                            m_cBoardChoices.getBoardclass().getName() + " " + m_cBoardChoices.getBoardclass().getBoard().getName(),
+                            lSyllabi.getName().trim());
+                    if (null != lessonsTableList && lessonsTableList.size() > 0)
+                        for (LessonsTable lessonsTable : lessonsTableList) {
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getImg1());
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getImg2());
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getImg3());
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getAudio());
+                            LessonsTable.delete(lessonsTable);
+                        }
+                    if (null != m_cRecycClassesAdapt) {
+                        m_cSyllabiList.clear();
+                        m_cRecycClassesAdapt.notifyDataSetChanged();
+                    }
+                    initOffline();
+                } else {
+                    if ((boolean) lObjects[0]) {
+                        m_cObjMainActivity.displayProgressBar(-1, "Loading...");
+                        RequestManager.getInstance(m_cObjMainActivity).placeUnivUserRequest(Constants.BOARDCLASSES +
+                                        m_cBoardChoices.getBoardclass().getId() +
+                                        "/" +
+                                        Constants.SYLLABI +
+                                        lSyllabi.getId() +
+                                        "/"
+                                , Users.class, this, PotMacros.ON_INFO_LONG_CLICK_SYLLABI, null, null, Request.Method.DELETE);
+                    }
                 }
                 break;
             default:
@@ -283,7 +305,8 @@ public class PotUserHomeSubjectFragment extends PotFragmentBaseClass implements 
                                 m_cSyllabiList.add(lSyllabi);
                         }
                         if (null != m_cSyllabiList && m_cSyllabiList.size() > 0) {
-                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForSubjects(m_cObjMainActivity, m_cSyllabiList, m_cSelectionType, this);
+                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForSubjects(m_cObjMainActivity, m_cSyllabiList, m_cSelectionType,
+                                    m_cGoOffline, this);
                             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
                         }
                     } else {

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MAIN_RL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/EDIT_PRO_MAIN_RL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/SCR_LAY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/REL_LAY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/PROFILE_PIC_LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.cosmicdew.lessonpot.customviews.UserCircularImageView
+                        android:id="@+id/USER_CIV_CELL"
+                        style="@style/circular_imageview"
+                        android:layout_marginTop="@dimen/margin_med_large"
+                        android:src="@drawable/profile_placeholder" />
+
+                    <LinearLayout
+                        android:id="@+id/NAMING_LL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/USER_FULL_NAME_TXT"
+                            style="@style/note_normal_black_bold_txt"
+                            android:layout_marginTop="2dp"
+                            android:layout_gravity="center"
+                            android:text="Full Name"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:id="@+id/USER_ROLL_TXT"
+                            style="@style/note_nor_txt"
+                            android:layout_gravity="center"
+                            android:text="Role"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/HEADER_LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/PROFILE_PIC_LL"
+                    android:layout_marginLeft="@dimen/pot_cell_margin"
+                    android:layout_marginRight="@dimen/pot_cell_margin"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/pot_cell_margin">
+
+                        <LinearLayout
+                            android:id="@+id/NO_FOLLOWERS_LL"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/FOLLOWERS_COUNT_TXT"
+                                style="@style/grey_bold_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:paddingBottom="@dimen/small_txt"
+                                android:textColor="@color/warm_grey" />
+
+                            <TextView
+                                android:id="@+id/FOLLOWERS_COUNT_DESC_TXT"
+                                style="@style/clikable_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_sides_size"
+                                android:gravity="center"
+                                android:paddingBottom="@dimen/small_txt"
+                                android:text="@string/followers_txt"
+                                android:textColor="@color/warm_grey" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/pot_cell_margin">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Your connect status:"
+                                android:paddingBottom="@dimen/small_txt"
+                                android:textColor="@color/text_body"
+                                android:textSize="@dimen/sub_text_size" />
+
+                            <TextView
+                                android:id="@+id/FOLLOW_STATUS_TXT"
+                                style="@style/grey_bold_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_sides_size"
+                                android:gravity="center"
+                                android:paddingBottom="@dimen/small_txt"
+                                android:textColor="@color/warm_grey" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/FOLLOW_TXT"
+                            style="@style/clickable_txt_Accent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:visibility="gone"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="@string/follow_txt" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/ACC_ID_RL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_sides_size">
+
+                        <TextView
+                            android:id="@+id/ACC_ID_TXT"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Account Id:"
+                            android:paddingBottom="@dimen/small_txt"
+                            android:textColor="@color/text_body"
+                            android:textSize="@dimen/sub_text_size"/>
+
+                        <TextView
+                            android:id="@+id/ACCOUNT_ID_DESC_TXT"
+                            style="@style/grey_bold_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/card_margin_for_image"
+                            android:layout_toRightOf="@+id/ACC_ID_TXT"
+                            android:gravity="center|left"
+                            android:maxLines="6"/>
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_sides_size"
+                        android:paddingBottom="@dimen/small_txt"
+                        android:gravity="top|left"
+                        android:text="@string/about_txt"
+                        android:textColor="@color/text_body"
+                        android:textSize="@dimen/sub_text_size" />
+
+                    <EditText
+                        android:id="@+id/BIO_EDIT"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/nav_header_height"
+                        android:background="@drawable/edit_txt_box"
+                        android:gravity="top|left"
+                        android:layout_marginTop="@dimen/margin_sides_size"
+                        android:layout_marginBottom="@dimen/margin_sides_size"
+                        android:maxLines="3"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:imeOptions="actionDone"
+                        android:padding="5dp"
+                        android:textColor="@color/text_heading"
+                        android:textCursorDrawable="@drawable/cursor_accent"
+                        android:textSize="@dimen/sub_text_size" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/BOTTOM_VIEW"
+        style="?attr/bottomSheetStyle"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/PAGER_DELETE_IMG"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:layout_margin="@dimen/margin_sides_size"
+                android:src="@drawable/deleteicon" />
+
+            <com.cosmicdew.lessonpot.customviews.TouchImageView
+                android:id="@+id/USER_IMG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/cardview_dark_background"
+                android:layout_marginRight="@dimen/margin_sides_size"
+                android:layout_marginLeft="@dimen/margin_sides_size"
+                android:layout_marginBottom="@dimen/margin_sides_size"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

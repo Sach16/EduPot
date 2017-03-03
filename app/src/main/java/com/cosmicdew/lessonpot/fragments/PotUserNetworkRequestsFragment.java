@@ -183,7 +183,7 @@ public class PotUserNetworkRequestsFragment extends PotFragmentBaseClass impleme
             default:
                 if (apiMethod.contains(Constants.CONNECTIONS)) {
                     if (response == null) {
-                        m_cObjMainActivity.displayToast(getResources().getString(R.string.connection_deleted_txt));
+                        m_cObjMainActivity.displayToast(getResources().getString(R.string.connection_request_deleted_txt));
                     } else if (response instanceof Connections) {
                         Connections lConnections = (Connections) response;
                         if (lConnections.getIsSpam()) {

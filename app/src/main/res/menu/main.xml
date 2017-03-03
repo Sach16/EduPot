@@ -2,8 +2,43 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_post_to_students"
-        android:title="@string/action_post_to_students"
+    <item android:id="@+id/action_post_to_public"
+        android:title="@string/action_post_to_public"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_post_to_followers_and_connections"
+        android:title="@string/action_post_to_followers_and_connections"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_post_to_connections"
+        android:title="@string/action_post_to_connections"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_extend_post_to_public"
+        android:title="@string/action_extend_post_to_public"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_extend_post_to_followers"
+        android:title="@string/action_extend_post_to_followers"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_unpost_from_public"
+        android:title="@string/action_unpost_from_public"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_unpost_from_connections"
+        android:title="@string/action_unpost_from_connections"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_unpost_from_followers"
+        android:title="@string/action_unpost_from_followers"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
@@ -17,13 +52,33 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_delete"
-        android:title="@string/action_delete"
+    <item android:id="@+id/action_remove"
+        android:title="@string/action_remove"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_remove"
-        android:title="@string/action_remove"
+    <item android:id="@+id/action_delete_lesson"
+        android:title="@string/action_delete_lesson"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_delete_all_shares"
+        android:title="@string/action_delete_all_shares"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_delete_my_shares"
+        android:title="@string/action_delete_my_shares"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_save"
+        android:title="@string/action_save"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_include_in_online_received_tab"
+        android:title="@string/action_include_in_online_received_tab"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
@@ -32,8 +87,19 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_save"
-        android:title="@string/action_save"
+    <item android:id="@+id/action_view_creator_profile"
+        android:title="@string/action_view_creator_profile"
         android:orderInCategory="100"
         app:showAsAction="never" />
+
+    <item android:id="@+id/action_view_sharer_profile"
+        android:title="@string/action_view_sharer_profile"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_report_spam"
+        android:title="@string/action_report_spam"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
 </menu>

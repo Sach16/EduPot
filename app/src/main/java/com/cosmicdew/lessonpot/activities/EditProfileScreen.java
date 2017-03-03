@@ -37,6 +37,7 @@ import com.cosmicdew.lessonpot.baseclasses.PotBaseActivity;
 import com.cosmicdew.lessonpot.customviews.TouchImageView;
 import com.cosmicdew.lessonpot.customviews.UserCircularImageView;
 import com.cosmicdew.lessonpot.fragments.PotGlobalSettingsFragment;
+import com.cosmicdew.lessonpot.fragments.PotProfileInfoFragment;
 import com.cosmicdew.lessonpot.fragments.PotRegisterPhoneNumbers;
 import com.cosmicdew.lessonpot.fragments.PotUserCredentialsFragment;
 import com.cosmicdew.lessonpot.interfaces.RefreshEditProfileListener;
@@ -96,8 +97,8 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
     TextView m_cRoleTxt;
 
     @Nullable
-    @BindView(R.id.DONE_TXT)
-    TextView m_cDoneTxt;
+    @BindView(R.id.FOLLOW_TXT)
+    TextView m_cFollowTxt;
 
     @Nullable
     @BindView(R.id.BOTTOM_VIEW)
@@ -115,6 +116,7 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
     public static final String FRAG_CREDENTIALS_FRAGMENT = "FRAG_CREDENTIALS_FRAGMENT";
     public static final String FRAG_REG_PHONENUMBERS = "FRAG_REG_PHONENUMBERS";
     public static final String FRAG_GLOBAL_SETTINGS = "FRAG_GLOBAL_SETTINGS";
+    public static final String FRAG_PROFILE_INFO = "FRAG_PROFILE_INFO";
 
     public static final int TAKE_PICTURE = 101;
     public static final int PROCESS_PICTURE = 111;
@@ -263,7 +265,15 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
 
     @Override
     public void onUpdate(int pPostion, Users pUsers, View pView) {
-
+        switch (pPostion){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                m_cUser = pUsers;
+                break;
+        }
     }
 
     public class DeleteUser extends AsyncTask {
@@ -294,6 +304,7 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             R.id.USER_CRED_TXT_RL,
             R.id.REG_PH_TXT_RL,
             R.id.SETTINGS_RL,
+            R.id.PROFILE_INFO_RL,
             R.id.ROLE_TXT,
             R.id.PAGER_DELETE_IMG})
     public void onClick(View v) {
@@ -327,9 +338,16 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             case R.id.SETTINGS_RL:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.EDIT_PRO_MAIN_RL, new PotGlobalSettingsFragment().newInstance(1, m_cUser, this), FRAG_GLOBAL_SETTINGS)
+                        .add(R.id.EDIT_PRO_MAIN_RL, new PotGlobalSettingsFragment().newInstance(2, m_cUser, this), FRAG_GLOBAL_SETTINGS)
                         .commit();
                 switchModeFragment(true, FRAG_GLOBAL_SETTINGS);
+                break;
+            case R.id.PROFILE_INFO_RL:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.EDIT_PRO_MAIN_RL, new PotProfileInfoFragment().newInstance(2, m_cUser, this), FRAG_PROFILE_INFO)
+                        .commit();
+                switchModeFragment(true, FRAG_PROFILE_INFO);
                 break;
             case R.id.PAGER_DELETE_IMG:
                 viewStub.setVisibility(View.GONE);
@@ -348,6 +366,9 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             case FRAG_GLOBAL_SETTINGS:
                 getSupportActionBar().setTitle(getResources().getString(R.string.global_permission_settings_txt));
                 break;
+            case FRAG_PROFILE_INFO:
+                getSupportActionBar().setTitle(getResources().getString(R.string.profile_information_txt));
+                break;
             default:
                 getSupportActionBar().setTitle(getResources().getString(R.string.edit_profile_txt));
                 break;
@@ -364,6 +385,9 @@ public class EditProfileScreen extends PotBaseActivity implements RefreshEditPro
             switchModeFragment(false, "");
         } else if (getSupportFragmentManager().findFragmentByTag(FRAG_GLOBAL_SETTINGS) != null) {
             ((PotGlobalSettingsFragment) getSupportFragmentManager().findFragmentByTag(FRAG_GLOBAL_SETTINGS)).onBackPressed();
+            switchModeFragment(false, "");
+        } else if (getSupportFragmentManager().findFragmentByTag(FRAG_PROFILE_INFO) != null) {
+            ((PotProfileInfoFragment) getSupportFragmentManager().findFragmentByTag(FRAG_PROFILE_INFO)).onBackPressed();
             switchModeFragment(false, "");
         } else {
             Intent lReturnIntent = new Intent();

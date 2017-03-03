@@ -46,16 +46,16 @@
 
             <TextView
                 android:id="@+id/ACCEPT_NET_TXT"
-                style="@style/user_nav_txt"
-                android:textSize="@dimen/mid_lar_text_size"
+                style="@style/user_small_nav_txt"
                 android:text="@string/accept_txt"
+                android:layout_toLeftOf="@+id/DELETE_NET_TXT"
                 android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/DELETE_NET_TXT"
-                style="@style/user_nav_txt"
+                style="@style/user_small_nav_txt"
                 android:layout_marginLeft="@dimen/txt_margin"
-                android:layout_toRightOf="@+id/ACCEPT_NET_TXT"
+                android:layout_toLeftOf="@+id/SPAM_SETTINGS_IMG"
                 android:text="@string/delete_txt"
                 android:textColor="@color/warm_grey" />
 
@@ -65,8 +65,9 @@
                 android:layout_height="match_parent"
                 android:textSize="@dimen/mid_lar_text_size"
                 android:src="@drawable/settings_net"
-                android:layout_marginLeft="@dimen/txt_margin"
-                android:layout_toRightOf="@+id/DELETE_NET_TXT" />
+                android:layout_marginLeft="@dimen/margin_sides_size"
+                android:layout_marginRight="@dimen/margin_sides_size"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
 

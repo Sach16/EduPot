@@ -47,14 +47,16 @@ public class CustomRecyclerAdapterForLessonsReceived extends RecyclerView.Adapte
     private static Users m_cUsers;
     private static Syllabi m_cSyllabi;
     private static Chapters m_cChapters;
+    private static String m_cGoOffline;
     private Context m_cObjContext;
 
     public CustomRecyclerAdapterForLessonsReceived(Context pContext, Users pUsers, BoardChoices pBoardChoices,
-                                                 Syllabi pSyllabi, Chapters pChapters,
-                                                 List<Lessons> pLessons,
-                                                 List<LessonShares> pLessonShares,
-                                                 List<LessonViews> pLessonViews,
-                                                 RecyclerHomeListener pListener) {
+                                                   Syllabi pSyllabi, Chapters pChapters,
+                                                   List<Lessons> pLessons,
+                                                   List<LessonShares> pLessonShares,
+                                                   List<LessonViews> pLessonViews,
+                                                   String pGoOffline,
+                                                   RecyclerHomeListener pListener) {
         this.m_cObjContext = pContext;
         this.m_cObjLessons = pLessons;
         this.m_cObjLessonShares = pLessonShares;
@@ -64,6 +66,7 @@ public class CustomRecyclerAdapterForLessonsReceived extends RecyclerView.Adapte
         this.m_cBoardChoices = pBoardChoices;
         this.m_cSyllabi = pSyllabi;
         this.m_cChapters = pChapters;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
@@ -131,6 +134,18 @@ public class CustomRecyclerAdapterForLessonsReceived extends RecyclerView.Adapte
         @BindView(R.id.CREATEDTIME_TXT)
         TextView modifiedTime;
 
+        @Nullable
+        @BindView(R.id.LIKE_LIST_TXT)
+        TextView likesCount;
+
+        @Nullable
+        @BindView(R.id.COMMENT_LIST_TXT)
+        TextView commentsCount;
+
+        @Nullable
+        @BindView(R.id.LIKES_COMMENTS_LL)
+        LinearLayout likesCommLL;
+
         public DataObjectHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -182,7 +197,16 @@ public class CustomRecyclerAdapterForLessonsReceived extends RecyclerView.Adapte
         if (holder instanceof CustomRecyclerAdapterForLessonsReceived.DataObjectHolder) {
 
             try {
-                if (m_cObjLessonShares.get(position).getIsNew())
+                if (null != m_cGoOffline) {
+                    ((CustomRecyclerAdapterForLessonsReceived.DataObjectHolder) holder).roundDotCV.setVisibility(View.INVISIBLE);
+                    ((CustomRecyclerAdapterForLessonsReceived.DataObjectHolder) holder).likesCommLL.setVisibility(View.INVISIBLE);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            try {
+                if (m_cObjLessonShares.get(position).getIsNew() || null != m_cGoOffline)
                     ((CustomRecyclerAdapterForLessonsReceived.DataObjectHolder) holder).roundDotCV.setVisibility(View.INVISIBLE);
             }catch (Exception e){
                 e.printStackTrace();
@@ -249,6 +273,22 @@ public class CustomRecyclerAdapterForLessonsReceived extends RecyclerView.Adapte
                         .setText(m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getName()+
                                 ", "+
                                 m_cObjLessons.get(position).getChapter().getSyllabus().getBoardclass().getBoard().getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int likesCount = m_cObjLessons.get(position).getLikesCount();
+                ((CustomRecyclerAdapterForLessonsReceived.DataObjectHolder) holder).likesCount
+                        .setText(likesCount > 99 ? "99+" : String.valueOf(likesCount));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int commentsCount = m_cObjLessons.get(position).getCommentsCount();
+                ((CustomRecyclerAdapterForLessonsReceived.DataObjectHolder) holder).commentsCount
+                        .setText(commentsCount > 99 ? "99+" : String.valueOf(commentsCount));
             } catch (Exception e) {
                 e.printStackTrace();
             }

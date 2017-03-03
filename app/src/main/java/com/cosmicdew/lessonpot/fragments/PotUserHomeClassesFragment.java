@@ -143,7 +143,7 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
         m_cUser = (new Gson()).fromJson(getArguments().getString("OBJECT"), Users.class);
         m_cSelectionType = getArguments().getString(PotMacros.OBJ_SELECTIONTYPE);
         m_cGoOffline = getArguments().getString(PotMacros.GO_OFFLINE);
-        if (null == m_cSelectionType)
+        if (null == m_cSelectionType && m_cGoOffline == null)
             m_cRightSyllabusLL.setVisibility(View.VISIBLE);
         m_cBoardClassList = new ArrayList<>();
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
@@ -189,13 +189,13 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
     }
 
     private void initOffline() {
-        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "user_id = ?", String.valueOf(m_cUser.getId()));
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "user_id = ? and lesson_id != -1", String.valueOf(m_cUser.getId()));
         Set<String> lSetBoards = new HashSet<>();
         for (LessonsTable lessonsTable : lessonsTableList)
             lSetBoards.add(lessonsTable.getBoardClass());
         if (null != lSetBoards && lSetBoards.size() > 0) {
             for (String lClassBoard : lSetBoards) {
-                String[] lStrArr = lClassBoard.split(" ");
+                String[] lStrArr = lClassBoard.split(",");
                 BoardChoices lBoardChoices = new BoardChoices();
                 BoardClass lBoardClass = new BoardClass();
                 lBoardClass.setName(lStrArr[0]);
@@ -208,7 +208,8 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
                 lBoardChoices.setChapterCount(0);
                 m_cBoardClassList.add(lBoardChoices);
             }
-            m_cRecycClassesAdapt = new CustomRecyclerAdapterForClasses(m_cObjMainActivity, m_cBoardClassList, m_cSelectionType, this);
+            m_cRecycClassesAdapt = new CustomRecyclerAdapterForClasses(m_cObjMainActivity, m_cBoardClassList, m_cSelectionType, m_cGoOffline,
+                    this);
             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
         } else {
             if (null != m_cRecycClassesAdapt) {
@@ -258,13 +259,33 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
                 break;
             case R.id.action_remove:
                 Object[] lObjects = (Object[]) pObjMessage.obj;
-                if ((boolean) lObjects[0]) {
-                    BoardChoices lBoardChoices = (BoardChoices) lObjects[1];
-                    m_cObjMainActivity.displayProgressBar(-1, "Loading...");
-                    RequestManager.getInstance(m_cObjMainActivity).placeUnivUserRequest(Constants.BOARDCLASSES +
-                                    lBoardChoices.getBoardclass().getId() +
-                                    "/",
-                            Users.class, this, PotMacros.ON_INFO_LONG_CLICK_BOARD_CLASS, null, null, Request.Method.DELETE);
+                BoardChoices pBoardChoices = (BoardChoices) lObjects[1];
+                if (null != m_cGoOffline) {
+                    List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class,
+                            "select * from lessons_table where user_id = ? and board_class like '%'||?||'%'",
+                            String.valueOf(m_cUser.getId()),
+                            pBoardChoices.getBoardclass().getName() + " " + pBoardChoices.getBoardclass().getBoard().getName());
+                    if (null != lessonsTableList && lessonsTableList.size() > 0)
+                        for (LessonsTable lessonsTable : lessonsTableList) {
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getImg1());
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getImg2());
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getImg3());
+                            m_cObjMainActivity.checkAndDelete(lessonsTable.getAudio());
+                            LessonsTable.delete(lessonsTable);
+                        }
+                    if (null != m_cRecycClassesAdapt) {
+                        m_cBoardClassList.clear();
+                        m_cRecycClassesAdapt.notifyDataSetChanged();
+                    }
+                    initOffline();
+                } else {
+                    if ((boolean) lObjects[0]) {
+                        m_cObjMainActivity.displayProgressBar(-1, "Loading...");
+                        RequestManager.getInstance(m_cObjMainActivity).placeUnivUserRequest(Constants.BOARDCLASSES +
+                                        pBoardChoices.getBoardclass().getId() +
+                                        "/",
+                                Users.class, this, PotMacros.ON_INFO_LONG_CLICK_BOARD_CLASS, null, null, Request.Method.DELETE);
+                    }
                 }
                 break;
             default:
@@ -294,7 +315,8 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
                                 m_cBoardClassList.add(lBoardChoices);
                         }
                         if (null != m_cBoardClassList && m_cBoardClassList.size() > 0) {
-                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForClasses(m_cObjMainActivity, m_cBoardClassList, m_cSelectionType, this);
+                            m_cRecycClassesAdapt = new CustomRecyclerAdapterForClasses(m_cObjMainActivity, m_cBoardClassList, m_cSelectionType, m_cGoOffline,
+                                    this);
                             m_cRecycClasses.setAdapter(m_cRecycClassesAdapt);
                         }
                     } else {

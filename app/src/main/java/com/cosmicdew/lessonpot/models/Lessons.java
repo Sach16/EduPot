@@ -39,6 +39,24 @@ public class Lessons {
     @SerializedName("views")
     @Expose
     private Integer views;
+    @SerializedName("is_spam")
+    @Expose
+    private Boolean isSpam;
+    @SerializedName("offlineable")
+    @Expose
+    private Boolean offlineable;
+    @SerializedName("sharable")
+    @Expose
+    private Boolean sharable;
+    @SerializedName("likes_count")
+    @Expose
+    private Integer likesCount;
+    @SerializedName("comments_count")
+    @Expose
+    private Integer commentsCount;
+    @SerializedName("posted_to")
+    @Expose
+    private String postedTo;
 
     /**
      *
@@ -208,5 +226,53 @@ public class Lessons {
      */
     public void setViews(Integer views) {
         this.views = views;
+    }
+
+    public Boolean getIsSpam() {
+        return isSpam;
+    }
+
+    public void setIsSpam(Boolean isSpam) {
+        this.isSpam = isSpam;
+    }
+
+    public Boolean getOfflineable() {
+        return offlineable;
+    }
+
+    public void setOfflineable(Boolean offlineable) {
+        this.offlineable = offlineable;
+    }
+
+    public Boolean getSharable() {
+        return sharable;
+    }
+
+    public void setSharable(Boolean sharable) {
+        this.sharable = sharable;
+    }
+
+    public Integer getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(Integer likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public Integer getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(Integer commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
+    public String getPostedTo() {
+        return postedTo;
+    }
+
+    public void setPostedTo(String postedTo) {
+        this.postedTo = postedTo;
     }
 }

@@ -9,6 +9,7 @@ import com.cosmicdew.lessonpot.fragments.PotUserHomeLessonFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeMineFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomePublicFragment;
 import com.cosmicdew.lessonpot.fragments.PotUserHomeReceivedFragment;
+import com.cosmicdew.lessonpot.macros.PotMacros;
 import com.cosmicdew.lessonpot.models.BoardChoices;
 import com.cosmicdew.lessonpot.models.Chapters;
 import com.cosmicdew.lessonpot.models.Syllabi;
@@ -52,22 +53,38 @@ public class PagerAdapterForPotLesson extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (null == m_cGoOffline)
-            switch (position) {
-                case 0:
-                    m_cObjFragmentBase = PotUserHomePublicFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
-                    return m_cObjFragmentBase;
-                case 1:
-                    m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
-                    return m_cObjFragmentBase;
-                case 2:
-                    m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
-                    return m_cObjFragmentBase;
-                case 3:
-                    m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
-                    return m_cObjFragmentBase;
-                default:
-                    return null;
-            }
+            if (m_cLessFromWhere.equals(PotMacros.OBJ_CHAPTERS))
+                switch (position) {
+                    case 0:
+                        m_cObjFragmentBase = PotUserHomePublicFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    case 1:
+                        m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    case 2:
+                        m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    case 3:
+                        m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    default:
+                        return null;
+                }
+            else
+                switch (position) {
+                    case 0:
+                        m_cObjFragmentBase = PotUserHomeLessonFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    case 1:
+                        m_cObjFragmentBase = PotUserHomeReceivedFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    case 2:
+                        m_cObjFragmentBase = PotUserHomeMineFragment.newInstance(position, m_cId, m_cUser, m_cBoardChoices, m_cSyllabi, m_cChapters, m_cLessFromWhere, m_cGoOffline);
+                        return m_cObjFragmentBase;
+                    default:
+                        return null;
+                }
+
         else
             switch (position) {
                 case 0:

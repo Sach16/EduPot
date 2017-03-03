@@ -22,10 +22,14 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,10 +37,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.adapters.ScreenSlidePagerAdapter;
@@ -47,10 +53,14 @@ import com.cosmicdew.lessonpot.models.Attachments;
 import com.cosmicdew.lessonpot.models.AttachmentsAll;
 import com.cosmicdew.lessonpot.models.BoardChoices;
 import com.cosmicdew.lessonpot.models.Chapters;
+import com.cosmicdew.lessonpot.models.Comments;
+import com.cosmicdew.lessonpot.models.CommentsAll;
 import com.cosmicdew.lessonpot.models.LessonShares;
 import com.cosmicdew.lessonpot.models.LessonViews;
 import com.cosmicdew.lessonpot.models.Lessons;
 import com.cosmicdew.lessonpot.models.LessonsTable;
+import com.cosmicdew.lessonpot.models.Likes;
+import com.cosmicdew.lessonpot.models.LikesAll;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
@@ -78,14 +88,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import butterknife.Optional;
 
 /**
  * Created by S.K. Pissay on 17/10/16.
  */
 
-public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnInfoListener {
+public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnInfoListener,
+        CompoundButton.OnCheckedChangeListener, View.OnTouchListener{
 
     private static final long MAX_TIME_MILLIS = 480000;
     private static final int RECORD_SEEK = 99;
@@ -95,6 +108,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     public static final int TAKE_PICTURE = 101;
     public static final int LESSON_MAPPING = 110;
     public static final int PROCESS_PICTURE = 111;
+    public static final int LESSON_LIKES_COMMENT = 121;
 
     @Nullable
     @BindView(R.id.toolbar_home)
@@ -204,6 +218,38 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     @BindView(R.id.BOTTOM_VIEW)
     FrameLayout viewStub;
 
+    @Nullable
+    @BindView(R.id.LIKE_COMMENT_LL)
+    LinearLayout likeCommentLL;
+
+    @Nullable
+    @BindView(R.id.LIKE_TXT)
+    TextView likeTxt;
+
+    @Nullable
+    @BindView(R.id.COMMENT_TXT)
+    TextView commentTxt;
+
+    @Nullable
+    @BindView(R.id.LIKE_LIST_TXT)
+    TextView likeListTxt;
+
+    @Nullable
+    @BindView(R.id.COMMENT_LIST_TXT)
+    TextView commentListTxt;
+
+    @Nullable
+    @BindView(R.id.LESSON_SWITCH_LL)
+    LinearLayout lessonSwitchLl;
+
+    @Nullable
+    @BindView(R.id.SHARES_SWITCH)
+    Switch m_cSharesSwch;
+
+    @Nullable
+    @BindView(R.id.OFFLINE_SWITCH)
+    Switch m_cOfflineSwch;
+
     //inner views of bottom_view
 
     @Nullable
@@ -226,6 +272,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     private LessonViews m_cLessonViews;
     private int mLessonID;
 
+    private String mNotes;
     private String mComment;
 
     private MediaRecorder mRecorder;
@@ -249,6 +296,16 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     private HashMap<String, Attachments> m_cAttachList;
 
     private LessonsTable m_cLessonsTable;
+
+    private boolean m_cIsShareTouched;
+    private boolean m_cIsOfflineTouched;
+    private boolean m_cIsTitleTouched;
+
+    private boolean m_cIsSharable = true;
+    private boolean m_cIsOfflinable = true;
+
+    private boolean m_cIsEdited;
+    private boolean m_cIsPrepared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,6 +343,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
         switch (m_cLessType) {
             case PotMacros.OBJ_LESSON_NEW:
                 ButterKnife.apply(mPlayPauseResImg, PotMacros.SETENABLED, false);
+                m_cSharesSwch.setChecked(m_cUser.getSharable());
+                m_cIsSharable = m_cUser.getSharable();
+                m_cOfflineSwch.setChecked(m_cUser.getOfflineable());
+                m_cIsOfflinable = m_cUser.getOfflineable();
                 setViewMode();
                 switch (mLessFromWhere) {
                     case PotMacros.OBJ_BOARDCHOICES:
@@ -315,20 +376,45 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             case PotMacros.OBJ_LESSON_EDIT:
                 mLessonID = m_cLessons.getId();
                 m_cTitleTxt.setText(m_cLessons.getName());
+                m_cSharesSwch.setChecked(m_cLessons.getSharable());
+                m_cIsSharable = m_cLessons.getSharable();
+                m_cOfflineSwch.setChecked(m_cLessons.getOfflineable());
+                m_cIsOfflinable = m_cLessons.getOfflineable();
                 ButterKnife.apply(mPlayPauseResImg, PotMacros.SETENABLED, true);
                 //uncomment if required
 //                ButterKnife.apply(mRecPauseResImg, PotMacros.SETENABLED, false);
                 setViewMode();
                 if (!mIsLessonMapped) {
                     mLessonTitleEdit.setText(m_cLessons.getName());
-                    mComment = m_cLessons.getComments();
-                    if (mComment.length() > 0) {
+                    mLessonTitleEdit.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            Log.v("Text", "b4");
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            Log.v("Text", "on");
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+                            Log.v("Text", "af");
+                            if (m_cIsTitleTouched) {
+                                m_cIsEdited = true;
+                                m_cIsTitleTouched = false;
+                            }
+                        }
+                    });
+                    mNotes = m_cLessons.getComments();
+                    if (mNotes.length() > 0) {
                         commentBox.setVisibility(View.VISIBLE);
                     }
                 }
                 String llessonSource = "";
                 switch (mLessFromWhereWchTab){
                     case PotMacros.OBJ_LESSON_MINE_TAB:
+                    case PotMacros.OBJ_LESSON_PUBLIC_TAB:
                         llessonSource = m_cLessons.getOwner().getFirstName() + " " + m_cLessons.getOwner().getLastName();
                         break;
                     case PotMacros.OBJ_LESSON_RECEIVED_TAB:
@@ -399,6 +485,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 deleteMediaImg.setVisibility(View.GONE);
                 lessonLocRL.setVisibility(View.GONE);
                 saveCancelLL.setVisibility(View.GONE);
+                lessonSwitchLl.setVisibility(View.GONE);
+                likeCommentLL.setVisibility(View.VISIBLE);
+                callLikes(null);
+                callComments(null);
                 commentBox.setVisibility(View.GONE);
                 mLessonImg1.setVisibility(View.GONE);
                 mLessonImg2.setVisibility(View.GONE);
@@ -407,18 +497,22 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ownerTxt.getLayoutParams();
                 params.setMargins(0, 0, 0, 0);
                 ownerTxt.setLayoutParams(params);*/
+                if (!mIsLessonMapped)
+                    checkWhereToMap();
                 break;
             case PotMacros.OBJ_LESSON_NEW:
                 ownerTxt.setVisibility(View.GONE);
                 sharedByTxt.setVisibility(View.GONE);
                 numbOfListensTxt.setVisibility(View.GONE);
                 lastListensTxt.setVisibility(View.GONE);
+                likeCommentLL.setVisibility(View.GONE);
                 break;
             case PotMacros.OBJ_LESSON_EDIT:
                 ownerTxt.setVisibility(View.GONE);
                 sharedByTxt.setVisibility(View.GONE);
                 numbOfListensTxt.setVisibility(View.GONE);
                 lastListensTxt.setVisibility(View.GONE);
+                likeCommentLL.setVisibility(View.GONE);
                 mRecPauseResImg.setVisibility(View.VISIBLE);
                 lessonTitleLL.setVisibility(View.VISIBLE);
                 deleteMediaImg.setVisibility(View.VISIBLE);
@@ -429,9 +523,15 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 mLessonImg2.setVisibility(View.VISIBLE);
                 mLessonImg3.setVisibility(View.VISIBLE);
                 mediaPlayerLL.setVisibility(View.VISIBLE);
+                lessonSwitchLl.setVisibility(View.VISIBLE);
                 m_cTitleTxt.setText(getResources().getString(R.string.edit_lesson_txt));
                 if (!mIsLessonMapped)
                     checkWhereToMap();
+                    //refreshing the flags
+                m_cSharesSwch.setChecked(m_cLessons.getSharable());
+                m_cIsSharable = m_cLessons.getSharable();
+                m_cOfflineSwch.setChecked(m_cLessons.getOfflineable());
+                m_cIsOfflinable = m_cLessons.getOfflineable();
                 break;
         }
     }
@@ -461,7 +561,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             case R.id.action_share:
                 lObjIntent = new Intent(this, ShareScreen.class);
                 lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
-                lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, mLessFromWhereWchTab);
+                lObjIntent.putExtra(PotMacros.OBJ_LESSONFROMWCHTAB, mLessFromWhereWchTab.equals(PotMacros.OBJ_LESSON_PUBLIC_TAB) ?
+                        PotMacros.OBJ_LESSON_MINE_TAB : mLessFromWhereWchTab);
                 lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
                 lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(m_cLessons));
                 lObjIntent.putExtra(PotMacros.OBJ_LESSONSHARES, (new Gson()).toJson(m_cLessonShares));
@@ -476,8 +577,11 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 setViewMode();
                 invalidateOptionsMenu();
                 return true;
-            case R.id.action_delete:
-                callDeleteLessonApi();
+            case R.id.action_delete_lesson:
+                displayYesOrNoCustAlert(PotMacros.ACTION_DELETE_LESSON,
+                        getResources().getString(R.string.action_delete_lesson),
+                        getResources().getString(R.string.delete_online_lesson_desc_txt),
+                        m_cLessons);
                 return true;
             case R.id.action_remove:
                 displayProgressBar(-1, "");
@@ -508,18 +612,12 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                                 "/"
                         , Syllabi.class, this, null, null, null, true);
                 return true;
-            case R.id.action_post_to_students:
-                displayProgressBar(-1, "");
-                RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
-                                m_cLessons.getId() +
-                                "/" +
-                                Constants.POST,
-                        Lessons.class, this, null, null, null, true);
-
-                return true;
             case R.id.action_save:
                 if (checkAndUpdateLessons()) {
-                    displayProgressBar(-1, "");
+                    if (m_cAttachList.size() > 0)
+                        displayProgressBar(-1, "");
+                    else
+                        displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
                     LinkedHashMap<String, Attachments> linkedHashMap = new LinkedHashMap<>(m_cAttachList);
                     for (int i = 0; i < m_cAttachList.size(); i++) {
                         RequestManager.getInstance(this).placeStreamRequest((new ArrayList<Attachments>(linkedHashMap.values())).get(i).getAttachment(),
@@ -534,6 +632,117 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     }
                 }
                 return true;
+            case R.id.action_post_to_public:
+            case R.id.action_extend_post_to_public:
+                if (m_cLessons.getSharable()){
+                    callLessonFlags(true, 2);
+                }else {
+                    displayYesOrNoCustAlert(R.id.action_post_to_public,
+                            getResources().getString(R.string.permission_txt),
+                            getResources().getString(R.string.lesson_sharable_permission_txt),
+                            null);
+                }
+                return true;
+            case R.id.action_unpost_from_public:
+                if (m_cLessons.getSharable()){
+                    callLessonFlags(false, 2);
+                }else {
+                    displayYesOrNoCustAlert(R.id.action_post_to_public,
+                            getResources().getString(R.string.permission_txt),
+                            getResources().getString(R.string.lesson_sharable_permission_txt),
+                            null);
+                }
+                return true;
+            case R.id.action_post_to_connections:
+                displayProgressBar(-1, "");
+                RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                                m_cLessons.getId() +
+                                "/" +
+                                Constants.POST,
+                        Lessons.class, this, getResources().getString(R.string.lesson_posted_successfully_txt), null, null, true);
+
+                return true;
+            case R.id.action_extend_post_to_followers:
+            case R.id.action_post_to_followers_and_connections:
+                displayProgressBar(-1, "");
+                JSONObject lJO = new JSONObject();
+                try {
+                    lJO.put(Constants.POST_TO_FOLLOWERS, true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                                m_cLessons.getId() +
+                                "/" +
+                                Constants.POST,
+                        Lessons.class, this, getResources().getString(R.string.lesson_posted_successfully_txt), null, lJO.toString(), true);
+                return true;
+            case R.id.action_unpost_from_connections:
+                displayProgressBar(-1, "");
+                RequestManager.getInstance(this).placeUnivUserRequest(Constants.LESSONS +
+                                m_cLessons.getId() +
+                                "/" +
+                                Constants.POST,
+                        Lessons.class, this, getResources().getString(R.string.lesson_unposted_successfully_txt), null, null, Request.Method.DELETE);
+
+                return true;
+            case R.id.action_unpost_from_followers:
+                displayProgressBar(-1, "");
+                JSONObject llJO = new JSONObject();
+                try {
+                    llJO.put(Constants.POST_TO_FOLLOWERS, false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                                m_cLessons.getId() +
+                                "/" +
+                                Constants.POST,
+                        Lessons.class, this, getResources().getString(R.string.lesson_unposted_successfully_txt), null, llJO.toString(), true);
+                return true;
+            case R.id.action_report_spam:
+                callLessonFlags(true, 3);
+                return true;
+            case R.id.action_delete_all_shares:
+                displayYesOrNoCustAlert(R.id.action_delete_all_shares,
+                        getResources().getString(R.string.action_delete_all_shares),
+                        getResources().getString(R.string.delete_all_shares_desc_txt),
+                        m_cLessons);
+                return true;
+            case R.id.action_delete_my_shares:
+                displayYesOrNoCustAlert(R.id.action_delete_my_shares,
+                        getResources().getString(R.string.action_delete_my_shares),
+                        getResources().getString(R.string.delete_my_shares_desc_txt),
+                        m_cLessons);
+                return true;
+            case R.id.action_view_creator_profile:
+                lObjIntent = new Intent(this, PotUserProfileScreen.class);
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cLessons.getOwner()));
+                lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(m_cLessons));
+                startActivity(lObjIntent);
+                return true;
+            case R.id.action_view_sharer_profile:
+                Users llessonSource;
+                switch (mLessFromWhereWchTab){
+                    case PotMacros.OBJ_LESSON_MINE_TAB:
+                    case PotMacros.OBJ_LESSON_PUBLIC_TAB:
+                        llessonSource = m_cLessons.getOwner();
+                        break;
+                    case PotMacros.OBJ_LESSON_RECEIVED_TAB:
+                        llessonSource = m_cLessonShares.getFromUser();
+                        break;
+                    case PotMacros.OBJ_LESSON_VIEWED_TAB:
+                        llessonSource = m_cLessonViews.getSource();
+                        break;
+                    default:
+                        llessonSource = m_cLessons.getOwner();
+                        break;
+                }
+                lObjIntent = new Intent(this, PotUserProfileScreen.class);
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(llessonSource));
+                lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(m_cLessons));
+                startActivity(lObjIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -542,24 +751,44 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (m_cLessType == PotMacros.OBJ_LESSON_NEW || m_cLessType == PotMacros.OBJ_LESSON_EDIT) {
+            menu.findItem(R.id.action_post_to_public).setVisible(false);
+            menu.findItem(R.id.action_post_to_connections).setVisible(false);
             menu.findItem(R.id.action_share).setVisible(false);
             menu.findItem(R.id.action_edit).setVisible(false);
-            menu.findItem(R.id.action_delete).setVisible(false);
-            menu.findItem(R.id.action_remove).setVisible(false);
-            menu.findItem(R.id.action_add_syllabus).setVisible(false);
-            menu.findItem(R.id.action_post_to_students).setVisible(false);
+            menu.findItem(R.id.action_delete_lesson).setVisible(false);
+            menu.findItem(R.id.action_delete_all_shares).setVisible(false);
             menu.findItem(R.id.action_save).setVisible(false);
+            menu.findItem(R.id.action_post_to_followers_and_connections).setVisible(false);
+            menu.findItem(R.id.action_extend_post_to_public).setVisible(false);
+            menu.findItem(R.id.action_extend_post_to_followers).setVisible(false);
+            menu.findItem(R.id.action_unpost_from_public).setVisible(false);
+            menu.findItem(R.id.action_unpost_from_connections).setVisible(false);
+            menu.findItem(R.id.action_unpost_from_followers).setVisible(false);
+            menu.findItem(R.id.action_add_syllabus).setVisible(false);
+            menu.findItem(R.id.action_remove).setVisible(false);
+            menu.findItem(R.id.action_delete_my_shares).setVisible(false);
+            menu.findItem(R.id.action_include_in_online_received_tab).setVisible(false);
+            menu.findItem(R.id.action_view_creator_profile).setVisible(false);
+            menu.findItem(R.id.action_view_sharer_profile).setVisible(false);
+            menu.findItem(R.id.action_report_spam).setVisible(false);
         } else if (m_cLessType == PotMacros.OBJ_LESSON_VIEW) {
-            if (m_cUser.getId().equals(m_cLessons.getOwner().getId())) {
+            menu = PotMacros.getLessonSettingsOptionsList(this, m_cLessons, m_cLessonShares, m_cLessonViews, mLessFromWhereWchTab, m_cUser, menu);
+
+            /*if (m_cUser.getId().equals(m_cLessons.getOwner().getId())) {
                 menu.findItem(R.id.action_remove).setVisible(false);
+                menu.findItem(R.id.action_view_creator_profile).setVisible(false);
+                if (!mLessFromWhere.equals(PotMacros.OBJ_LESSON))
+                    menu.findItem(R.id.action_post_to_public).setVisible(false);
             } else {
                 if (m_cUser.getRole().equalsIgnoreCase(PotMacros.ROLE_STUDENT)) {
                     menu.findItem(R.id.action_share).setVisible(false);
-                    menu.findItem(R.id.action_post_to_students).setVisible(false);
+                    menu.findItem(R.id.action_post_to_connections).setVisible(false);
                 }
                 menu.findItem(R.id.action_edit).setVisible(false);
                 menu.findItem(R.id.action_delete).setVisible(false);
-            }
+                menu.findItem(R.id.action_post_to_public).setVisible(false);
+                menu.findItem(R.id.action_view_creator_profile).setVisible(false);
+            }*/
         }
         return super.onPrepareOptionsMenu(menu);
 
@@ -574,15 +803,20 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
         List<LessonsTable> lessonsTableListAll = LessonsTable.listAll(LessonsTable.class);
         List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "lesson_id = ? and user_id = ?", String.valueOf(m_cLessons.getId()), String.valueOf(m_cUser.getId()));
         int lSourceId = -1;
+        String lSource = null;
         switch (mLessFromWhereWchTab) {
             case PotMacros.OBJ_LESSON_RECEIVED_TAB:
                 lSourceId = m_cLessonShares.getFromUser().getId();
+                lSource = m_cLessonShares.getFromUser().getFirstName() + " " + m_cLessonShares.getFromUser().getLastName();
                 break;
             case PotMacros.OBJ_LESSON_VIEWED_TAB:
                 lSourceId = m_cLessonViews.getSource().getId();
+                lSource = m_cLessonViews.getSource().getFirstName() + " " + m_cLessonViews.getSource().getLastName();
                 break;
             case PotMacros.OBJ_LESSON_MINE_TAB:
+            case PotMacros.OBJ_LESSON_PUBLIC_TAB:
                 lSourceId = m_cLessons.getOwner().getId();
+                lSource = m_cLessons.getOwner().getFirstName() + " " + m_cLessons.getOwner().getLastName();
                 break;
         }
         if (lessonsTableList.size() == 0) {
@@ -590,7 +824,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     m_cLessons.getCreated(), m_cLessons.getModified(), m_cUser.getId(), m_cLessons.getOwner().getId(), lSourceId != m_cUser.getId() ? lSourceId : -1,
                     m_cLessons.getChapter().getName(),
                     m_cLessons.getChapter().getSyllabus().getSubjectName(),
-                    m_cLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+                    m_cLessons.getChapter().getSyllabus().getBoardclass().getName() + "," +
                     m_cLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName(),
                     null,
                     null,
@@ -598,12 +832,15 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     null,
                     m_cLessons.getLength().getLengthSum(),
                     m_cLessons.getPosition(),
-                    m_cLessons.getViews());
+                    m_cLessons.getViews(),
+                    false,
+                    m_cLessons.getOwner().getFirstName() + " " + m_cLessons.getOwner().getLastName(),
+                    lSource);
             m_cLessonsTable.save();
             lRetVal = true;
         } else {
             List<LessonsTable> lessonsTableAll = LessonsTable.find(LessonsTable.class, "lesson_id = ?", String.valueOf(m_cLessons.getId()));
-            m_cLessonsTable = LessonsTable.find(LessonsTable.class, "lesson_id = ?", String.valueOf(m_cLessons.getId())).get(0);
+            m_cLessonsTable = LessonsTable.find(LessonsTable.class, "lesson_id = ? and user_id = ?", String.valueOf(m_cLessons.getId()), String.valueOf(m_cUser.getId())).get(0);
             m_cLessonsTable.setLessonId(m_cLessons.getId());
             m_cLessonsTable.setName(m_cLessons.getName());
             m_cLessonsTable.setComments(m_cLessons.getComments());
@@ -614,13 +851,28 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             m_cLessonsTable.setSharerId(lSourceId != m_cUser.getId() ? lSourceId : -1);
             m_cLessonsTable.setChapterName(m_cLessons.getChapter().getName());
             m_cLessonsTable.setSyllabiName(m_cLessons.getChapter().getSyllabus().getSubjectName());
-            m_cLessonsTable.setBoardClass(m_cLessons.getChapter().getSyllabus().getBoardclass().getName() + " " +
+            m_cLessonsTable.setBoardClass(m_cLessons.getChapter().getSyllabus().getBoardclass().getName() + "," +
                     m_cLessons.getChapter().getSyllabus().getBoardclass().getBoard().getName());
             m_cLessonsTable.setLengthSum(m_cLessons.getLength().getLengthSum());
             m_cLessonsTable.setPosition(m_cLessons.getPosition());
             m_cLessonsTable.setViews(m_cLessons.getViews());
+            m_cLessonsTable.setEdited(false);
+            if (null != m_cLessonsTable.getAudio())
+            checkAndDelete(m_cLessonsTable.getAudio());
+            if (null != m_cLessonsTable.getImg1())
+            checkAndDelete(m_cLessonsTable.getImg1());
+            if (null != m_cLessonsTable.getImg2())
+            checkAndDelete(m_cLessonsTable.getImg2());
+            if (null != m_cLessonsTable.getImg3())
+            checkAndDelete(m_cLessonsTable.getImg3());
+            m_cLessonsTable.setAudio(null);
+            m_cLessonsTable.setImg1(null);
+            m_cLessonsTable.setImg2(null);
+            m_cLessonsTable.setImg3(null);
+            m_cLessonsTable.setOwner(m_cLessons.getOwner().getFirstName() + " " + m_cLessons.getOwner().getLastName());
+            m_cLessonsTable.setSource(lSource);
             m_cLessonsTable.save();
-            lRetVal = false;
+            lRetVal = true;
         }
         return lRetVal;
     }
@@ -693,17 +945,52 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 }
                 break;
             case LESSON_MAPPING:
+                if (resultCode == RESULT_OK) {
+                    Syllabi lSyllabi = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_SYLLABI), Syllabi.class);
+                    BoardChoices lBoardChoices = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
+                    if (null != m_cLessons) {
+                        if (null != lSyllabi) {
+                            if (!m_cLessons.getChapter().getSyllabus().getId().equals(lSyllabi.getId())) {
+                                displayYesOrNoCustAlert(LESSON_MAPPING, getResources().getString(R.string.edit_location_txt),
+                                        getResources().getString(R.string.syllabus_change_will_txt),
+                                        data);
+                            } else {
+                                //call mapping
+                                callMappingLocally(data);
+                            }
+                        } else {
+                            if (!m_cLessons.getChapter().getSyllabus().getBoardclass().getId().equals(lBoardChoices.getBoardclass().getId())) {
+                                displayYesOrNoCustAlert(LESSON_MAPPING, getResources().getString(R.string.edit_location_txt),
+                                        getResources().getString(R.string.syllabus_change_will_txt),
+                                        data);
+                            } else {
+                                //call mapping
+                                callMappingLocally(data);
+                            }
+                        }
+                    } else {
+                        callMappingLocally(data);
+                    }
+                }
+                break;
+            case LESSON_LIKES_COMMENT:
                 if (resultCode == RESULT_OK){
-                    mIsLessonMapped = true;
-                    mLessFromWhere = data.getStringExtra(PotMacros.OBJ_LESSONFROM);
-                    m_cUser = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_USER), Users.class);
-                    m_cBoardChoice = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
-                    m_cSyllabi = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_SYLLABI), Syllabi.class);
-                    m_cChapters = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_CHAPTERS), Chapters.class);
-                    init();
+                    callLikes(null);
+                    callComments(null);
                 }
                 break;
         }
+    }
+
+    private void callMappingLocally(Intent data) {
+        mLessFromWhere = data.getStringExtra(PotMacros.OBJ_LESSONFROM);
+        m_cUser = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_USER), Users.class);
+        m_cBoardChoice = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_BOARDCHOICES), BoardChoices.class);
+        m_cSyllabi = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_SYLLABI), Syllabi.class);
+        m_cChapters = (new Gson()).fromJson(data.getStringExtra(PotMacros.OBJ_CHAPTERS), Chapters.class);
+        mIsLessonMapped = true;
+        m_cIsEdited = true;
+        init();
     }
 
     @Override
@@ -727,7 +1014,9 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             R.id.CANCEL_LESSON_TXT, R.id.SAVE_LESSON_TXT,
             R.id.LESSON_IMG_1, R.id.LESSON_IMG_2, R.id.LESSON_IMG_3,
             R.id.DELETE_MEDIA_IMG, R.id.TITLE_TXT,
-            R.id.PAGER_DELETE_IMG, R.id.LESSON_LOCATION_RL})
+            R.id.PAGER_DELETE_IMG, R.id.LESSON_LOCATION_RL,
+            R.id.LIKE_TXT, R.id.COMMENT_TXT,
+            R.id.LIKE_LIST_TXT, R.id.COMMENT_LIST_TXT})
     public void onClick(View v) {
         Intent lObjIntent;
         switch (v.getId()) {
@@ -769,27 +1058,28 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         ButterKnife.apply(mRecPauseResImg, PotMacros.SETENABLED, false);
                     }
                 }else if (null != m_cAudioUrl) { //live streaming
-                    if (mIsPlaying) {
-                        mIsPlaying = !mIsPlaying;
-                        mPlayPauseResImg.setImageResource(R.drawable.playicon);
-                        pausePlaying();
-                        ButterKnife.apply(mRecPauseResImg, PotMacros.SETENABLED, true);
-                    } else {
-                        mIsPlaying = !mIsPlaying;
-                        mPlayPauseResImg.setImageResource(R.drawable.pauseicon);
-                        if (mPlayer != null && mPlayer.isPlaying())
-                            resumePlaying();
-                        else
-                            startPlaying(m_cAudioUrl);
-                        ButterKnife.apply(mRecPauseResImg, PotMacros.SETENABLED, false);
-                    }
+                    if (m_cIsPrepared) //allow only if prepared
+                        if (mIsPlaying) {
+                            mIsPlaying = !mIsPlaying;
+                            mPlayPauseResImg.setImageResource(R.drawable.playicon);
+                            pausePlaying();
+                            ButterKnife.apply(mRecPauseResImg, PotMacros.SETENABLED, true);
+                        } else {
+                            mIsPlaying = !mIsPlaying;
+                            mPlayPauseResImg.setImageResource(R.drawable.pauseicon);
+                            if (mPlayer != null && mPlayer.isPlaying())
+                                resumePlaying();
+                            else
+                                startPlaying(m_cAudioUrl);
+                            ButterKnife.apply(mRecPauseResImg, PotMacros.SETENABLED, false);
+                        }
                 }
                 break;
             case R.id.IMAGES_TITLE_TXT:
                 if (m_cLessType == PotMacros.OBJ_LESSON_VIEW)
-                    displayCommentDialog(v.getId(), getResources().getString(R.string.notes_txt), mComment, true);
+                    displayCommentDialog(v.getId(), getResources().getString(R.string.notes_txt), mNotes, true);
                 else
-                    displayCommentDialog(v.getId(), getResources().getString(R.string.notes_txt), mComment, false);
+                    displayCommentDialog(v.getId(), getResources().getString(R.string.notes_txt), mNotes, false);
                 break;
             case R.id.CANCEL_LESSON_TXT:
                 onBackPressed();
@@ -800,50 +1090,55 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 }
                 if (mLessonID != 0) {
                     displayProgressBar(-1, "");
+                    HashMap<String, String> lParams = new HashMap<>();
+                    if (m_cIsEdited)
+                        lParams.put(Constants.CONTENT_EDITED, String.valueOf(m_cIsEdited));
                     JSONObject lJO = new JSONObject();
                     try {
                         lJO.put(Constants.NAME, mLessonTitleEdit.getText().toString().trim().isEmpty() ? m_cLessons.getName() :
                                 mLessonTitleEdit.getText().toString().trim());
-                        lJO.put(Constants.COMMENTS, mComment != null ? mComment : "");
+                        lJO.put(Constants.COMMENTS, mNotes != null ? mNotes : "");
+                        lJO.put(Constants.SHARABLE, m_cIsSharable);
+                        lJO.put(Constants.OFFLINEABLE, m_cIsOfflinable);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     switch (mLessFromWhere) {
                         case PotMacros.OBJ_BOARDCHOICES:
-                            RequestManager.getInstance(this).placePutRequest(Constants.LESSONS
+                            RequestManager.getInstance(this).placeUnivUserRequest(Constants.LESSONS
                                             +
                                             mLessonID +
                                             "/",
-                                    Lessons.class, this, null, null, lJO.toString(), true);
+                                    Lessons.class, this, null, lParams, lJO.toString(), Request.Method.PUT);
 
                             break;
                         case PotMacros.OBJ_SYLLABI:
-                            RequestManager.getInstance(this).placePutRequest(Constants.BOARDCLASSES +
+                            RequestManager.getInstance(this).placeUnivUserRequest(Constants.BOARDCLASSES +
                                             m_cBoardChoice.getBoardclass().getId() +
                                             "/" +
                                             Constants.LESSONS +
                                             mLessonID +
                                             "/",
-                                    Lessons.class, this, null, null, lJO.toString(), true);
+                                    Lessons.class, this, null, lParams, lJO.toString(), Request.Method.PUT);
 
                             break;
                         case PotMacros.OBJ_CHAPTERS:
-                            RequestManager.getInstance(this).placePutRequest(Constants.SYLLABI +
+                            RequestManager.getInstance(this).placeUnivUserRequest(Constants.SYLLABI +
                                             m_cSyllabi.getId() +
                                             "/" +
                                             Constants.LESSONS +
                                             mLessonID +
                                             "/",
-                                    Lessons.class, this, null, null, lJO.toString(), true);
+                                    Lessons.class, this, null, lParams, lJO.toString(), Request.Method.PUT);
                             break;
                         case PotMacros.OBJ_LESSON:
-                            RequestManager.getInstance(this).placePutRequest(Constants.CHAPTERS +
+                            RequestManager.getInstance(this).placeUnivUserRequest(Constants.CHAPTERS +
                                             m_cChapters.getId() +
                                             "/" +
                                             Constants.LESSONS +
                                             mLessonID +
                                             "/",
-                                    Lessons.class, this, null, null, lJO.toString(), true);
+                                    Lessons.class, this, null, lParams, lJO.toString(), Request.Method.PUT);
                             break;
                     }
                 } else {
@@ -851,7 +1146,9 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     try {
                         lJO.put(Constants.NAME, mLessonTitleEdit.getText().toString().trim().isEmpty() ? "" :
                                 mLessonTitleEdit.getText().toString().trim());
-                        lJO.put(Constants.COMMENTS, mComment != null ? mComment : "");
+                        lJO.put(Constants.COMMENTS, mNotes != null ? mNotes : "");
+                        lJO.put(Constants.SHARABLE, m_cIsSharable);
+                        lJO.put(Constants.OFFLINEABLE, m_cIsOfflinable);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -937,7 +1234,130 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
                 startActivityForResult(lObjIntent, LESSON_MAPPING);
                 break;
+            case R.id.LIKE_TXT:
+                RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                        m_cLessons.getId() +
+                        "/" +
+                        Constants.LESSON_LIKES, Likes.class, this, null, null, null, true);
+                break;
+            case R.id.COMMENT_TXT:
+                if (m_cLessType == PotMacros.OBJ_LESSON_VIEW)
+                    callComments(PotMacros.OBJ_LESSON_COMMENTS);
+                break;
+            case R.id.LIKE_LIST_TXT:
+                callLikes(PotMacros.OBJ_LESSON_LIKES);
+                break;
+            case R.id.COMMENT_LIST_TXT:
+                callComments(PotMacros.OBJ_LESSON_COMMENTS);
+                break;
         }
+    }
+
+    @Optional
+    @OnTouch({R.id.SHARES_SWITCH, R.id.OFFLINE_SWITCH,
+            R.id.LESSON_TITLE_TXT})
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId()) {
+            case R.id.SHARES_SWITCH:
+                m_cIsShareTouched = true;
+                break;
+            case R.id.OFFLINE_SWITCH:
+                m_cIsOfflineTouched = true;
+                break;
+            case R.id.LESSON_TITLE_TXT:
+                m_cIsTitleTouched = true;
+                break;
+        }
+        return false;
+    }
+
+    @Optional
+    @OnCheckedChanged({R.id.SHARES_SWITCH, R.id.OFFLINE_SWITCH})
+    public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+        switch (view.getId()) {
+            case R.id.SHARES_SWITCH:
+                if (m_cIsShareTouched) {
+                    m_cIsShareTouched = false;
+                    m_cIsSharable = !m_cIsSharable;
+                    if(!m_cIsSharable){
+                        if (m_cLessType == PotMacros.OBJ_LESSON_EDIT) {
+                            if (m_cLessons.getPostedTo().equals(Constants.POSTED_FOLLOWERS)){
+                                displayToastLong(getResources().getString(R.string.lesson_cannot_be_visible_txt));
+                            }else {
+                                displayToast(getResources().getString(R.string.lesson_cannot_be_shared_txt));
+                            }
+                        }else {
+                            displayToast(getResources().getString(R.string.lesson_cannot_be_shared_txt));
+                        }
+                    }
+//                    if (m_cLessType != PotMacros.OBJ_LESSON_NEW)
+//                        callLessonFlags(isChecked, 0);
+                }
+                break;
+            case R.id.OFFLINE_SWITCH:
+                if (m_cIsOfflineTouched) {
+                    m_cIsOfflineTouched = false;
+                    m_cIsOfflinable = !m_cIsOfflinable;
+                    if(!m_cIsOfflinable){
+                        displayToast(getResources().getString(R.string.lesson_cannot_be_offlinable_txt));
+                    }
+
+//                    if (m_cLessType != PotMacros.OBJ_LESSON_NEW)
+//                        callLessonFlags(isChecked, 1);
+                }
+                break;
+        }
+    }
+
+    private void callComments(String objLessonComments) {
+        RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                m_cLessons.getId() +
+                "/" +
+                Constants.LESSON_COMMENTS, CommentsAll.class, this, objLessonComments, null, null, false);
+    }
+
+    private void callLikes(String objLessonLikes) {
+        RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                m_cLessons.getId() +
+                "/" +
+                Constants.LESSON_LIKES, LikesAll.class, this, objLessonLikes, null, null, false);
+    }
+
+    private void callLessonFlags(boolean isTrue, int pCase) {
+        String lStrObj = null;
+        JSONObject lJO = new JSONObject();
+        try {
+            switch (pCase) {
+                case 0:
+                    lJO.put(Constants.SHARABLE, isTrue);
+                    lJO.put(Constants.NAME, m_cLessons.getName());
+                    lStrObj = Constants.SHARABLE;
+                    break;
+                case 1:
+                    lJO.put(Constants.OFFLINEABLE, isTrue);
+                    lJO.put(Constants.NAME, m_cLessons.getName());
+                    lStrObj = Constants.OFFLINEABLE;
+                    break;
+                case 2:
+                    lJO.put(Constants.PUBLICABLE, isTrue);
+                    lJO.put(Constants.NAME, m_cLessons.getName());
+                    lStrObj = Constants.PUBLICABLE;
+                    break;
+                case 3:
+                    lJO.put(Constants.IS_SPAM, isTrue);
+                    lJO.put(Constants.NAME, m_cLessons.getName());
+                    lStrObj = Constants.IS_SPAM;
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestManager.getInstance(this).placeUnivUserRequest(Constants.CHAPTERS +
+                m_cLessons.getChapter().getId() +
+                "/" +
+                Constants.LESSONS +
+                m_cLessons.getId() +
+                "/", Lessons.class, this, new Object[]{lStrObj, isTrue}, null, lJO.toString(), Request.Method.PATCH);
     }
 
     private void manualStopRec() {
@@ -991,6 +1411,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     ((Attachments)m_cAttachList.get(pLessonImgTag)).setIsDeleted(true);
                 }
                 mLessonImg.setImageResource(R.mipmap.cameraicon_pad2);
+                m_cIsEdited = true;
                 break;
             case 3:
                 showBottomSheet(pLessonImgTag);
@@ -1046,7 +1467,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 }
                 break;
         }
-        m_cScreenSlidePagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), this, 0, list);
+        m_cScreenSlidePagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), this, 0, list, null);
         imgPager.setAdapter(m_cScreenSlidePagerAdapter);
         imgPager.setCurrentItem(lIndex);
 
@@ -1141,6 +1562,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     //player prepared
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
+        m_cIsPrepared = true;
         playProgressBar.setVisibility(View.GONE);
         fixedTimerTxt.setText(PotMacros.getFormatedTimer(mPlayer.getDuration()));
     }
@@ -1231,7 +1653,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 }
                 break;
             case R.id.IMAGES_TITLE_TXT:
-                mComment = (String) pObjMessage.obj;
+                mNotes = (String) pObjMessage.obj;
+                m_cIsEdited = true;
                 break;
             case R.id.LESSON_IMG_1:
                 m_cCurrentImgId = pObjMessage.what;
@@ -1254,10 +1677,10 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         stopPlaying();
                     if (mRecorder != null)
                         stopRecording();
-                    if (m_cAudioUrl != null){
-                        ((Attachments)m_cAttachList.get(PotMacros.LESSON_AUDIO)).setIsDeleted(true);
+                    if (m_cAudioUrl != null) {
+                        ((Attachments) m_cAttachList.get(PotMacros.LESSON_AUDIO)).setIsDeleted(true);
                         m_cAudioUrl = null;
-                    }else {
+                    } else {
                         m_cAttachList.remove(PotMacros.LESSON_AUDIO);
                     }
                     mIsPlaying = false;
@@ -1269,6 +1692,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     deleteRecursive(PotMacros.getAudioFilePath(this));
                     progressTimerTxt.setText(getResources().getString(R.string.timer_nutral));
                     fixedTimerTxt.setText(getResources().getString(R.string.timer_nutral));
+                    m_cIsEdited = true;
                 }
                 break;
             case R.id.REC_PAUSE_RES_IMG:
@@ -1283,6 +1707,112 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             case PotMacros.LESSON_ACTION_DOWNLOADED:
                 //start playing
                 new StartPlaying().execute();
+                break;
+            case R.id.COMMENT_TXT:
+                mComment = (String) pObjMessage.obj;
+                if (mComment != null && !mComment.isEmpty()) {
+                    JSONObject lJO = new JSONObject();
+                    try {
+                        lJO.put(Constants.COMMENT, mComment.toString().trim());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                            m_cLessons.getId() +
+                            "/" +
+                            Constants.LESSON_COMMENTS, Comments.class, this, null, null, lJO.toString(), true);
+                }
+                break;
+            case PotMacros.OBJ_LESSON_COMMENTS_SHOW:
+                CommentsAll lCommentsAll = (CommentsAll) pObjMessage.obj;
+                Comments lComments = lCommentsAll.getComments().get(pObjMessage.arg1);
+                if (lComments.getUser().getId() == m_cUser.getId())
+                    displayCommentDialog(PotMacros.OBJ_LESSON_COMMENTS_EDIT,
+                            getResources().getString(R.string.lesson_comment_txt),
+                            lComments.getComment(),
+                            false,
+                            lComments);
+                else
+                    displayCommentDialog(PotMacros.OBJ_LESSON_COMMENTS_EDIT,
+                            getResources().getString(R.string.lesson_comment_txt),
+                            lComments.getComment(),
+                            true,
+                            lComments);
+                break;
+            case PotMacros.OBJ_LESSON_COMMENTS_EDIT:
+                Object[] lObjects = (Object[]) pObjMessage.obj;
+                mComment = (String) lObjects[0];
+                Comments lComment = (Comments) lObjects[1];
+                if (null != mComment) {
+                    JSONObject lJO = new JSONObject();
+                    try {
+                        lJO.put(Constants.COMMENT, mComment.toString().trim());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    RequestManager.getInstance(this).placeUnivUserRequest(Constants.LESSONS +
+                            m_cLessons.getId() +
+                            "/" +
+                            Constants.LESSON_COMMENTS +
+                            lComment.getId() +
+                            "/", Comments.class, this, null, null, lJO.toString(), Request.Method.PATCH);
+                } else {
+                    RequestManager.getInstance(this).placeUnivUserRequest(Constants.LESSONS +
+                            m_cLessons.getId() +
+                            "/" +
+                            Constants.LESSON_COMMENTS +
+                            lComment.getId() +
+                            "/", Comments.class, this, null, null, null, Request.Method.DELETE);
+                }
+                break;
+            case R.id.action_post_to_public:
+                Object[] lObjectPub = (Object[]) pObjMessage.obj;
+                if ((boolean) lObjectPub[0]) {
+                    callLessonFlags(true, 0);
+                    callLessonFlags(true, 2);
+                }
+                break;
+            case LESSON_MAPPING:
+                Object[] lObjectLoc = (Object[]) pObjMessage.obj;
+                Intent lIntent = (Intent) lObjectLoc[1];
+                if ((boolean) lObjectLoc[0]) {
+                    callMappingLocally(lIntent);
+                }
+                break;
+            case PotMacros.ACTION_DELETE_LESSON:
+                Object[] lObjectDel = (Object[]) pObjMessage.obj;
+                Lessons pLesson = (Lessons) lObjectDel[1];
+                if ((boolean) lObjectDel[0]) {
+                    callDeleteLessonApi();
+                }
+                break;
+            case R.id.action_delete_all_shares:
+                Object[] lObjectDelAll = (Object[]) pObjMessage.obj;
+                Lessons lLessons = (Lessons) lObjectDelAll[1];
+                if ((boolean) lObjectDelAll[0]) {
+                    HashMap<String, String> lParams = new HashMap<>();
+                    lParams.put(Constants.SCOPE, Constants.SCOPE_ALL);
+                    displayProgressBar(-1, "");
+                    RequestManager.getInstance(this).placeUnivUserRequest(Constants.LESSONS +
+                                    m_cLessons.getId() +
+                                    "/" +
+                                    Constants.POST,
+                            Lessons.class, this, getResources().getString(R.string.deleted_all_shares_txt), lParams, null, Request.Method.DELETE);
+                }
+                break;
+            case R.id.action_delete_my_shares:
+                Object[] lObjectDelMy = (Object[]) pObjMessage.obj;
+                Lessons llLessons = (Lessons) lObjectDelMy[1];
+                if ((boolean) lObjectDelMy[0]) {
+                    HashMap<String, String> llParams = new HashMap<>();
+                    llParams.put(Constants.SCOPE, Constants.SCOPE_MINE);
+                    displayProgressBar(-1, "");
+                    RequestManager.getInstance(this).placeUnivUserRequest(Constants.LESSONS +
+                                    m_cLessons.getId() +
+                                    "/" +
+                                    Constants.POST,
+                            Lessons.class, this, getResources().getString(R.string.deleted_my_shares_txt), llParams, null, Request.Method.DELETE);
+                }
                 break;
         }
     }
@@ -1312,10 +1842,12 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (mPlayer != null && fromUser) {
-            mPlayer.seekTo(progress * 1000);
-            if (mIsPlaying) {
-                mPlayer.start();
-                m_cObjUIHandler.sendEmptyMessage(PLAY_SEEK);
+            if (m_cIsPrepared || !(m_cLessType == PotMacros.OBJ_LESSON_VIEW)) {
+                mPlayer.seekTo(progress * 1000);
+                if (mIsPlaying) {
+                    mPlayer.start();
+                    m_cObjUIHandler.sendEmptyMessage(PLAY_SEEK);
+                }
             }
         }
     }
@@ -1334,7 +1866,68 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (apiMethod.contains(Constants.SOURCES)) {
+                if (apiMethod.contains(Constants.LESSON_COMMENTS)) {
+                    if (response instanceof Comments) {
+                        Comments lComments = (Comments) response;
+                        callComments(null);
+                    } else if (response == null) {
+                        callComments(null);
+                    } else if (response instanceof CommentsAll) {
+                        CommentsAll lCommentsAll = (CommentsAll) response;
+                        commentListTxt.setText(String.valueOf(lCommentsAll.getCount()));
+                        if (null != lCommentsAll) {
+                            if (null != refObj) {
+                                /*ArrayList<String> lComments = new ArrayList<>();
+                                ArrayList<Integer> lIds = new ArrayList<>();
+                                if (null != (String) refObj) {
+                                    for (Comments comments : lCommentsAll.getComments()) {
+                                        lComments.add(String.format("%s : %s", comments.getUser().getFirstName() + " " + comments.getUser().getLastName(),
+                                                comments.getComment()));
+                                        lIds.add(comments.getId());
+                                    }
+                                    displaySpinnerDialog(PotMacros.OBJ_LESSON_COMMENTS_SHOW, getResources().getString(R.string.lesson_comments_txt),
+                                            lComments, lCommentsAll);
+                                }*/
+                                if (null != (String) refObj) {
+                                    Intent lObjIntent = new Intent(this, LessonLikesCommentsScreen.class);
+                                    lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                                    lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(m_cLessons));
+                                    lObjIntent.putExtra(PotMacros.OBJ_LESSON_COMMENTS, (new Gson()).toJson(lCommentsAll));
+                                    lObjIntent.putExtra(PotMacros.OBJ_SELECTIONTYPE, false);
+                                    startActivityForResult(lObjIntent, LESSON_LIKES_COMMENT);
+                                }
+                            }
+                        }
+                    }
+                } else if (apiMethod.contains(Constants.LESSON_LIKES)) {
+                    if (response instanceof Likes) {
+                        Likes likes = (Likes) response;
+                        callLikes(null);
+                    } else if (response instanceof LikesAll) {
+                        LikesAll likesAll = (LikesAll) response;
+                        likeListTxt.setText(String.valueOf(likesAll.getCount()));
+                        if (null != likesAll && likesAll.getLikes().size() > 0) {
+                            /*ArrayList<String> lNames = new ArrayList<>();
+                            ArrayList<Integer> lIds = new ArrayList<>();
+                            if (null != (String) refObj) {
+                                for (Likes likes : likesAll.getLikes()) {
+                                    lNames.add(likes.getUser().getFirstName() + " " + likes.getUser().getLastName());
+                                    lIds.add(likes.getUser().getId());
+                                }
+                                displaySpinnerDialog(PotMacros.OBJ_LESSON_LIKES_SHOW, getResources().getString(R.string.lesson_likes_txt),
+                                        lNames, lIds, likesAll);
+                            }*/
+                            if (null != (String) refObj) {
+                                Intent lObjIntent = new Intent(this, LessonLikesCommentsScreen.class);
+                                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
+                                lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(m_cLessons));
+                                lObjIntent.putExtra(PotMacros.OBJ_LESSON_LIKES, (new Gson()).toJson(likesAll));
+                                lObjIntent.putExtra(PotMacros.OBJ_SELECTIONTYPE, true);
+                                startActivityForResult(lObjIntent, LESSON_LIKES_COMMENT);
+                            }
+                        }
+                    }
+                } else if (apiMethod.contains(Constants.SOURCES)) {
                     if (response == null) {
                         hideDialog();
                         onBackPressed();
@@ -1347,10 +1940,13 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     }
                 } else if (apiMethod.contains(Constants.POST)) {
                     if (response == null) {
-                        hideDialog();
-                        displayToast(getResources().getString(R.string.lesson_posted_successfully_txt));
+                        displayToast((String) refObj);
+                        displayProgressBar(-1, "");
+                        RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                                m_cLessons.getId() +
+                                "/", Lessons.class, this, new Object[]{PotMacros.OBJ_LESSON, false}, null, null, false);
                     }
-                } else if (apiMethod.contains(Constants.CHAPTERS)) {
+                } else if (apiMethod.contains(Constants.CHAPTERS) && (refObj == null)) {
                     if (response == null) {
                         hideDialog();
                         onBackPressed();
@@ -1452,6 +2048,39 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         }
                         hideDialog();
                     }
+                } else if (apiMethod.contains(Constants.LESSONS) && refObj != null) {
+                    Lessons lLessons = (Lessons) response;
+                    Object[] lObjects = (Object[]) refObj;
+                    if (lLessons != null) {
+                        m_cLessons = lLessons;
+                        switch ((String) lObjects[0]) {
+                            case Constants.SHARABLE:
+                                if ((boolean) lObjects[1])
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.shares_enabled_txt));
+                                else
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.shares_disabled_txt));
+                                break;
+                            case Constants.OFFLINEABLE:
+                                if ((boolean) lObjects[1])
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.offline_save_enabled_txt));
+                                else
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.offline_save_disabled_txt));
+                                break;
+                            case Constants.PUBLICABLE:
+                                if ((boolean) lObjects[1])
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.posted_to_public_txt));
+                                else
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.unpost_from_public_txt));
+                                break;
+                            case Constants.IS_SPAM:
+                                if ((boolean) lObjects[1])
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.marked_as_spam_txt));
+                                else
+                                    displaySnack(m_cRlMain, getResources().getString(R.string.removed_spam_txt));
+                                break;
+                        }
+                    }
+                    hideDialog();
                 } else if (apiMethod.contains(Constants.LESSONS)) {
                     Lessons lLessons = (Lessons) response;
                     if (lLessons != null && m_cAttachList.size() > 0) {
@@ -1489,15 +2118,23 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                     }
                     switch ((String) lObjects[0]) {
                         case PotMacros.LESSON_AUDIO:
+                            if (null != m_cLessonsTable.getAudio())
+                                checkAndDelete(m_cLessonsTable.getAudio());
                             m_cLessonsTable.setAudio((String) lObjects[1]);
                             break;
                         case PotMacros.LESSON_IMG_1:
+                            if (null != m_cLessonsTable.getImg1())
+                                checkAndDelete(m_cLessonsTable.getImg1());
                             m_cLessonsTable.setImg1((String) lObjects[1]);
                             break;
                         case PotMacros.LESSON_IMG_2:
+                            if (null != m_cLessonsTable.getImg2())
+                                checkAndDelete(m_cLessonsTable.getImg2());
                             m_cLessonsTable.setImg2((String) lObjects[1]);
                             break;
                         case PotMacros.LESSON_IMG_3:
+                            if (null != m_cLessonsTable.getImg3())
+                                checkAndDelete(m_cLessonsTable.getImg3());
                             m_cLessonsTable.setImg3((String) lObjects[1]);
                             break;
                     }
@@ -1519,23 +2156,26 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             Intent lObjIntent = new Intent(this, PotUserLessonScreen.class);
             switch (mLessFromWhere) {
                 case PotMacros.OBJ_BOARDCHOICES:
+                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 2);
                     lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
                     lObjIntent.putExtra(PotMacros.LESSON_HEADER, m_cBoardChoice.getBoardclass().getName());
                     break;
                 case PotMacros.OBJ_SYLLABI:
+                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 2);
                     lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
                     lObjIntent.putExtra(PotMacros.LESSON_HEADER, m_cSyllabi.getName());
                     break;
                 case PotMacros.OBJ_CHAPTERS:
+                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 3);
                     lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, mLessFromWhere);
                     lObjIntent.putExtra(PotMacros.LESSON_HEADER, m_cChapters.getName());
                     break;
                 case PotMacros.OBJ_LESSON:
+                    lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 3);
                     lObjIntent.putExtra(PotMacros.OBJ_LESSONFROM, PotMacros.OBJ_CHAPTERS);
                     lObjIntent.putExtra(PotMacros.LESSON_HEADER, m_cChapters.getName());
                     break;
             }
-            lObjIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, 2);
             lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUser));
             lObjIntent.putExtra(PotMacros.OBJ_BOARDCHOICES, (new Gson()).toJson(m_cBoardChoice));
             lObjIntent.putExtra(PotMacros.OBJ_SYLLABI, (new Gson()).toJson(m_cSyllabi));
@@ -1544,7 +2184,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
             startActivity(lObjIntent);
             finish();
         }else {
-            if (mRequestResultIndex == 2){
+            if (mRequestResultIndex == 3){
                 Intent lReturnIntent = new Intent();
                 lReturnIntent.putExtra(PotMacros.LESSON_INDEX_PAGE, mRequestResultIndex);
                 setResult(Activity.RESULT_OK, lReturnIntent);
@@ -1679,7 +2319,9 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
 
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
-        if (apiMethod.contains(Constants.SOURCES) ||
+        if (apiMethod.contains(Constants.LESSON_LIKES) ||
+                apiMethod.contains(Constants.LESSON_COMMENTS) ||
+                apiMethod.contains(Constants.SOURCES) ||
                 apiMethod.contains(Constants.BOARDCLASSES) ||
                 apiMethod.contains(Constants.POST) ||
                 apiMethod.contains(Constants.CHAPTERS) ||
@@ -1824,6 +2466,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         lview = mLessonImg1;
                         break;
                 }
+                m_cIsEdited = true;
                 Picasso.with(LessonsScreen.this)
                         .load(new File(PotMacros.getImageFilePath(LessonsScreen.this), m_cImageGUID + ".jpg"))
                         .error(R.drawable.profile_placeholder)

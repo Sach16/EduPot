@@ -35,13 +35,16 @@ public class CustomRecyclerAdapterForChapters extends RecyclerView.Adapter{
     private static RecyclerHomeListener m_cClickListener;
     private static List<Chapters> m_cObjChapters;
     private static String m_cSelectionType;
+    private static String m_cGoOffline;
     private Context m_cObjContext;
 
-    public CustomRecyclerAdapterForChapters(Context pContext, List<Chapters> pChapters, String pSellectionType, RecyclerHomeListener pListener) {
+    public CustomRecyclerAdapterForChapters(Context pContext, List<Chapters> pChapters, String pSellectionType,
+                                            String pGoOffline, RecyclerHomeListener pListener) {
         this.m_cObjContext = pContext;
         this.m_cObjChapters = pChapters;
         this.m_cSelectionType = pSellectionType;
         this.m_cClickListener = pListener;
+        this.m_cGoOffline = pGoOffline;
     }
 
     @Override
@@ -133,6 +136,15 @@ public class CustomRecyclerAdapterForChapters extends RecyclerView.Adapter{
                 ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).schoolNameLocTxt.setVisibility(View.GONE);
                 ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).arrowImg.setVisibility(View.GONE);
                 ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).timeStamp.setVisibility(View.GONE);
+            }
+
+            try {
+                if (null != m_cGoOffline) {
+                    ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).schoolNameLocTxt.setVisibility(View.GONE);
+                    ((CustomRecyclerAdapterForChapters.DataObjectHolder) holder).timeStamp.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             try {

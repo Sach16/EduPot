@@ -249,9 +249,9 @@ public class PotBoardClassScreen extends PotBaseActivity implements RefreshClass
                 displayProgressBar(-1, "Loading");
                 Users lUsers = (Users) response;
                 if (null != lUsers.getCreated()) {
-//                    displaySnack(m_cllMain, "Successfully created User with id " + lUsers.getId());
+                    int sessionId = PotMacros.getSessionId(this) > -1 ? PotMacros.getSessionId(this) : PotMacros.getGreenSessionId(this);
                     RequestManager.getInstance(this).placeRequest(Constants.SESSIONS +
-                            PotMacros.getSessionId(this) +
+                            sessionId +
                             "/" +
                             Constants.USERS +
                             lUsers.getId() +

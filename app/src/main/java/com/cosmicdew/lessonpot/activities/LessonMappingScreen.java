@@ -55,6 +55,7 @@ public class LessonMappingScreen extends PotBaseActivity implements RecyclerSele
     FrameLayout m_cMainRL;
 
     private Users m_cUser;
+    private Lessons m_cLessons;
     private BoardChoices m_cBoardChoices;
     private Syllabi m_cSyllabi;
 
