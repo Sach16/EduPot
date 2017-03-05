@@ -146,7 +146,7 @@ public class PotUserHomePublicFragment extends PotFragmentBaseClass implements R
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        m_cObjMainView = inflater.inflate(R.layout.fragment_cust_recyclerview, container, false);
+        m_cObjMainView = inflater.inflate(R.layout.fragment_public_recyclerview, container, false);
         ButterKnife.bind(this, m_cObjMainView);
 
         m_cObjMainActivity.m_cObjFragmentBase = PotUserHomePublicFragment.this;

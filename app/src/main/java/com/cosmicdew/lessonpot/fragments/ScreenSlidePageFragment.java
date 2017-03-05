@@ -11,6 +11,8 @@ import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.baseclasses.PotFragmentBaseClass;
 import com.cosmicdew.lessonpot.customviews.TouchImageView;
 import com.cosmicdew.lessonpot.macros.PotMacros;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -71,6 +73,8 @@ public class ScreenSlidePageFragment extends PotFragmentBaseClass{
                     .error(R.drawable.profile_placeholder)
                     .placeholder(R.drawable.profile_placeholder)
                     .config(Bitmap.Config.RGB_565)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .fit()
                     .into(imageZom);
         } catch (Exception e) {
@@ -85,6 +89,8 @@ public class ScreenSlidePageFragment extends PotFragmentBaseClass{
                     .error(R.drawable.profile_placeholder)
                     .placeholder(R.drawable.profile_placeholder)
                     .config(Bitmap.Config.RGB_565)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .fit()
                     .into(imageZom);
         } catch (Exception e) {
@@ -99,6 +105,8 @@ public class ScreenSlidePageFragment extends PotFragmentBaseClass{
                     .error(R.drawable.profile_placeholder)
                     .placeholder(R.drawable.profile_placeholder)
                     .config(Bitmap.Config.RGB_565)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .fit()
                     .into(imageZom);
         } catch (Exception e) {

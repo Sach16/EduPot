@@ -192,7 +192,10 @@ public class PotUserHomeReceivedFragment extends PotFragmentBaseClass implements
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         m_cRecycClasses.setLayoutManager(m_cLayoutManager);
-        m_cHeaderView.attachTo(m_cRecycClasses);
+        if (null == m_cGoOffline) {
+            m_cHeaderView.setVisibility(View.VISIBLE);
+            m_cHeaderView.attachTo(m_cRecycClasses);
+        }
         m_cRecycClasses.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -260,9 +263,9 @@ public class PotUserHomeReceivedFragment extends PotFragmentBaseClass implements
 
     private void initOffline() {
         List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
-        /*"sharer_id != ? and sharer_id != -1 and user_id = ? and board_class = ? and syllabi_name = ? and chapter_name = ?"*/
+        //NOTE : 1st index sharer_id changed to owner_id
         List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class,
-                "select * from lessons_table where sharer_id != ? and sharer_id != -1 and user_id = ? and board_class like '%'||?||'%' and syllabi_name = ? and chapter_name = ? and lesson_id != -1",
+                "select * from lessons_table where owner_id != ? and sharer_id != -1 and user_id = ? and board_class like '%'||?||'%' and syllabi_name = ? and chapter_name = ? and lesson_id != -1",
                 String.valueOf(m_cUser.getId()),
                 String.valueOf(m_cUser.getId()),
                 m_cBoardChoice.getBoardclass().getName() + "," + m_cBoardChoice.getBoardclass().getBoard().getName(),
@@ -324,7 +327,9 @@ public class PotUserHomeReceivedFragment extends PotFragmentBaseClass implements
         } else {
             if (null != m_cRecycClassesAdapt) {
                 m_cLessonsList.clear();
-                m_cRecycClassesAdapt.notifyDataSetChanged();
+                m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsReceived(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                        m_cSyllabi, m_cChapters, m_cLessonsList, m_cLessonSharesList, null, m_cGoOffline, this));
+                m_cRecycClasses.invalidate();
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.cosmicdew.lessonpot.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
@@ -51,6 +54,10 @@ public class PotUserNetworkFollowingFragment extends PotFragmentBaseClass implem
     private String m_cKey;
     private Users m_cUser;
     private String m_cSelectionType;
+
+    private Dialog m_cObjDialog;
+
+    public static final int ACTION_DELETE_CONNECTION = 9179;
 
     private boolean m_cLoading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -148,7 +155,18 @@ public class PotUserNetworkFollowingFragment extends PotFragmentBaseClass implem
 
     @Override
     protected void handleUIMessage(Message pObjMessage) {
-
+        switch (pObjMessage.what) {
+            case ACTION_DELETE_CONNECTION:
+                Object[] lObjectDelMy = (Object[]) pObjMessage.obj;
+                Follows lFollows = (Follows) lObjectDelMy[1];
+                if ((boolean) lObjectDelMy[0]) {
+                    m_cObjMainActivity.displayProgressBar(-1, "");
+                    placeUnivUserRequest(Constants.FOLLOWERS +
+                            lFollows.getId() +
+                            "/", Follows.class, null, null, null, Request.Method.DELETE);
+                }
+                break;
+        }
     }
 
     @Override
@@ -236,11 +254,40 @@ public class PotUserNetworkFollowingFragment extends PotFragmentBaseClass implem
             case 0:
                 break;
             case 1:
-                m_cObjMainActivity.displayProgressBar(-1, "");
-                placeUnivUserRequest(Constants.FOLLOWERS +
-                        pFollows.getId() +
-                        "/", Follows.class, null, null, null, Request.Method.DELETE);
+                displayYesOrNoCustAlert(ACTION_DELETE_CONNECTION,
+                        getResources().getString(R.string.unfollow_txt),
+                        getResources().getString(R.string.all_lessons_shared_by_txt),
+                        pFollows);
                 break;
         }
+    }
+
+    public void displayYesOrNoCustAlert(final int pId, String pTitle, String pMessage, final Object pObj) {
+        AlertDialog.Builder lObjBuilder = new AlertDialog.Builder(m_cObjMainActivity);
+        View lView = LayoutInflater.from(m_cObjMainActivity).inflate(R.layout.spinner_header, null);
+        ((TextView) lView.findViewById(R.id.TEXT_HEAD)).setText(pTitle);
+        lObjBuilder.setCustomTitle(lView);
+        final View lMainView = LayoutInflater.from(m_cObjMainActivity).inflate(R.layout.lesson_yes_no_dialog, null);
+        ((TextView) lMainView.findViewById(R.id.ALLERT_TXT)).setText(pMessage);
+        lObjBuilder.setView(lMainView);
+        ((TextView) lMainView.findViewById(R.id.NO_DIALOG_TXT)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_cObjDialog.dismiss();
+            }
+        });
+        ((TextView) lMainView.findViewById(R.id.YES_DIALOG_TXT)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message lMsg = new Message();
+                lMsg.what = pId;
+                lMsg.obj = new Object[]{true, pObj};
+                m_cObjUIHandler.sendMessage(lMsg);
+                m_cObjDialog.dismiss();
+            }
+        });
+        m_cObjDialog = lObjBuilder.create();
+        m_cObjDialog.setCanceledOnTouchOutside(false);
+        m_cObjDialog.show();
     }
 }

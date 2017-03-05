@@ -143,6 +143,8 @@ public class PotAddExistingUserScreen extends PotBaseActivity {
                     hideDialog();
                     if (error instanceof NoConnectionError) {
                         Toast.makeText(this, "Please check Network connection", Toast.LENGTH_SHORT).show();
+                    } else if (error.networkResponse.statusCode == 404) {
+                        displayToast(getResources().getString(R.string.invalid_credentials_txt));
                     } else {
                         String lMsg = new String(error.networkResponse.data);
                         showErrorMsg(lMsg);

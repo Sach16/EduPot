@@ -15,8 +15,10 @@ import com.cosmicdew.lessonpot.R;
 import com.cosmicdew.lessonpot.activities.PotUserHomeScreen;
 import com.cosmicdew.lessonpot.activities.SplashScreen;
 import com.cosmicdew.lessonpot.macros.PotMacros;
+import com.cosmicdew.lessonpot.models.Comments;
 import com.cosmicdew.lessonpot.models.Connections;
 import com.cosmicdew.lessonpot.models.LessonShares;
+import com.cosmicdew.lessonpot.models.Likes;
 import com.cosmicdew.lessonpot.models.Users;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -38,6 +40,8 @@ public class PotFirebaseMessagingService extends FirebaseMessagingService{
     private Connections m_cConnections;
     private LessonShares m_cLessonShares;
     private Users m_cUsers;
+    private Likes m_cLikes;
+    private Comments m_cComments;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -89,6 +93,20 @@ public class PotFirebaseMessagingService extends FirebaseMessagingService{
                 lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUsers));
                 lObjIntent.putExtra(PotMacros.NOTIFICATION, lTag.equals(Constants.LESSON_SHARES_FROM_CONNECTION) ?
                         Constants.LESSON_SHARES_FROM_CONNECTION : Constants.LESSON_SHARES_FROM_SYLLABUS);
+                break;
+            case Constants.LESSON_COMMENT:
+                lObjIntent = new Intent(this, PotUserHomeScreen.class);
+                m_cComments = (new Gson()).fromJson(lStrObj, Comments.class);
+                m_cUsers = m_cComments.getLesson().getOwner();
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUsers));
+                lObjIntent.putExtra(PotMacros.NOTIFICATION, Constants.LESSON_COMMENT);
+                break;
+            case Constants.LESSON_LIKE:
+                lObjIntent = new Intent(this, PotUserHomeScreen.class);
+                m_cLikes = (new Gson()).fromJson(lStrObj, Likes.class);
+                m_cUsers = m_cLikes.getLesson().getOwner();
+                lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(m_cUsers));
+                lObjIntent.putExtra(PotMacros.NOTIFICATION, Constants.LESSON_LIKE);
                 break;
             default:
                 lObjIntent = new Intent(this, SplashScreen.class);

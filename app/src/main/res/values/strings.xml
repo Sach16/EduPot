@@ -155,6 +155,7 @@
     <string name="add_connection_txt">Add Connection</string>
     <string name="alert_txt">Alert</string>
     <string name="invalid_user_txt">Invalid Account</string>
+    <string name="invalid_credentials_txt">Invalid Credentials</string>
     <string name="insufficient_info_txt">There is more than one Account matching the information you have provided. Provide a sufficient number of initial letters of first/last name and Role to identify a unique Account</string>
     <string name="account_id_doesnt_exist_txt">Account Id doesn\'t exist</string>
     <string name="sms_info_txt">This person does not have LessonPot app on his/her phone. You can invite the person to join LessonPot yourself. Or, you can click Yes below to send an SMS. \n\nNote: Your carrier may charge you for sending the SMS.</string>
@@ -299,6 +300,7 @@
     <string name="lesson_cannot_be_shared_txt">This lesson cannot be shared by others anymore.</string>
     <string name="lesson_cannot_be_offlinable_txt">This lesson cannot be saved offline by others anymore.</string>
     <string name="lesson_cannot_be_visible_txt">Lesson will no longer be visible to Public.\nIt also cannot be shared by others anymore.</string>
+    <string name="all_lessons_shared_by_txt">All lessons shared by this user with you will be permanently removed! \nDo you want to proceed?</string>
 
     <string-array name="add_photo_arr">
         <item>Go to camera</item>

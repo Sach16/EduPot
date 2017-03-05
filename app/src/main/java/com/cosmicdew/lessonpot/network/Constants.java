@@ -147,6 +147,8 @@ public class Constants {
     public static final String LESSON_SHARES_FROM_CONNECTION = "lesson:shares_from_connection";
     public static final String LESSON_SHARES_FROM_SYLLABUS = "lesson:shares_from_syllabus";
     public static final String LESSON_EDIT = "lesson:edit";
+    public static final String LESSON_COMMENT = "lesson:comment";
+    public static final String LESSON_LIKE = "lesson:like";
 
     public static String apiMethodEx(String apiMethod, String uuid) {
         StringBuffer lBuf = new StringBuffer();

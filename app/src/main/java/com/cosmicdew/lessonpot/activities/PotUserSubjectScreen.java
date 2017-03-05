@@ -437,10 +437,14 @@ public class PotUserSubjectScreen extends PotBaseActivity {
                                                         i == (m_cAttachList.size() - 1) ? (m_cAttachList.size() - 1) : -1},
                                         null, null, false);
                             }
-                        } else
+                        } else {
+                            displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
                             hideDialog();
-                    } else
+                        }
+                    } else {
+                        displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
                         hideDialog();
+                    }
                 } else if (apiMethod.contains(Constants.OFFLINE_META)) {
                     Object[] lObjects = (Object[]) refObj;
                     try {

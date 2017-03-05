@@ -471,6 +471,29 @@ public class PotMacros {
         return lFormatedDate;
     }
 
+    public static String getDateFormatLocal(Date pDate, String pDateTxt, String pInPut, String pOutPut) {
+        String lFormatedDate = null;
+        SimpleDateFormat lObjFormat = new SimpleDateFormat(pOutPut);
+        Date lObjDate = null;
+        try {
+            if(null != pDateTxt) {
+                SimpleDateFormat lObjFormat1 = new SimpleDateFormat(pInPut);
+                lObjFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+                lObjDate = lObjFormat1.parse(pDateTxt);
+            } else if(null != pDate){
+                lObjDate = pDate;
+            }
+            if(null != lObjDate) {
+                lObjFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                lFormatedDate = lObjFormat.format(lObjDate);
+            }
+        } catch(Exception ex) {
+            lFormatedDate = "";
+            ex.printStackTrace();
+        }
+        return lFormatedDate;
+    }
+
     public static Date convertStringToDate(String pDateString, String pFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pFormat);
         Date convertedDate = new Date();
@@ -1050,6 +1073,7 @@ public class PotMacros {
                                     pCtx.getResources().getString(R.string.action_share),
                                     pCtx.getResources().getString(R.string.action_remove),
                                     pCtx.getResources().getString(R.string.action_delete_my_shares),
+                                    pCtx.getResources().getString(R.string.action_save),
                                     pCtx.getResources().getString(R.string.action_add_syllabus),
                                     pCtx.getResources().getString(R.string.action_view_creator_profile),
                                     pCtx.getResources().getString(R.string.action_view_sharer_profile),
@@ -1058,6 +1082,7 @@ public class PotMacros {
                                     R.id.action_share,
                                     R.id.action_remove,
                                     R.id.action_delete_my_shares,
+                                    R.id.action_save,
                                     R.id.action_add_syllabus,
                                     R.id.action_view_creator_profile,
                                     R.id.action_view_sharer_profile,
@@ -1067,6 +1092,7 @@ public class PotMacros {
                                     pCtx.getResources().getString(R.string.action_share),
                                     pCtx.getResources().getString(R.string.action_remove),
                                     pCtx.getResources().getString(R.string.action_delete_my_shares),
+                                    pCtx.getResources().getString(R.string.action_save),
                                     pCtx.getResources().getString(R.string.action_add_syllabus),
                                     pCtx.getResources().getString(R.string.action_view_creator_profile),
                                     pCtx.getResources().getString(R.string.action_report_spam));
@@ -1074,6 +1100,7 @@ public class PotMacros {
                                     R.id.action_share,
                                     R.id.action_remove,
                                     R.id.action_delete_my_shares,
+                                    R.id.action_save,
                                     R.id.action_add_syllabus,
                                     R.id.action_view_creator_profile,
                                     R.id.action_report_spam);

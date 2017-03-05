@@ -264,7 +264,7 @@ public class PotUserHomeClassesFragment extends PotFragmentBaseClass implements 
                     List<LessonsTable> lessonsTableList = LessonsTable.findWithQuery(LessonsTable.class,
                             "select * from lessons_table where user_id = ? and board_class like '%'||?||'%'",
                             String.valueOf(m_cUser.getId()),
-                            pBoardChoices.getBoardclass().getName() + " " + pBoardChoices.getBoardclass().getBoard().getName());
+                            pBoardChoices.getBoardclass().getName() + "," + pBoardChoices.getBoardclass().getBoard().getName());
                     if (null != lessonsTableList && lessonsTableList.size() > 0)
                         for (LessonsTable lessonsTable : lessonsTableList) {
                             m_cObjMainActivity.checkAndDelete(lessonsTable.getImg1());

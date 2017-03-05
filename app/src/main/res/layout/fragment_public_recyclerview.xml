@@ -17,8 +17,7 @@
         android:id="@+id/RECYCLERVIEW_HEADER"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:visibility="gone">
+        android:layout_gravity="center_horizontal|top">
 
         <include
             layout="@layout/header_filter_received_layout"/>

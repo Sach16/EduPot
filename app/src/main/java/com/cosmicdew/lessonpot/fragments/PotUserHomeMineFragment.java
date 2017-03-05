@@ -177,7 +177,7 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         m_cRecycClasses.setLayoutManager(m_cLayoutManager);
         if (null != mLessFromWhere &&
-                mLessFromWhere.equalsIgnoreCase(PotMacros.OBJ_CHAPTERS)) {
+                mLessFromWhere.equalsIgnoreCase(PotMacros.OBJ_CHAPTERS) && (null == m_cGoOffline)) {
             m_cHeaderView.setVisibility(View.VISIBLE);
             m_cHeaderListTxt.setText(getResources().getString(R.string.reorder_txt));
 //            m_cHeaderView.attachTo(m_cRecycClasses);
@@ -293,7 +293,9 @@ public class PotUserHomeMineFragment extends PotFragmentBaseClass implements Rec
         } else {
             if (null != m_cRecycClassesAdapt) {
                 m_cLessonsList.clear();
-                m_cRecycClassesAdapt.notifyDataSetChanged();
+                m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsMine(m_cObjMainActivity, m_cUser, m_cBoardChoice,
+                        m_cSyllabi, m_cChapters, m_cLessonsList, null, null, this, this, mLessFromWhere, m_cGoOffline, m_cIsInReorder));
+                m_cRecycClasses.invalidate();
             }
         }
     }

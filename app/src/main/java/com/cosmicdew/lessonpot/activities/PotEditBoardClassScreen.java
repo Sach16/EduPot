@@ -269,8 +269,10 @@ public class PotEditBoardClassScreen extends PotBaseActivity implements RefreshC
     @Override
     public void resetFragment(boolean pState) {
         //below 1st line added new
-        m_cBoardClassList.clear();
-        m_cRecycBoardAdapt.notifyDataSetChanged();
+        if (null != m_cRecycBoardAdapt) {
+            m_cBoardClassList.clear();
+            m_cRecycBoardAdapt.notifyDataSetChanged();
+        }
         init();
         switchModeFragment(pState, -1);
     }

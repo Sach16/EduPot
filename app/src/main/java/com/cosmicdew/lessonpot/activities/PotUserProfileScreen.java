@@ -140,12 +140,12 @@ public class PotUserProfileScreen extends PotBaseActivity implements RefreshEdit
     @Override
     protected void onResume() {
         super.onResume();
+        m_cUser = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_USER), Users.class);
+        m_cLessons = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_LESSON), Lessons.class);
         init();
     }
 
     private void init() {
-        m_cUser = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_USER), Users.class);
-        m_cLessons = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_LESSON), Lessons.class);
         if (null != m_cUser) {
             try {
                 Picasso.with(PotUserProfileScreen.this)
@@ -238,7 +238,7 @@ public class PotUserProfileScreen extends PotBaseActivity implements RefreshEdit
                 viewStub.setVisibility(View.GONE);
                 break;
             case R.id.FOLLOW_TXT:
-                hideDialog();
+                displayProgressBar(-1, "Loading...");
                 JSONObject lJO = new JSONObject();
                 try {
                     lJO.put(Constants.TO_USER, m_cUser.getId());
@@ -286,6 +286,8 @@ public class PotUserProfileScreen extends PotBaseActivity implements RefreshEdit
                 if (apiMethod.contains(Constants.FOLLOWERS)){
                     Follows lFollows = (Follows) response;
                     if (null != lFollows){
+                        m_cUser = lFollows.getToUser();
+                        init();
                     }
                     hideDialog();
                 }else {

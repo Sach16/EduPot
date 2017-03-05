@@ -186,7 +186,10 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
         m_cLayoutManager = new LinearLayoutManager(m_cObjMainActivity);
         m_cLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         m_cRecycClasses.setLayoutManager(m_cLayoutManager);
-        m_cHeaderView.attachTo(m_cRecycClasses);
+        if (null == m_cGoOffline) {
+            m_cHeaderView.setVisibility(View.VISIBLE);
+            m_cHeaderView.attachTo(m_cRecycClasses);
+        }
         m_cRecycClasses.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -234,7 +237,8 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
 
     private void initOffline() {
         List<LessonsTable> lessonsTableAll = LessonsTable.listAll(LessonsTable.class);
-        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "sharer_id != ? and sharer_id != -1 and user_id = ? and lesson_id != -1", String.valueOf(m_cUser.getId()), String.valueOf(m_cUser.getId()));
+        //NOTE : 1st index sharer_id changed to owner_id
+        List<LessonsTable> lessonsTableList = LessonsTable.find(LessonsTable.class, "owner_id != ? and sharer_id != -1 and user_id = ? and lesson_id != -1", String.valueOf(m_cUser.getId()), String.valueOf(m_cUser.getId()));
         ArrayList<LessonShares> m_cLessonSharesList = new ArrayList<>();
         if (null != lessonsTableList && lessonsTableList.size() > 0) {
             for (LessonsTable lessonsTable : lessonsTableList) {
@@ -291,7 +295,9 @@ public class PotUserHomeClassesReceivedFragment extends PotFragmentBaseClass imp
         } else {
             if (null != m_cRecycClassesAdapt) {
                 m_cLessonsList.clear();
-                m_cRecycClassesAdapt.notifyDataSetChanged();
+                m_cRecycClasses.setAdapter(new CustomRecyclerAdapterForLessonsReceived(m_cObjMainActivity, m_cUser, null,
+                        null, null, m_cLessonsList, m_cLessonSharesList, null, m_cGoOffline, this));
+                m_cRecycClasses.invalidate();
             }
         }
     }

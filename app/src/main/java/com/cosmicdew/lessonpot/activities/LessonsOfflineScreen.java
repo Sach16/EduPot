@@ -624,7 +624,7 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
                 setViewMode();
                 invalidateOptionsMenu();
                 return true;
-            case R.id.action_delete:
+            case R.id.action_delete_lesson:
                 displayYesOrNoCustAlert(PotMacros.ACTION_DELETE_LESSON,
                         getResources().getString(R.string.action_delete_lesson),
                         getResources().getString(R.string.delete_offline_lesson_desc_txt),
@@ -1047,10 +1047,12 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
                     m_cLessonsTable.setName(mLessonTitleEdit.getText().toString().trim().isEmpty() ? m_cLessons.getName() :
                             mLessonTitleEdit.getText().toString().trim());
                     m_cLessonsTable.setComments(mNotes != null ? mNotes : "");
+                    m_cLessonsTable.setCreated(PotMacros.getDateFormatLocal(new Date(), null, null, PotMacros.DATE_FORMAT_UNDERSC_YYYYMMDD_HHMMSS_SSSSSS));
+                    m_cLessonsTable.setModified(PotMacros.getDateFormatLocal(new Date(), null, null, PotMacros.DATE_FORMAT_UNDERSC_YYYYMMDD_HHMMSS_SSSSSS));
                 } else {
                     m_cLessonsTable = new LessonsTable(-1, mLessonTitleEdit.getText().toString().trim(), mNotes != null ? mNotes : "",
-                            PotMacros.getDateFormat(new Date(), null, null, PotMacros.DATE_FORMAT_UNDERSC_YYYYMMDD_HHMMSS_SSSSSS),
-                            PotMacros.getDateFormat(new Date(), null, null, PotMacros.DATE_FORMAT_UNDERSC_YYYYMMDD_HHMMSS_SSSSSS),
+                            PotMacros.getDateFormatLocal(new Date(), null, null, PotMacros.DATE_FORMAT_UNDERSC_YYYYMMDD_HHMMSS_SSSSSS),
+                            PotMacros.getDateFormatLocal(new Date(), null, null, PotMacros.DATE_FORMAT_UNDERSC_YYYYMMDD_HHMMSS_SSSSSS),
                             m_cUser.getId(), m_cUser.getId(), -1,
                             "",
                             "",
@@ -1129,7 +1131,10 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
                     }
                 } else {
                     if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_1))
-                        showPhotoOption(v.getId(), true);
+                        if (((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getIsDeleted())
+                            showPhotoOption(v.getId(), false);
+                        else
+                            showPhotoOption(v.getId(), true);
                     else
                         showPhotoOption(v.getId(), false);
                 }
@@ -1141,7 +1146,10 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
                     }
                 } else {
                     if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_2))
-                        showPhotoOption(v.getId(), true);
+                        if (((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getIsDeleted())
+                            showPhotoOption(v.getId(), false);
+                        else
+                            showPhotoOption(v.getId(), true);
                     else
                         showPhotoOption(v.getId(), false);
                 }
@@ -1153,7 +1161,10 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
                     }
                 } else {
                     if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_3))
-                        showPhotoOption(v.getId(), true);
+                        if (((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getIsDeleted())
+                            showPhotoOption(v.getId(), false);
+                        else
+                            showPhotoOption(v.getId(), true);
                     else
                         showPhotoOption(v.getId(), false);
                 }
@@ -1358,17 +1369,20 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
     private void showBottomSheet(String pLessonImgTag) {
         ArrayList<String> list = new ArrayList<>();
         if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_1))
-            list.add(m_cLessType == PotMacros.OBJ_LESSON_NEW ?
-                    PotMacros.getTempImageFilePath(LessonsOfflineScreen.this) + "/" + ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getAttachment() :
-                    ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getAttachment());
+            if (!((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getIsDeleted())
+                list.add(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getId() == -1 ?
+                        PotMacros.getTempImageFilePath(LessonsOfflineScreen.this) + "/" + ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getAttachment() :
+                        ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_1)).getAttachment());
         if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_2))
-            list.add(m_cLessType == PotMacros.OBJ_LESSON_NEW ?
-                    PotMacros.getTempImageFilePath(LessonsOfflineScreen.this) + "/" + ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getAttachment() :
-                    ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getAttachment());
+            if (!((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getIsDeleted())
+                list.add(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getId() == -1 ?
+                        PotMacros.getTempImageFilePath(LessonsOfflineScreen.this) + "/" + ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getAttachment() :
+                        ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_2)).getAttachment());
         if (m_cAttachList.containsKey(PotMacros.LESSON_IMG_3))
-            list.add(m_cLessType == PotMacros.OBJ_LESSON_NEW ?
-                    PotMacros.getTempImageFilePath(LessonsOfflineScreen.this) + "/" + ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getAttachment() :
-                    ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getAttachment());
+            if (!((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getIsDeleted())
+                list.add(((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getId() == -1 ?
+                        PotMacros.getTempImageFilePath(LessonsOfflineScreen.this) + "/" + ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getAttachment() :
+                        ((Attachments) m_cAttachList.get(PotMacros.LESSON_IMG_3)).getAttachment());
 
         m_cSlider = BottomSheetBehavior.from(viewStub);
         m_cSlider.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -2322,6 +2336,8 @@ public class LessonsOfflineScreen extends PotBaseActivity implements SeekBar.OnS
                         .error(R.drawable.profile_placeholder)
                         .placeholder(R.drawable.profile_placeholder)
                         .config(Bitmap.Config.RGB_565)
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .fit()
                         .into(lview);
             } catch (Exception e) {

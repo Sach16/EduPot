@@ -36,11 +36,15 @@ public class CustomRecyclerAdapterForUsers extends RecyclerView.Adapter{
     private static String LOG_TAG = "MyRecyclerViewAdapter";
     private static RecyclerUsersListener m_cClickListener;
     private static List<Users> m_cObjJsonUsers;
+    private static String m_cGoOffline;
     private Context m_cObjContext;
 
-    public CustomRecyclerAdapterForUsers(Context pContext, List<Users> pJsonUsers, RecyclerUsersListener pListener) {
+    public CustomRecyclerAdapterForUsers(Context pContext, List<Users> pJsonUsers,
+                                         String pGoOffline,
+                                         RecyclerUsersListener pListener) {
         this.m_cObjContext = pContext;
-            this.m_cObjJsonUsers = pJsonUsers;
+        this.m_cObjJsonUsers = pJsonUsers;
+        this.m_cGoOffline = pGoOffline;
         this.m_cClickListener = pListener;
     }
 
@@ -145,6 +149,13 @@ public class CustomRecyclerAdapterForUsers extends RecyclerView.Adapter{
                         .into(((DataObjectHolder) holder).civUser);
             } catch (Exception e) {
                 ((DataObjectHolder) holder).civUser.setImageResource(R.drawable.profile_placeholder);
+                e.printStackTrace();
+            }
+
+            try {
+                if (null != m_cGoOffline)
+                    ((DataObjectHolder) holder).badgeTxt.setVisibility(View.GONE);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

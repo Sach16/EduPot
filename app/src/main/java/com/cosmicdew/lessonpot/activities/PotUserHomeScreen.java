@@ -124,10 +124,14 @@ public class PotUserHomeScreen extends PotBaseActivity implements NavigationView
         setContentView(R.layout.pot_user_home_screen);
         ButterKnife.bind(this);
 
-        m_cUser = (new Gson()).fromJson(getIntent().getStringExtra(PotMacros.OBJ_USER), Users.class);
-        m_cNotification = getIntent().getStringExtra(PotMacros.NOTIFICATION);
-        m_cFromNetworkScreen = getIntent().getBooleanExtra(PotMacros.FROM_NETWORK_SCREEN, false);
-        m_cGoOffline = getIntent().getStringExtra(PotMacros.GO_OFFLINE);
+        init(getIntent(), false);
+    }
+
+    private void init(Intent intent, boolean pIsNewIntent) {
+        m_cUser = (new Gson()).fromJson(intent.getStringExtra(PotMacros.OBJ_USER), Users.class);
+        m_cNotification = intent.getStringExtra(PotMacros.NOTIFICATION);
+        m_cFromNetworkScreen = intent.getBooleanExtra(PotMacros.FROM_NETWORK_SCREEN, false);
+        m_cGoOffline = intent.getStringExtra(PotMacros.GO_OFFLINE);
 
         m_cView = m_cNavigationView.inflateHeaderView(R.layout.pot_nav_header_main);
         UserCircularImageView lUserPic = (UserCircularImageView) m_cView.findViewById(R.id.USER_CIV_CELL);
@@ -312,17 +316,17 @@ public class PotUserHomeScreen extends PotBaseActivity implements NavigationView
 
         m_cNavigationView.setNavigationItemSelectedListener(this);
 
-        init();
-    }
+        //initn of tabs
 
-    private void init() {
-        m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Classes"));
-        if (null == m_cGoOffline)
-            m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Viewed"));
-        else
-            m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Upload"));
-        m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Received"));
-        m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Mine"));
+        if (!pIsNewIntent) {
+            m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Classes"));
+            if (null == m_cGoOffline)
+                m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Viewed"));
+            else
+                m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Upload"));
+            m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Received"));
+            m_cTabLayout.addTab(m_cTabLayout.newTab().setText("Mine"));
+        }
 //        m_cTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         m_cPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(m_cTabLayout));
@@ -359,9 +363,11 @@ public class PotUserHomeScreen extends PotBaseActivity implements NavigationView
 //                        m_cObjTransportMgr.getPackages("", EURemediesSpecialityScreen.this);
                         break;
                     case 2:
-                        PotMacros.clearNotifyCount(PotUserHomeScreen.this, Constants.LESSON_SHARE, m_cUser);
-                        invalidateOptionsMenu();
-                        ShortcutBadger.applyCount(PotUserHomeScreen.this, PotMacros.getNotifyAll(PotUserHomeScreen.this)[0]);
+                        if (null == m_cGoOffline) {
+                            PotMacros.clearNotifyCount(PotUserHomeScreen.this, Constants.LESSON_SHARE, m_cUser);
+                            invalidateOptionsMenu();
+                            ShortcutBadger.applyCount(PotUserHomeScreen.this, PotMacros.getNotifyAll(PotUserHomeScreen.this)[0]);
+                        }
                         // NOTHING TO DO HERE
                         break;
                     case 3:
@@ -406,15 +412,20 @@ public class PotUserHomeScreen extends PotBaseActivity implements NavigationView
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mIndexPage = intent.getIntExtra(PotMacros.LESSON_INDEX_PAGE, 0);
-        m_cPager.setAdapter(new PagerAdapterForPotHome(getSupportFragmentManager(),
-                m_cObjFragmentBase,
-                m_cTabLayout.getTabCount(),
-                "",
-                m_cUser,
-                m_cGoOffline));
-        m_cPager.invalidate();
-        m_cPager.setCurrentItem(mIndexPage);
+        m_cNotification = intent.getStringExtra(PotMacros.NOTIFICATION);
+        if (null != m_cNotification) {
+            init(intent, true);
+        } else {
+            mIndexPage = intent.getIntExtra(PotMacros.LESSON_INDEX_PAGE, 0);
+            m_cPager.setAdapter(new PagerAdapterForPotHome(getSupportFragmentManager(),
+                    m_cObjFragmentBase,
+                    m_cTabLayout.getTabCount(),
+                    "",
+                    m_cUser,
+                    m_cGoOffline));
+            m_cPager.invalidate();
+            m_cPager.setCurrentItem(mIndexPage);
+        }
     }
 
     @Override
@@ -766,10 +777,14 @@ public class PotUserHomeScreen extends PotBaseActivity implements NavigationView
                                                         i == (m_cAttachList.size() - 1) ? (m_cAttachList.size() - 1) : -1},
                                         null, null, false);
                             }
-                        } else
+                        } else {
+                            displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
                             hideDialog();
-                    } else
+                        }
+                    } else {
+                        displayToast(getResources().getString(R.string.lesson_saved_successfully_txt));
                         hideDialog();
+                    }
                 } else if (apiMethod.contains(Constants.OFFLINE_META)) {
                     Object[] lObjects = (Object[]) refObj;
                     try {

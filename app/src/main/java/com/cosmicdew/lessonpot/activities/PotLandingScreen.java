@@ -35,7 +35,6 @@ import com.google.gson.Gson;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -157,7 +156,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
                 lUsers.setIsAdmin(lUsersTable.getIsAdmin());
                 m_cUsersList.add(lUsers);
             }
-            m_cRecycAdUsers = new CustomRecyclerAdapterForUsers(this, m_cUsersList, this);
+            m_cRecycAdUsers = new CustomRecyclerAdapterForUsers(this, m_cUsersList, m_cGoOffline, this);
             m_cRecycUsers.setAdapter(m_cRecycAdUsers);
             rlNoData.setVisibility(View.GONE);
         }else {
@@ -273,7 +272,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
                     for (Users lUsers : lUsersAll.getUsers()) {
                         m_cUsersList.add(lUsers);
                     }
-                    m_cRecycAdUsers = new CustomRecyclerAdapterForUsers(this, m_cUsersList, this);
+                    m_cRecycAdUsers = new CustomRecyclerAdapterForUsers(this, m_cUsersList, m_cGoOffline, this);
                     m_cRecycUsers.setAdapter(m_cRecycAdUsers);
                     rlNoData.setVisibility(View.GONE);
                 }else {
@@ -302,7 +301,7 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
                     ShortcutBadger.applyCount(this, PotMacros.getNotifyAll(this)[0]);
                     if (null != m_cRecycAdUsers) {
                         m_cUsersList.remove((int) lObjects[1]);
-                        m_cRecycUsers.setAdapter(new CustomRecyclerAdapterForUsers(this, m_cUsersList, this));
+                        m_cRecycUsers.setAdapter(new CustomRecyclerAdapterForUsers(this, m_cUsersList, m_cGoOffline, this));
                         m_cRecycUsers.invalidate();
 //                        m_cObjUIHandler.sendEmptyMessage(RE_FRESH);
 //                        break;
@@ -395,13 +394,13 @@ public class PotLandingScreen extends PotBaseActivity implements RecyclerUsersLi
 
     @Override
     public void onInfoLongClick(int pPostion, Users pUsers, View pView) {
-        if (null == m_cGoOffline) {
+        /*if (null == m_cGoOffline) {
             displaySpinnerDialog(PotMacros.ON_INFO_LONG_CLICK_USERS,
                     pUsers.getFirstName() + " " + pUsers.getLastName(),
                     Arrays.asList(getResources().getString(R.string.remove_user_txt)),
                     Arrays.asList(R.id.action_remove),
                     new Object[]{pUsers, pPostion});
-        }
+        }*/
     }
 
     @Override

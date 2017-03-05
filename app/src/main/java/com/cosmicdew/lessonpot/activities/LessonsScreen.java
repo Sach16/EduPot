@@ -63,6 +63,7 @@ import com.cosmicdew.lessonpot.models.Likes;
 import com.cosmicdew.lessonpot.models.LikesAll;
 import com.cosmicdew.lessonpot.models.Syllabi;
 import com.cosmicdew.lessonpot.models.Users;
+import com.cosmicdew.lessonpot.models.UsersAll;
 import com.cosmicdew.lessonpot.network.Constants;
 import com.cosmicdew.lessonpot.network.RequestManager;
 import com.cosmicdew.lessonpot.utils.Utilities;
@@ -742,6 +743,13 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                 lObjIntent.putExtra(PotMacros.OBJ_USER, (new Gson()).toJson(llessonSource));
                 lObjIntent.putExtra(PotMacros.OBJ_LESSON, (new Gson()).toJson(m_cLessons));
                 startActivity(lObjIntent);
+                return true;
+            case R.id.action_include_in_online_received_tab:
+                displayProgressBar(-1, "");
+                HashMap<String, String> llParams = new HashMap<>();
+                llParams.put(Constants.USERNAME, PotMacros.PUBLIC_USERNAME);
+                RequestManager.getInstance(this).placeRequest(Constants.USERS,
+                        UsersAll.class, this, null, llParams, null, false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -1515,6 +1523,7 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     private void stopRecording() {
         try {
             m_cAttachList.put(PotMacros.LESSON_AUDIO, addAttachment(-1, PotMacros.LESSON_AUDIO, m_cAudioGUID + ".aac"));
+            m_cIsEdited = true;
             mRecorder.stop();
             mRecorder.release();
             mRecorder = null;
@@ -1866,7 +1875,25 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
     public void onAPIResponse(Object response, String apiMethod, Object refObj) {
         switch (apiMethod) {
             default:
-                if (apiMethod.contains(Constants.LESSON_COMMENTS)) {
+                if (apiMethod.contains(Constants.PUBLICSHARE)) {
+                    if (response == null) {
+                        displayToast(getResources().getString(R.string.lesson_successfully_included_txt));
+                        hideDialog();
+                    }
+                } else if (apiMethod.contains(Constants.USERS)) {
+                    UsersAll llUsers = (UsersAll) response;
+                    JSONObject lllJO = new JSONObject();
+                    try {
+                        lllJO.put(Constants.PUBLIC_USER, String.valueOf(llUsers.getUsers().get(0).getId()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    RequestManager.getInstance(this).placeUserRequest(Constants.LESSONS +
+                                    m_cLessons.getId() +
+                                    "/" +
+                                    Constants.PUBLICSHARE,
+                            Lessons.class, this, null, null, lllJO.toString(), true);
+                } else if (apiMethod.contains(Constants.LESSON_COMMENTS)) {
                     if (response instanceof Comments) {
                         Comments lComments = (Comments) response;
                         callComments(null);
@@ -2004,6 +2031,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                                                 .error(R.drawable.profile_placeholder)
                                                 .placeholder(R.drawable.profile_placeholder)
                                                 .transform(new RoundedCornersTransformation(0, 0))
+                                                .networkPolicy(NetworkPolicy.NO_CACHE)
+                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                 .config(Bitmap.Config.RGB_565)
 //                                                .centerCrop()
 //                                                .resize(mLessonImg2.getMeasuredWidth(), mLessonImg1.getMeasuredHeight())
@@ -2020,6 +2049,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                                                 .error(R.drawable.profile_placeholder)
                                                 .placeholder(R.drawable.profile_placeholder)
                                                 .transform(new RoundedCornersTransformation(0, 0))
+                                                .networkPolicy(NetworkPolicy.NO_CACHE)
+                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                 .config(Bitmap.Config.RGB_565)
 //                                                .centerCrop()
 //                                                .resize(mLessonImg3.getMeasuredWidth(), mLessonImg1.getMeasuredHeight())
@@ -2319,7 +2350,9 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
 
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod, Object refObj) {
-        if (apiMethod.contains(Constants.LESSON_LIKES) ||
+        if (apiMethod.contains(Constants.PUBLICSHARE) ||
+                apiMethod.contains(Constants.USERS) ||
+                apiMethod.contains(Constants.LESSON_LIKES) ||
                 apiMethod.contains(Constants.LESSON_COMMENTS) ||
                 apiMethod.contains(Constants.SOURCES) ||
                 apiMethod.contains(Constants.BOARDCLASSES) ||
@@ -2472,6 +2505,8 @@ public class LessonsScreen extends PotBaseActivity implements SeekBar.OnSeekBarC
                         .error(R.drawable.profile_placeholder)
                         .placeholder(R.drawable.profile_placeholder)
                         .config(Bitmap.Config.RGB_565)
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .fit()
                         .into(lview);
             } catch (Exception e) {
